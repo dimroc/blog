@@ -29,4 +29,4 @@ Three takeaways I didn't foresee:
 
 See more technical details on the [github page](https://github.com/dimroc/nyc_building_perimeters).
 
-Check out the release of [ViziCities](http://vizicities.com/), an impressive rendering of citis. Check out [NYC](http://vizicities.apps.rawk.es/demo.html#40.71432818342427,-73.98659111120529).
+Check out the release of [ViziCities](http://vizicities.com/), an impressive rendering of cities. Check out [NYC](http://vizicities.apps.rawk.es/demo.html#40.71432818342427,-73.98659111120529).
