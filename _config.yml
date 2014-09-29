@@ -10,7 +10,7 @@ relative_permalinks: true
 title:            dimroc
 tagline:          'The development blog of Dimitri Roche'
 description:      'The coding adventures of Dimitri Roche'
-url:              http://hyde.getpoole.com
+url:              http://www.dimroc.com
 baseurl:          /
 
 author:
