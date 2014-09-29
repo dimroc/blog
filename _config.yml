@@ -18,6 +18,7 @@ author:
   url:            https://twitter.com/dimroc
 
 paginate:         10
+excerpt_separator: <!--more-->
 
 # Custom vars
 version:          2.1.0
