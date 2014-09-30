@@ -4,7 +4,7 @@ title: Elasticsearch behind NGINX on AWS
 ---
 
 Hosting on Heroku or any other multi-tenant PaaS means you're sharing IP security with other people. Now your web services require at least basic auth
-when interacting with services like your MySQL and Elasticsearch. We will run Elasticsearch behind nginx, which will enforce a username/pw for basic auth.
+when interacting with services like MySQL and Elasticsearch. We will run Elasticsearch behind nginx, which will enforce a username/pw for basic auth.
 
 <!--more-->
 
