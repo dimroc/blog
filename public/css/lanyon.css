@@ -80,9 +80,9 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 32rem;
   }
 }
-@media (min-width: 56em) {
+@media (min-width: 62em) {
   .container {
-    max-width: 38rem;
+    max-width: 42rem;
   }
 }
 
@@ -113,11 +113,24 @@ h1, h2, h3, h4, h5, h6 {
   color: #c0c0c0;
   letter-spacing: 0;
 }
+.masthead-links {
+  font-size: 60%;
+  font-weight: 500;
+  /*float: right;*/
+  /*line-height: 2.25;*/
+}
+.masthead-links a {
+  color: #268bd2;
+  margin-right:10px;
+}
 
 @media (max-width: 48em) {
   .masthead-title {
     text-align: center;
   }
+}
+
+@media (max-width: 62em) {
   .masthead-title small {
     display: none;
   }
@@ -299,7 +312,7 @@ a.sidebar-nav-item:focus {
 
 .page,
 .post {
-  margin-bottom: 4em;
+  margin-bottom: 2em;
 }
 
 /* Blog post or page title */
@@ -551,3 +564,4 @@ a.pagination-item:hover {
 .layout-reverse.sidebar-overlay #sidebar-checkbox:checked ~ .sidebar {
   box-shadow: -.25rem 0 .5rem rgba(0,0,0,.1);
 }
+
