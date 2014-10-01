@@ -10,7 +10,7 @@ task :deploy do
   system("git remote add origin git@github.com:dimroc/dimroc.github.io.git")
   system("git add .")
   system("git commit -m 'Deployment #{Time.now}'")
-  system("git push origin master")
+  system("git push origin master -f")
 
   #puts "\n## Deleting master branch"
   #status = system("git branch -D master")
