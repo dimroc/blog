@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Intro to ThreeJS... using ThreeJS
+tags: webgl javascript
 ---
 
 I'm a big believer in learning by doing. So when I set out to learn ThreeJS, I did it by making [this sweet slide deck](http://www.dimroc.com/reveal.js-threejs/).

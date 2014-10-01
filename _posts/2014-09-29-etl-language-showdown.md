@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Comparing Golang, Scala, Elixir and Ruby for ETL
+tags: ruby elixir golang scala
 ---
 
 How do the following languages stack up when running an ETL against ~40M tweets? Read on to find out more.

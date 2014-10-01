@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Monitoring CI from your iPhone
+tags: ios
 ---
 
 Ever want to receive a push notification when a commit fails CI? Well, do I have news for you.

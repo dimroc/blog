@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Elasticsearch behind NGINX on AWS
+tags: elasticsearch
 ---
 
 Hosting on Heroku or any other multi-tenant PaaS means you're sharing IP security with other people. Now your web services require at least basic auth

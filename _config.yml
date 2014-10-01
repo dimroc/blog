@@ -22,6 +22,10 @@ author:
 paginate:         10
 excerpt_separator: <!--more-->
 
+# Tags
+tag_page_layout: tag_page
+tag_page_dir: tag
+
 # Custom vars
 version:          2.1.0
 

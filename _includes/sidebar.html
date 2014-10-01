@@ -26,14 +26,17 @@
     <a class="sidebar-nav-item" href="{{ site.author.twitter }}">@dimroc</a>
   </nav>
 
-  <!--<div class="sidebar-item">-->
-    <!--<p>Tags</p>-->
-  <!--</div>-->
+  <div class="sidebar-item">
+    <p>Tags</p>
+  </div>
 
   <nav class="sidebar-nav">
     {% comment %}
       List all available tags in the site.
     {% endcomment %}
+    {% for tag in site.tags | order: ascending %}
+      <a class="sidebar-nav-item" href={{ tag[0] | tag_url }}>{{ tag[0] }}</a>
+    {% endfor %}
   </nav>
 
   <div class="sidebar-item">

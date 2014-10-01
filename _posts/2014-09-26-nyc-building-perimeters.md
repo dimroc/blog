@@ -1,6 +1,7 @@
 ---
 layout: post
 title: NYC Building Perimeters
+tags: javascript webgl nyc
 ---
 
 I love NYC and WebGL. So I married the two by rendering NYC building perimeters with [ThreeJS](http://threejs.org/) using [NYC Open Data](https://nycopendata.socrata.com/).

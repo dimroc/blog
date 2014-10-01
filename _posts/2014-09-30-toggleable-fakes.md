@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Toggleable Fakes for better integration testing
+tags: testing
 ---
 
 During the development of [iOS Project Monitor](https://github.com/dimroc/iOS.ProjectMonitor), I ran into the need

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Tweets as Pixels in NYC
+tags: twitter nyc
 ---
 
 What do you get when you brighten a pixel every time you get a tweet's location? That's what [Miguel Rios](https://blog.twitter.com/2013/the-geography-of-tweets) asked

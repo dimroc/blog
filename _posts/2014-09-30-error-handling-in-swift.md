@@ -1,6 +1,7 @@
 ---
 layout: post
 title: A better error handling future for iOS with Swift
+tags: swift ios
 ---
 
 Pattern matching is a fantastic mechanism prevalent in functional programming languages, and [Swift](https://developer.apple.com/swift/) has it! Below, we'll find out how to use it to encapsulate errors in asynchronous code.
