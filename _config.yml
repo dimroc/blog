@@ -8,14 +8,16 @@ relative_permalinks: true
 
 # Setup
 title:            dimroc
-tagline:          'The development blog of Dimitri Roche'
-description:      'The coding adventures of Dimitri Roche'
+tagline:          'Development Blog of Dimitri Roche'
+description:      'Development Blog of Dimitri Roche'
 url:              http://www.dimroc.com
 baseurl:          /
 
 author:
   name:           'Dimitri Roche'
-  url:            https://twitter.com/dimroc
+  twitter:        https://twitter.com/dimroc
+  github:         https://github.com/dimroc
+  experiments:    http://experiments.dimroc.com
 
 paginate:         10
 excerpt_separator: <!--more-->
@@ -24,4 +26,4 @@ excerpt_separator: <!--more-->
 version:          2.1.0
 
 github:
-  repo:           https://github.com/dimroc
+  repo:           https://github.com/dimroc/dimroc.github.io
