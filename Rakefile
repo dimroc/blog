@@ -5,7 +5,8 @@ task :deploy do
   system("mkdir -p tmp/deployment/_site")
   puts "copying"
   system("cp -R _site tmp/deployment/")
-  system("cd tmp/deployment/")
+  system("cd tmp/deployment/_site")
+  system("touch .nojekyll")
   system("git init")
   system("git remote add origin git@github.com:dimroc/dimroc.github.io.git")
   system("git add .")
