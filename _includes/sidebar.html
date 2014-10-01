@@ -2,6 +2,13 @@
      styles, `#sidebar-checkbox` for behavior. -->
 <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox" checked>
 
+<script>
+  if(browser.mobile) {
+    var checkbox = document.querySelector('#sidebar-checkbox');
+    checkbox.checked = false;
+  }
+</script>
+
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
   <nav class="sidebar-nav">
