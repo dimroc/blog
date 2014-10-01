@@ -5,10 +5,11 @@ task :deploy do
   system("mkdir -p tmp/deployment/_site")
   puts "copying"
   system("cp -R _site tmp/deployment/")
-  system("cd /tmp/deployment/_site")
+  system("cd /tmp/deployment/")
   system("git init")
   system("git remote add origin git@github.com:dimroc/dimroc.github.io.git")
-  system("git commit -am 'Deployment #{Time.now}'")
+  system("git add .")
+  system("git commit -m 'Deployment #{Time.now}'")
   system("git push origin master")
 
   #puts "\n## Deleting master branch"
