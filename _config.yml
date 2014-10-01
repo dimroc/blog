@@ -8,8 +8,8 @@ relative_permalinks: true
 
 # Setup
 title:            dimroc
-tagline:          'Development Blog of Dimitri Roche'
-description:      'Development Blog of Dimitri Roche'
+tagline:          'The Development Blog of Dimitri Roche'
+description:      'The Development Blog of Dimitri Roche'
 url:              http://www.dimroc.com
 baseurl:          /
 

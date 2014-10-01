@@ -121,7 +121,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .masthead-links a {
   color: #268bd2;
-  margin-right:10px;
+  margin: 10px;
 }
 
 @media (max-width: 48em) {

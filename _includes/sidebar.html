@@ -5,11 +5,13 @@
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-item">
-    <p>Tags</p>
+    <p>Extra</p>
   </div>
 
   <nav class="sidebar-nav">
     <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}">Home</a>
+    <a class="sidebar-nav-item" href="{{ site.author.github }}">GitHub</a>
+    <a class="sidebar-nav-item" href="{{ site.author.experiments }}">Experiments</a>
 
     {% comment %}
       The code below dynamically generates a sidebar nav of pages with
@@ -25,7 +27,17 @@
       {% endif %}
     {% endfor %}
 
-    <a class="sidebar-nav-item" href="{{ site.github.repo }}">GitHub</a>
+    <a class="sidebar-nav-item" href="{{ site.author.twitter }}">@dimroc</a>
+  </nav>
+
+  <!--<div class="sidebar-item">-->
+    <!--<p>Tags</p>-->
+  <!--</div>-->
+
+  <nav class="sidebar-nav">
+    {% comment %}
+      List all available tags in the site.
+    {% endcomment %}
   </nav>
 
   <div class="sidebar-item">
