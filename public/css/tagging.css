@@ -8,3 +8,15 @@
 .set-5 {
   font-size: 200%;
 }
+
+.posts .post-date {
+  display: inline-block;
+}
+
+.posts .post-comments {
+  margin-left: 20px;
+}
+
+.post h1 {
+  margin-bottom: 0;
+}
