@@ -15,7 +15,7 @@ upfront work but adds incredible confidence in your code.
 
 ### Overview
 
-* Use Sinatra to mount a `FakeThirdParty` service.
+* Create a `FakeThirdParty` service.
 
   {% highlight ruby %}
 
@@ -45,7 +45,7 @@ upfront work but adds incredible confidence in your code.
 
   {% endhighlight %}
 
-* Using WebMock, route all traffic to `www.thirdparty.com` to your mounted sinatra fake.
+* Using WebMock, route all traffic to `www.thirdparty.com` to our sinatra fake. Take note of the `.to_rack` method:
 
   {% highlight ruby %}
 
