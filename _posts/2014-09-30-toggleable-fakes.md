@@ -31,6 +31,18 @@ upfront work but adds incredible confidence in your code.
     run! if app_file == $0
   end
 
+  class FakeError
+    def self.call(env)
+      [ 503, { 'Content-Type' => 'application/json' }, [{ "error" => "server error" }.to_json] ]
+    end
+  end
+
+  class FakeUnauthorized
+    def self.call(env)
+      [ 401, { 'Content-Type' => 'application/json' }, [{"error"=>"unauthorized"}.to_json] ]
+    end
+  end
+
   {% endhighlight %}
 
 * Using WebMock, route all traffic to `www.thirdparty.com` to your mounted sinatra fake.
