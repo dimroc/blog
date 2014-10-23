@@ -179,7 +179,7 @@ $ parallel -j 90% -a commands.txt && ruby reducer.rb
 #### Observations
 - Performance average after first write with `:delayed_write`: `2m30.508s`. 
 - This number says less about Elixir's performance and more about how much I suck at writing Elixir code. Ease of writing performant code though is a valid factor.
-- Extremely productive language once one knows the class methods, but difficult to discover.
+- Extremely productive language once one knows the module functions, but difficult to discover.
 - Clearly designed for use with a text editor and the command-line (It's great).
 - The Elixir docs are usually the sole source of information, thankfully they are pretty good.
 
@@ -200,13 +200,13 @@ $ parallel -j 90% -a commands.txt && ruby reducer.rb
 #### Moments of Disappointment
 - The lack of objects is initially infuriating. Hard to encapsulate logic, and structs don't seem like a substitute. It effectively means that most if not all built-in methods only return primitive types as opposed to objects.
 - Lack of online resources because of small community. Few Stack Overflow posts, etc.
-- Discoverability is tricky since methods are all class methods on primitive types.
+- Discoverability is tricky since methods are all module functions on primitive types, therefore you can't look up the primitive type, but must know the relevant module.
 - Inability to fold/reduce from a stream in a straighforward manner. Had to hold contents in memory.
 
 ## Conclusion
 
 - Only after returning to a functional language like Elixir do I realize the convenience of **Object Oriented meets Functional**. Big ups to Scala.
-- The ability to return an object with relevant methods while still being immutable adds the power of discoverability, a huge advantage over the manipulation of maps and other primitives with Class methods.
+- The ability to return an object with relevant methods while still being immutable adds the power of discoverability, a huge advantage over the manipulation of maps and other primitives with module functions.
 - The big surprise was JRuby's performance and the impact of being able to use all cores. Running Puma on JRuby is very compelling when using a system with multiple cores.
 - Golang's simplicity is very refreshing and their built-in profiling contributes to a philosophy of hand-tuning code for the best performance.
 - Scala, on the other hand, has the user well removed from the low level, but the JVM handles a lot of optimizations for the programmer, and it shows. If only I didn't need an IDE...
