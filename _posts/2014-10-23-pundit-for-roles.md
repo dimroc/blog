@@ -2,7 +2,7 @@
 layout: post
 title: "Pundit for Roles on Rails"
 date: "Thu Oct 23 09:58:56 -0400 2014"
-tags: rails
+tags: rails ruby
 ---
 
 Roles are almost always a requirement for a web app. There are many good options out there for Rails, with the old guard being [CanCan](https://github.com/CanCanCommunity/cancancan)
