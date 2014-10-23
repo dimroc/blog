@@ -1,9 +1,10 @@
 .custom.summary {
-  position: relative;
 }
 
 .custom.summary a.more {
-  position: absolute;
-  bottom: -30px;
-  right: 0px;
+  display: block;
+  text-align: right;
+}
+
+h1.custom.post-title a {
 }
