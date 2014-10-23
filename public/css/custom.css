@@ -1,0 +1,9 @@
+.custom.summary {
+  position: relative;
+}
+
+.custom.summary a.more {
+  position: absolute;
+  bottom: -30px;
+  right: 0px;
+}

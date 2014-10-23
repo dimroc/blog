@@ -15,7 +15,10 @@ title: Home
     <span class="post-date">{{ post.date | date_to_string }}</span>
     <span class="post-comments"><a href="{{ post.url }}#disqus_thread"></a></span>
 
-    {{ post.excerpt }}
+    <div class="custom summary">
+      {{ post.excerpt }}
+      <a class="more" href="{{ post.url }}">Read More -></a>
+    </div>
   </div>
   {% endfor %}
 </div>
