@@ -2,7 +2,7 @@
 layout: post
 title: "Arelastic for your Elasticsearch Queries pt.1"
 date: "Wed Oct 29 08:45:25 -0400 2014"
-tags: ruby
+tags: ruby elasticsearch
 ---
 
 When doing more than just a simple search with [Elasticsearch-rails](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-model),
