@@ -10,6 +10,7 @@ but want to eagerly load all associations when rendering your page for performan
 and when you `includes(:association)`, you lose the pagination support.
 
 Below, you'll see how a simple delegator will relieve your woes and eagerly load associations with support for pagination.
+
 <!--more-->
 
 ## The Problem
