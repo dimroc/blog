@@ -8,7 +8,7 @@ tags: rails
 You've been using [Active Record Migrations](http://api.rubyonrails.org/classes/ActiveRecord/Migration.html) to manage changes in
 your database and you love it. But then a model's validations change, and all your existing data becomes invalid.
 
-What do you do? Place it in an AR migration? Depends. Those are for primarily for schema migrations and this is not a schema change.
+What do you do? Place it in an AR migration? Depends. Those are primarily for schema migrations and this is not a schema change.
 
 Boom: You need to run a data migration.
 
@@ -61,8 +61,8 @@ class ChangeAdminDefaultToFalseOnUsers < ActiveRecord::Migration
 end
 {%endhighlight%}
 
-Everything in `db/migrate/` has to live for the life
-of the application, which is why using application code in an AR migration is frowned upon.
+Everything in **db/migrate/** has to live for the life
+of the application, which is why using application code in an AR migration is frowned upon (sure, you can move onto schema:load and delete migrations, but let's keep things simple for now).
 
 That application code will change months or even weeks from now, and then running `rake db:migrate` will be busted.
 
@@ -74,28 +74,94 @@ What do you do?
 
 ## Create a one off rake task? No.
 
-Perhaps, but the code will soon go stale, will be difficult to test, and won't automatically have mechanisms in place to roll back to changes.
+Perhaps, but the code will be difficult to test and won't have mechanisms in place to roll back to changes. Even if you refactor the logic out of
+the rake task into a separate ruby class, you will now have to maintain code that is ephemeral in nature. It merely exists for this one off data migration.
 
-**** TODO: Fill out this 'one off' rake task section.
-
-This is where [datafix](https://github.com/Casecommons/datafix) comes in!
+One approach is to create a **oneshots.rake** file, but that ends up being a ghetto of random tasks with no test coverage that never gets cleaned up 
 
 # Datafixes! Yes.
 
-**** TODO: Fill out this section.
+Basically a mirror of AR migrations, every rails user will feel right at home with [datafixes](https://github.com/Casecommons/datafix).
 
-Notes:
+Run the generator to create the datafix template:
 
-Validations change over time
-Tables and classes change over time
-The migration does not change over time. It's frozen (until you nuke the migrations and only use the db:schema:load)
-Datafixes also won't change over time
+{% highlight bash %}
+> rails g datafix AddValidWholesalePriceToProducts
+  create  db/datafixes/20141211143848_add_valid_wholesale_price_to_products.rb
+  create  spec/db/datafixes/20141211143848_add_valid_wholesale_price_to_products_spec.rb
+{% endhighlight %}
 
-Uses:
+Fill out the datafix with your data migration:
 
-Denormalize values into another table
-Long running migrations that require API calls (honeybadger example)
-Fix existing data to comply with new validations
+{% highlight ruby %}
+class Datafixes::AddValidWholesalePriceToProducts < Datafix
+  def self.up
+    Product.where(wholesale_price_cents: nil).each do |product|
+      product.update_attributes({
+        wholesale_price_cents: product.fetch_price_from_amazon
+      })
+    end
+  end
+
+  def self.down
+  end
+end
+{% endhighlight %}
+
+Then just run the rake tasks:
+
+{% highlight bash %}
+> rake db:datafix
+  migrating AddValidWholesalePriceToProducts up
+
+> rake db:datafix:status
+
+  database: somedatabase_development
+
+   Status   Datafix ID            Datafix Name
+  --------------------------------------------------
+     up    20141208102001       AddSupplierIdToGifts
+     up    20141211143848       AddValidWholesalePriceToProducts
+{% endhighlight %}
+
+Here's how it's even better than standard AR migrations: it generates specs!
+
+{% highlight ruby %}
+require "rails_helper"
+require Rails.root.join("db", "datafixes", "20141211143848_add_valid_wholesale_price_to_products")
+
+describe Datafixes::AddValidWholesalePriceToProducts do
+  describe ".up" do
+    # Fill out the describe block
+    let!(:product) do
+      product = FactoryGirl.build(:product, wholesale_price_cents: nil)
+      product.save(validate: false)
+      product
+    end
+
+    it "should fix the price and be valid" do
+      expect(product).to_not be_valid
+      subject.migrate('up')
+      expect(product.reload).to be_valid
+    end
+  end
+end
+{% endhighlight %}
+
+And the real kicker: when the code has overstayed its welcome, you can just delete the datafix. That's not so simple with a schema migration in **db/migrate/**. 
+The datafix is ephemeral in nature and isn't worth maintaining months down the road.
+
+This is super handy in all the scenarios:
+
+1. Denormalizing values to another table
+2. Changing data to comply with changing validations
+3. Long running data migrations that span days
+4. Migrating from one table to another
+
+## Wrap Up
+
+For data migrations, datafixes is far better than anything out there, but it's still brand new and rough around the edges. It doesn't even have
+**rake db:datafix:rollback** yet! [Check it out!](https://github.com/Casecommons/datafix).
 
 ### References
 
