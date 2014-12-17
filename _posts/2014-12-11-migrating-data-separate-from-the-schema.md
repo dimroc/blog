@@ -10,7 +10,7 @@ your database and you love it. But then a model's validations change, and all yo
 
 What do you do? Place it in an AR migration? Depends. Those are primarily for schema migrations and this is not a schema change.
 
-Boom: You need to run a *data migration*.
+Boom: You need to run a **data migration**.
 
 <!--more-->
 
