@@ -79,9 +79,15 @@ the rake task into a separate ruby class, you will now have to maintain code tha
 
 One approach is to create a **oneshots.rake** file, but that ends up being a ghetto of random tasks with no test coverage that never gets cleaned up 
 
-# Datafixes! Yes.
+# [Datafixes!](https://github.com/dimroc/datafix) Yes.
 
-Basically a mirror of AR migrations, every rails user will feel right at home with [datafixes](https://github.com/Casecommons/datafix).
+Basically a mirror of AR migrations, every rails user will feel right at home with [datafixes](https://github.com/dimroc/datafix).
+
+Install the gem from my repo:
+
+{% highlight ruby %}
+gem 'datafix', github: 'dimroc/datafix' # The changes will eventually be incorporated into the main gem `datafix`
+{% endhighlight %}
 
 Run the generator to create the datafix template:
 
@@ -120,11 +126,10 @@ Then just run the rake tasks:
 
    Status   Datafix ID            Datafix Name
   --------------------------------------------------
-     up    20141208102001       AddSupplierIdToGifts
      up    20141211143848       AddValidWholesalePriceToProducts
 {% endhighlight %}
 
-Here's how it's even better than standard AR migrations: it generates specs!
+Unlike AR migrations, it generates specs:
 
 {% highlight ruby %}
 require "rails_helper"
@@ -161,7 +166,11 @@ This is super handy in all the scenarios:
 ## Wrap Up
 
 For data migrations, datafixes is far better than anything out there, but it's still brand new and rough around the edges. It doesn't even have
-**rake db:datafix:rollback** yet! [Check it out!](https://github.com/Casecommons/datafix).
+**rake db:datafix:rollback** yet! [Check it out!](https://github.com/dimroc/datafix).
+
+### Note
+*The* [**dimroc**](https://github.com/dimroc/datafix) *fork has many upgrades to make the Casecommons version including the rake tasks that work like rake db:migrate. It will eventually be incorporated into the Casecommons version
+when they stop sending email and look at the PR.*
 
 ### References
 
