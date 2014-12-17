@@ -165,11 +165,11 @@ This is super handy in all the scenarios:
 
 ## Wrap Up
 
-For data migrations, datafixes is far better than anything out there, but it's still brand new and rough around the edges. It doesn't even have
-**rake db:datafix:rollback** yet! [Check it out!](https://github.com/dimroc/datafix).
+For data migrations, datafixes are far better than anything out there, but it's still brand new and rough around the edges. It doesn't even have
+**rake db:datafix:rollback** yet! [Check it out!](https://github.com/dimroc/datafix)
 
 ### Note
-*The* [**dimroc**](https://github.com/dimroc/datafix) *fork has many upgrades to make the Casecommons version including the rake tasks that work like rake db:migrate. It will eventually be incorporated into the Casecommons version
+*The* [**dimroc**](https://github.com/dimroc/datafix) *fork has many upgrades to the Casecommons version, including the rake tasks that function like *rake db:migrate*. It will eventually be incorporated into the Casecommons version
 when they stop sending email and look at the PR.*
 
 ### References
