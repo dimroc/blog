@@ -11,7 +11,6 @@ remote services. So how do we avoid callback hell?
 **Promises (aka futures)**.
 
 Below I'll explain why I chose the [**Bolts Framework (BF)**](https://github.com/BoltsFramework/Bolts-iOS)
-over [PromiseKit](https://github.com/mxcl/PromiseKit) and [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa)
-and why it's been a godsend.
+over [PromiseKit](https://github.com/mxcl/PromiseKit) and [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa).
 
 <!--more-->
