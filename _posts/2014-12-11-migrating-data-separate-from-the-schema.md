@@ -8,7 +8,7 @@ tags: rails
 You've been using [Active Record Migrations](http://api.rubyonrails.org/classes/ActiveRecord/Migration.html) to manage changes in
 your database and you love it. But then a model's validations change, and all your existing data becomes invalid.
 
-What do you do? Place it in an AR migration? Depends. Those are primarily for schema migrations and this is not a schema change.
+What do you do? Place it in an AR migration? Depends. Those are primarily for **schema migrations** and this is not a schema change.
 
 Boom: You need to run a **data migration**.
 
