@@ -42,25 +42,25 @@ As Swift and CocoaPods mature, I'm sure PaperTrailLumberjack will just work out 
 
 ###Steps:
 
-1. Add CocoaLumberjack 2.x and the patched PaperTrailLumberjack to your application, then `pod install`.
+1. Add CocoaLumberjack 2.x and the patched PaperTrailLumberjack to your Podfile, then `pod install`.
 
     ```ruby
     pod 'CocoaLumberjack', git: 'git@github.com:dimroc/CocoaLumberjack.git'
     pod 'PaperTrailLumberjack', git: 'https://bitbucket.org/luisrecuenco/papertraillumberjack.git'
     ```
 
-2. Add the #imports to your bridging header.
+2. Add the #imports to your bridging header file.
 
     ```C++
     #import "CocoaLumberjack.h"
     #import "RMPaperTrailLogger.h"
     ```
 
-3. For Swift, add my DDLogHelper to your project with your settings.
+3. For Swift, add my DDLogHelper to your project (copy pasta).
 
     {% gist dimroc/2aef1b6b1e391f0085d2 %}
 
-4. Configure PapertrailLumberjack and DDLog:
+4. Configure DDLog and PapertrailLumberjack with your settings.
 
     ```swift
     class func launch() { // Or any initializer method
@@ -74,7 +74,7 @@ As Swift and CocoaPods mature, I'm sure PaperTrailLumberjack will just work out 
     }
     ```
 
-5. Log away:
+5. Log away.
 
     ```swift
     DDLogHelper.debug("Launching Papertrail logging for My App")
