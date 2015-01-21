@@ -263,45 +263,6 @@ a.sidebar-nav-item:focus {
   }
 }
 
-.sidebar-toggle {
-  display: block;
-}
-@media (min-width: 90em) {
-  .sidebar-toggle {
-    display: none;
-  }
-
-  .sidebar-toggle,
-  #sidebar-checkbox ~ .sidebar-toggle {
-    color: #fff;
-    background-color: #505050;
-  }
-
-  #sidebar-checkbox + .sidebar {
-    z-index: 10;
-    visibility: visible;
-  }
-
-  #sidebar-checkbox ~ .sidebar,
-  #sidebar-checkbox ~ .wrap,
-  #sidebar-checkbox ~ .sidebar-toggle {
-    -webkit-transform: translateX(14rem);
-        -ms-transform: translateX(14rem);
-            transform: translateX(14rem);
-  }
-
-  .sidebar-overlay #sidebar-checkbox ~ .wrap {
-    -webkit-transform: translateX(0);
-        -ms-transform: translateX(0);
-            transform: translateX(0);
-  }
-  .sidebar-overlay #sidebar-checkbox ~ .sidebar-toggle {
-    box-shadow: 0 0 0 .25rem #fff;
-  }
-  .sidebar-overlay #sidebar-checkbox ~ .sidebar {
-    box-shadow: .25rem 0 .5rem rgba(0,0,0,.1);
-  }
-}
 
 /* Slide effect
  *

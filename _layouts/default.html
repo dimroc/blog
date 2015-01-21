@@ -44,7 +44,9 @@
              sidebar.contains(target) ||
              (target === checkbox || target === toggle)) return;
 
-          checkbox.checked = false;
+          if(browser.mobile) {
+            checkbox.checked = false;
+          }
         }, false);
       })(document);
     </script>
