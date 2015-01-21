@@ -13,7 +13,7 @@ Here's my very own rendering of NYC after gathering geotagged tweets in 2013:
 
 ![Entire NYC](https://newtweetcity.s3.amazonaws.com/snapshots/nyc/nyc_20140216T230944%2B0000.png)
 
-Fascinating deducations:
+Fascinating deductions:
 
 * The gridded street blocks really pop out because of what I assume are pedestrians tweeting on the sidewalks.
 * A lot of people tweet when they drive. Look closely and you can even see all the main bridges (Brooklyn, Williamsburgh, etc).
