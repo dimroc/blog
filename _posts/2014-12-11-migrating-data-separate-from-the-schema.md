@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Not all Migrations are Equal"
+title: "Not All Migrations are Equal: Schema vs. Data"
 date: "Thu Dec 11 18:42:07 -0500 2014"
 tags: rails
 ---
