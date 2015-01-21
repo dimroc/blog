@@ -82,7 +82,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 @media (min-width: 62em) {
   .container {
-    max-width: 50rem;
+    max-width: 48rem;
   }
 }
 
@@ -116,8 +116,8 @@ h1, h2, h3, h4, h5, h6 {
 .masthead-links {
   font-size: 60%;
   font-weight: 500;
-  /*float: right;*/
-  /*line-height: 2.25;*/
+  float: right;
+  line-height: 2.25;
 }
 .masthead-links a {
   color: #268bd2;
@@ -312,7 +312,7 @@ a.sidebar-nav-item:focus {
 
 .page,
 .post {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 /* Blog post or page title */

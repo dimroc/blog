@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Comparing Golang, Scala, Elixir and Ruby for ETL - Part 2"
+title: "Comparing Golang, Scala, Elixir, Ruby for ETL - Part 2"
 date: "Wed Nov 19 10:56:59 -0500 2014"
 tags: ruby elixir golang scala etl
 ---
