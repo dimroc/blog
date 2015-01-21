@@ -4,7 +4,11 @@ title: A better error handling future for iOS with Swift
 tags: swift ios
 ---
 
-Pattern matching is a fantastic mechanism prevalent in functional programming languages, and [Swift](https://developer.apple.com/swift/) has it! Below, we'll find out how to use it to encapsulate errors in asynchronous code.
+*Update: I now handle errors from callbacks with the [Bolts Framework](http://www.dimroc.com/2014/12/17/bolt-framework-promisekit-or-reactive-cocoa-for-async/). Consider this article deprecated.*
+
+----
+
+Pattern matching is a fantastic mechanism found in functional programming languages, and [Swift](https://developer.apple.com/swift/) has it! Below, we'll find out how to use it to encapsulate errors in asynchronous code.
 
 <!--more-->
 
