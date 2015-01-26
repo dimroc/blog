@@ -5,6 +5,11 @@ date: "Thu Dec 11 18:42:07 -0500 2014"
 tags: rails
 ---
 
+*Update 01/26/2015: Check out the [nondestructive_migrations](https://github.com/jasonfb/nondestructive_migrations) gem. It's similar to dimroc/datafix but simpler because it
+leverages existing AR code. It does not however generate specs... yet.*
+
+----
+
 You've been using [Active Record Migrations](http://api.rubyonrails.org/classes/ActiveRecord/Migration.html) to manage changes in
 your database and you love it. But then a model's validations change, and all your existing data becomes invalid.
 
@@ -171,10 +176,6 @@ For data migrations, datafixes are far better than anything out there, but it's 
 ### Note
 *The* [**dimroc**](https://github.com/dimroc/datafix) *fork has many upgrades to the Casecommons version, including the rake tasks that function like *rake db:migrate*. It will eventually be incorporated into the Casecommons version
 when they stop sending email and look at the PR.*
-
-###Update 01/26/2015
-*Check out the [nondestructive_migrations](https://github.com/jasonfb/nondestructive_migrations) gem. It's similar to dimroc/datafix but simpler because it
-leverages existing AR code. It does not however generate specs... yet.*
 
 ### References
 
