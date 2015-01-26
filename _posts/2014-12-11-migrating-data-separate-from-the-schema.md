@@ -172,9 +172,12 @@ For data migrations, datafixes are far better than anything out there, but it's 
 *The* [**dimroc**](https://github.com/dimroc/datafix) *fork has many upgrades to the Casecommons version, including the rake tasks that function like *rake db:migrate*. It will eventually be incorporated into the Casecommons version
 when they stop sending email and look at the PR.*
 
+###Update 01/26/2015
+*Check out the [nondestructive_migrations](https://github.com/jasonfb/nondestructive_migrations) gem. It's similar to dimroc/datafix but simpler because it
+leverages existing AR code. It does not however generate specs... yet.*
+
 ### References
 
 - [Casecommons/datafix](https://github.com/Casecommons/datafix)
 - [Change data in migrations like a boss](http://railsguides.net/change-data-in-migrations-like-a-boss)
 - [Zero Downtime Migrations of Large Databases - Honeybadger](https://www.honeybadger.io/blog/2013/08/06/zero-downtime-migrations-of-large-databases-using-rails-postgres-and-redis)
-
