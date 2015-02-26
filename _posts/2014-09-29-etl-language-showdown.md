@@ -45,6 +45,10 @@ battery-park-city-lower-manhattan	625
 * These tasks are not run on Hadoop but do run concurrently. Performance numbers are expected to be moot since the CPU mostly sits idle waiting on Disk IO.
 * **UPDATE: Boy was the IO bound assumption wrong.
 
+## The Hardware
+
+MacBook Pro 2.3GHz i7 (quad core) with 8GB RAM and 5200 RPM HDD
+
 ## The Languages
 
 1. [Ruby 2.1.0](https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/) with [Celluloid](http://celluloid.io/)  - Exposes the GIL limitation in pure ruby and shows the multicore advantage of JRuby.
@@ -211,6 +215,6 @@ $ parallel -j 90% -a commands.txt && ruby reducer.rb
 - Golang's simplicity is very refreshing and their built-in profiling contributes to a philosophy of hand-tuning code for the best performance.
 - Scala, on the other hand, has the user well removed from the low level, but the JVM handles a lot of optimizations for the programmer, and it shows. If only I didn't need an IDE...
 
-For ETL operations, it would be remiss to ignore the Hadoop and Java ecosystem. Scala provides an incredible toolset for all ETL operations. But I can't help but want to code in Golang.
+For ETL operations, it would be remiss to ignore the Hadoop and Java ecosystem. Scala provides an incredible toolset for all ETL operations, but I can't help but want to code in Golang.
 
 As always, feel free to check out the [source code](https://github.com/dimroc/etl-language-comparison).
