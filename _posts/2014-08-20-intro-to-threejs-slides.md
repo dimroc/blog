@@ -9,6 +9,51 @@ Click through to check out details.
 
 <!--more-->
 
+<canvas id="spinningCube"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+
+<script>
+var dimroc = (function() {
+  return { gfx: {
+    width: 320,
+    height: 250
+  }};
+})();
+
+var renderSpinningCube = function(canvas) {
+  var scene = new THREE.Scene();
+
+  var camera = new THREE.PerspectiveCamera( 30, dimroc.gfx.width / dimroc.gfx.height, 1, 1000 );
+  camera.position.set(0, 3, 7);
+  camera.lookAt( new THREE.Vector3(0,0,0));
+
+  var scale = 2.5;
+  var geometry = new THREE.BoxGeometry( scale, scale, scale );
+  var material = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, wireframeLinewidth: 3 } );
+
+  var mesh = new THREE.Mesh( geometry, material );
+  scene.add( mesh );
+
+  var axisHelper = new THREE.AxisHelper(50);
+  scene.add( axisHelper );
+
+  var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true});
+  renderer.setSize( dimroc.gfx.width, dimroc.gfx.height );
+
+  function animate() {
+    requestAnimationFrame( animate, canvas );
+    mesh.rotation.y += 0.008;
+    renderer.render( scene, camera );
+  }
+
+  animate();
+}
+
+renderSpinningCube($('#spinningCube')[0]);
+
+</script>
+
 Using [reveal.js](http://lab.hakim.se/reveal-js/#/), an html framework for presentations, I added self-contained javascript ThreeJS samples on each slide to
 demonstrate a particular feature of ThreeJS.
 

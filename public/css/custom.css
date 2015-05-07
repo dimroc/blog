@@ -32,3 +32,8 @@
     margin-bottom: 0;
   }
 }
+
+#spinningCube {
+  display: block;
+  margin: auto;
+}
