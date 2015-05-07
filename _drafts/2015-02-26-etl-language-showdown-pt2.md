@@ -1,23 +1,48 @@
 ---
 layout: post
-title: "Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL"
+title: "RE: Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL"
 date: "Thu Feb 26 11:13:39 -0500 2015"
 tags: ruby elixir golang scala python etl
 ---
 
-A year ago, I wrote the same program in four languages to compare their productivity and speed when performing ETL (extract-transform-load).
+A year ago, I wrote the same program in four languages to compare their productivity performing ETL (extract-transform-load).
 Read about [part 1 here](/2014/09/29/etl-language-showdown/) and check out the [source code](https://github.com/dimroc/etl-language-comparison).
 
 The code has changed, the languages have evolved, and the hardware now includes a SSD drive. Where are they now??
 
 ## Results
 
-- Ruby (Global Interpreter Lock bound): 1m32.624s
-- Ruby w/ Parallel: 45.803s
-- Python w/ Pool: 11.532s
-- Scala: 27.247s
-- Golang: 48.556s
-- Elixir: 58.907s
+<table>
+  <tr>
+    <td>Ruby (Global Interpreter Lock bound)</td>
+    <td>1m32.624s</td>
+  </tr>
+
+  <tr>
+    <td>Ruby w/ GNU Parallel</td>
+    <td>45.803s</td>
+  </tr>
+
+  <tr>
+    <td>Python w/ Pool</td>
+    <td>11.532s</td>
+  </tr>
+
+  <tr>
+    <td>Scala</td>
+    <td>27.247s</td>
+  </tr>
+
+  <tr>
+    <td>Golang</td>
+    <td>48.556s</td>
+  </tr>
+
+  <tr>
+    <td>Elixir</td>
+    <td>58.907s</td>
+  </tr>
+</table>
 
 <!--more-->
 
