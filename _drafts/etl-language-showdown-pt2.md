@@ -50,7 +50,7 @@ It still isn't. A max of a day was spent on each solution, so time for optimizat
 
   <tr>
     <td>Golang</td>
-    <td>TODO</td>
+    <td>TODO: Have implementation write directly to file and see if it affects performance</td>
   </tr>
 
   <tr>
