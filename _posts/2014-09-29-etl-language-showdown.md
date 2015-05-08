@@ -73,7 +73,7 @@ MacBook Pro 2.3GHz i7 (quad core) with 8GB RAM and 5200 RPM HDD
 This is effectively:
 
 ```
-$ parallel -j 90% -a commands.txt && ruby reducer.rb
+$ parallel -j 100% -a commands.txt && ruby reducer.rb
 ```
 
 #### Features used
@@ -217,4 +217,4 @@ $ parallel -j 90% -a commands.txt && ruby reducer.rb
 
 For ETL operations, it would be remiss to ignore the Hadoop and Java ecosystem. Scala provides an incredible toolset for all ETL operations, but I can't help but want to code in Golang.
 
-As always, feel free to check out the [source code](https://github.com/dimroc/etl-language-comparison).
+As always, feel free to check out the [source code](https://github.com/dimroc/etl-language-comparison/tree/v1).

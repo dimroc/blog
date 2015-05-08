@@ -1,46 +1,61 @@
 ---
 layout: post
-title: "RE: Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL"
-date: "Thu Feb 26 11:13:39 -0500 2015"
+title: "Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL: Part 2"
+date: "Thu May 7 11:13:39 -0500 2015"
 tags: ruby elixir golang scala python etl
 ---
 
-A year ago, I wrote the same program in four languages to compare their productivity performing ETL (extract-transform-load).
+A year ago, I wrote the same program in four languages to compare their productivity when performing ETL (extract-transform-load).
 Read about [part 1 here](/2014/09/29/etl-language-showdown/) and check out the [source code](https://github.com/dimroc/etl-language-comparison).
 
-The code has changed, the languages have evolved, and the hardware now includes a SSD drive. Where are they now??
+The code has changed, the languages have evolved, and the hardware now includes a SSD drive. Where are they now?
+
+## Recap
+
+The goal was **not** to see how fast each language could go. The goal was to measure the length of time needed to
+write a solution in that language, and to subjectively measure the maintainability of the final solution.
+But in the end everyone wants benchmarks, so those are provided.
+
+It was assumed that runtimes would all be approximately the same, since this should have been an IO-bound problem. So why
+care about the speed of the language? Well, on my old MacBook Pro with a 5200 RPM HDD, this was not true. Is it true on my SSD?
+It still isn't. A max of a day was spent on each solution, so time for optimizations was capped.
 
 ## Results
 
 <table>
   <tr>
-    <td>Ruby (Global Interpreter Lock bound)</td>
-    <td>1m32.624s</td>
+    <td>Ruby w/ Celluloid (Global Interpreter Lock Bound, single core)</td>
+    <td>43.745s</td>
   </tr>
 
   <tr>
-    <td>Ruby w/ GNU Parallel</td>
-    <td>45.803s</td>
+    <td>JRuby w/ Celluloid</td>
+    <td>15.855s</td>
   </tr>
 
   <tr>
-    <td>Python w/ Pool</td>
-    <td>11.532s</td>
+    <td>Ruby w/ <a href="https://github.com/grosser/parallel" target="_blank">grosser/parallel</a> (<b>not</b> GNU Parallel)</td>
+    <td>12.449s</td>
+  </tr>
+
+  <tr>
+    <td>Python w/ <a href="https://docs.python.org/2/library/multiprocessing.html" target="_blank">Pool</a></td>
+    <td>12.730s</td>
   </tr>
 
   <tr>
     <td>Scala</td>
-    <td>27.247s</td>
+    <td>8.8s</td>
   </tr>
 
   <tr>
     <td>Golang</td>
-    <td>48.556s</td>
+    <td>TODO</td>
   </tr>
 
   <tr>
     <td>Elixir</td>
-    <td>58.907s</td>
+    <td>21.84s</td>
   </tr>
 </table>
 
@@ -55,20 +70,12 @@ MacBook Pro 2.3GHz i7 (quad core) with 16GB RAM and SSD
 We have ~40M tweets spanning multiple files, with each tweet tagged with their New York City neighborhood. Discover which
 neighborhoods care the most about the New York Knicks by searching for the term `knicks`.
 
-## Recap
-
-The goal was **not** to see how fast each language could go. The goal was to measure the length of time needed to
-write a solution in that language, and to subjectively measure the maintainability of the final solution.
-
-It was assumed that runtimes would all be approximately the same, since this should have been an IO-bound problem. So why
-care about the speed of the language? Well, on my old MacBook Pro with a 5200 RPM HDD, this was not true. Is it true on my SSD??? TODO:wjioj4iovaklsd
-
 ## Questions and Concerns from Part 1
 
 1. Why am I writing to an intermediary file? Why don't I do it all in memory?
 
     This comparison was derived from a larger ETL process that spanned multiple computers and therefore
-    used intermediary files to pass along the information. This cookie-cutter experiment has no need of this,
+    used intermediary files to pass along the information. This cookie-cutter experiment has no need for this,
     so it's been removed.
 
 2. Why am I using regex and not a simple string search (GoLang's regex sucks in 1.x.x)?
@@ -84,10 +91,15 @@ care about the speed of the language? Well, on my old MacBook Pro with a 5200 RP
 ## Implementation Changes
 
 ### Ruby
-Ruby version is now 2.2.0. Implementation stayed as is.
+- Ruby version is now 2.2.1.
+- No longer uses GNU Parallel, but instead uses [grosser/parallel](https://github.com/grosser/parallel) to span multiple cores
+- Implementation no longer writes to intermediary file.
 
 ### Scala
-Stayed as is.
+- Upgraded to Scala 2.11.5 and Akka 2.3.10.
+- Reduction no longer writes to intermediary file.
+- Still uses Akka. If you think the [Parallel Collections](http://docs.scala-lang.org/overviews/parallel-collections/overview.html) library would be a better fit,
+which it very well might be, please feel free to contribute a pull request.
 
 ### Python
 - Version python3-3.4.3
@@ -97,7 +109,8 @@ Stayed as is.
     A pretty great alternative to my use of [GNU `parallel`](http://www.gnu.org/software/parallel/) with Ruby.
 
 ### Elixir
-- Updated to Elixir version 1.0.3
+- Updated to Elixir version 1.0.4
+- Reduction no longer writes to intermediary file.
 - Changing this
 
 {% highlight elixir %}
@@ -158,10 +171,16 @@ Spawn(*procs, func() {
 ## Conclusion
 
 - There's a lot of knowledge here. I definitely got what I wanted out of this comparison.
-- It's always a challenge (or a lot of fun) attempting to write the same thing in two languages, let alone five. A langauge's idioms sway an implementation in a particular direction. Long story short, there are a lot of discrepancies between the implementations.
+- It's always a challenge (or a lot of fun) attempting to write the same thing in two languages, let alone five.
+A langauge's idioms sway an implementation in a particular direction. Long story short, there are a lot of discrepancies between the implementations.
 - Elixir and Golang have matured dramatically in a year's time.
+- It is damn difficult to parse Scala code when you've been away for a while. It's just **dense**.
 - [My previous conclusion](/2014/09/29/etl-language-showdown/) still holds up, check it out (it's at the bottom).
 - This whole experiment has lived far longer than I thought.
+
+## Think you can do better? Contribute.
+
+Submit a pull request with your code changes and I'll update the doc!
 
 ## Thanks
 
