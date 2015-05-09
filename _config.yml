@@ -10,7 +10,7 @@ relative_permalinks: true
 title:            dimroc
 tagline:          'blog'
 description:      'The Development Blog of Dimitri Roche'
-url:              http://www.dimroc.com
+url:              http://blog.dimroc.com
 baseurl:          /
 
 author:
@@ -30,4 +30,4 @@ tag_page_dir: tag
 version:          2.1.0
 
 github:
-  repo:           https://github.com/dimroc/dimroc.github.io
+  repo:           https://github.com/dimroc/blog
