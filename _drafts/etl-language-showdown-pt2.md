@@ -122,6 +122,8 @@ which it very well might be, please feel free to contribute a pull request.
 - Reduction no longer writes to intermediary file.
 - Actor model is beautiful in Elixir.
 - No significant performance improvement when using String.contains instead of regex.
+- Profiled with [exprof](https://github.com/parroty/exprof) but didn't see any low hanging fruit (I'm welcome to any feedback here).
+    ![Elixir Profiling](/public/images/etlElixirProfiling.jpg)
 - Changing this
 
 {% highlight elixir %}
