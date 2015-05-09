@@ -10,15 +10,7 @@ Read about [part 1 here](/2014/09/29/etl-language-showdown/) and check out the [
 
 The code has changed, the languages have evolved, and the hardware now includes a SSD drive. Where are they now?
 
-## Recap
-
-The goal was **not** to see how fast each language could go. The goal was to measure the length of time needed to
-write a solution in that language, and to subjectively measure the maintainability of the final solution.
-But in the end everyone wants benchmarks, so those are provided.
-
-It was assumed that runtimes would all be approximately the same, since this should have been an IO-bound problem. So why
-care about the speed of the language? Well, on my old MacBook Pro with a 5200 RPM HDD, this was not true. Is it true on my SSD?
-It still isn't. A max of a day was spent on each solution, so time for optimizations was capped.
+<!--more-->
 
 ## Results
 
@@ -69,7 +61,15 @@ It still isn't. A max of a day was spent on each solution, so time for optimizat
   </tr>
 </table>
 
-<!--more-->
+## Recap
+
+The original goal was **not** to see how fast each language could go, it was was to measure the length of time needed to
+write a solution in that language, and to subjectively measure the maintainability of that final solution learning about the gotchas on the way.
+But in the end everyone wants benchmarks.
+
+It was assumed that runtimes would all be approximately the same, since this should have been an IO-bound problem. So why
+care about the speed of the language? Well, on my old MacBook Pro with a 5200 RPM HDD, this was not true. Is it true on my SSD?
+It still isn't.
 
 ## The Hardware
 
@@ -82,7 +82,7 @@ neighborhoods care the most about the New York Knicks by searching for the term 
 
 ## Questions and Concerns from [Part 1](/2014/09/29/etl-language-showdown/)
 
-1. Why am I writing to an intermediary file? Why don't I do it all in memory?
+1. Why am I writing to an intermediary file? Why don't I do it all in memory? Now I do.
 
     This comparison was derived from a larger ETL process that spanned multiple computers and therefore
     used intermediary files to pass along the information. This cookie-cutter experiment has no need for this,
@@ -101,8 +101,8 @@ neighborhoods care the most about the New York Knicks by searching for the term 
 ## Implementation Changes
 
 ### Ruby
-- Ruby version is now 2.2.1.
-- No longer uses GNU Parallel, but instead uses [grosser/parallel](https://github.com/grosser/parallel) to span multiple cores
+- Ruby version is now 2.2.2.
+- No longer uses GNU Parallel, but instead uses [grosser/parallel](https://github.com/grosser/parallel) to span multiple cores.
 - Implementation no longer writes to intermediary file.
 
 ### Scala
@@ -121,6 +121,7 @@ which it very well might be, please feel free to contribute a pull request.
 - Updated to Elixir version 1.0.4
 - Reduction no longer writes to intermediary file.
 - Actor model is beautiful in Elixir.
+- No significant performance improvement when using String.contains instead of regex.
 - Changing this
 
 {% highlight elixir %}
@@ -145,7 +146,7 @@ and won't catch unsuspecting programmers like myself again.
 - Updated Golang to 1.4.2.
 - Initial performance was a disappointing 30s+, so I dug in and used [pprof](http://blog.golang.org/profiling-go-programs) to profile the code.
     ![Golang Profiling](/public/images/etlGolangRegexp.jpg)
-- Go's Regular Expression engine really is as slow as a previous commenter mentioned. Switching to `strings.Contains` took it to 7s.
+- Go's Regular Expression engine really is as slow as a previous commenter mentioned. Switching to `strings.Contains` took it to ~7s.
 - They've been hyped before, but I'm going to hype them again: GoLang's Channels are fantastic.
 
 A modification to the GoLang implementation liberally uses channels as a FIFO queue to great effect:
@@ -187,12 +188,12 @@ Spawn(*procs, func() {
 A langauge's idioms sway an implementation in a particular direction. Long story short, there are still a lot of discrepancies between the implementations.
 - Elixir and Golang have matured dramatically in a year's time.
 - It is damn difficult to parse Scala code when you've been away for a while. It's just **dense**.
-- [My previous conclusion](/2014/09/29/etl-language-showdown/) still holds up, check it out (it's at the bottom).
+- [My previous conclusion](/2014/09/29/etl-language-showdown/) still holds up, check it out (it's at the bottom of the link).
 - This whole experiment has lived far longer than I thought.
 
 ## Think you can do better? Want to see another language? Contribute.
 
-Submit a pull request with your code changes and I'll update the doc!
+Submit a pull request with your code changes and I'll update the doc.
 
 ## Thanks
 
