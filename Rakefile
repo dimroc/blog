@@ -10,6 +10,7 @@ task :deploy do
   system("touch .nojekyll")
   system("git init")
   system("git remote add origin git@github.com:dimroc/blog.git")
+  system("git checkout -b gh-pages")
   system("git add .")
   system("git commit -m 'Deployment #{Time.now}'")
   system("git push origin gh-pages -f")
