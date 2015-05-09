@@ -25,22 +25,22 @@ It still isn't. A max of a day was spent on each solution, so time for optimizat
 <table>
   <tr>
     <td>Ruby w/ Celluloid (Global Interpreter Lock Bound, single core)</td>
-    <td>43.745s</td>
+    <td>43.7s</td>
   </tr>
 
   <tr>
     <td>JRuby w/ Celluloid</td>
-    <td>15.855s</td>
+    <td>15.8s</td>
   </tr>
 
   <tr>
     <td>Ruby w/ <a href="https://github.com/grosser/parallel" target="_blank">grosser/parallel</a> (<b>not</b> GNU Parallel)</td>
-    <td>12.449s</td>
+    <td>10.9s</td>
   </tr>
 
   <tr>
     <td>Python w/ <a href="https://docs.python.org/2/library/multiprocessing.html" target="_blank">Pool</a></td>
-    <td>12.730s</td>
+    <td>12.7s</td>
   </tr>
 
   <tr>
@@ -49,13 +49,23 @@ It still isn't. A max of a day was spent on each solution, so time for optimizat
   </tr>
 
   <tr>
+    <td>Scala w/ Substring <b>(Skipped regex for performance analysis)</b></td>
+    <td>8.3s</td>
+  </tr>
+
+  <tr>
     <td>Golang</td>
-    <td>TODO: Have implementation write directly to file and see if it affects performance</td>
+    <td>32.8s</td>
+  </tr>
+
+  <tr>
+    <td>Golang w/ Substring <b>(Skipped regex for performance analysis)</b></td>
+    <td>7.8s</td>
   </tr>
 
   <tr>
     <td>Elixir</td>
-    <td>21.84s</td>
+    <td>21.8s</td>
   </tr>
 </table>
 
@@ -70,23 +80,23 @@ MacBook Pro 2.3GHz i7 (quad core) with 16GB RAM and SSD
 We have ~40M tweets spanning multiple files, with each tweet tagged with their New York City neighborhood. Discover which
 neighborhoods care the most about the New York Knicks by searching for the term `knicks`.
 
-## Questions and Concerns from Part 1
+## Questions and Concerns from [Part 1](/2014/09/29/etl-language-showdown/)
 
 1. Why am I writing to an intermediary file? Why don't I do it all in memory?
 
     This comparison was derived from a larger ETL process that spanned multiple computers and therefore
     used intermediary files to pass along the information. This cookie-cutter experiment has no need for this,
-    so it's been removed.
+    so it has been removed.
 
 2. Why am I using regex and not a simple string search (GoLang's regex sucks in 1.x.x)?
 
     The implementations should be consistent across all languages for a fair comparison. Although
     the problem is simply searching for `knicks`, I wanted the implementations to have the flexibility to
-    to perform more powerful searches.
+    to perform more powerful searches. That being said, Golang's Regexp package performs dramatically worse than other languages.
 
 3. In Scala, why did I use Akka instead of the lighter Parallel Collections?
 
-    Because I love Akka and wanted to check it out.
+    Because I love Akka.
 
 ## Implementation Changes
 
@@ -104,13 +114,13 @@ which it very well might be, please feel free to contribute a pull request.
 ### Python
 - Version python3-3.4.3
 - A new Python implementation has been added for comparison's sake.
-- The whole thing is 64 lines, gotta love its terseness. This isn't a shortness competition though so please don't get carried away with the lines of code metric.
 - The [`Pool` object](https://docs.python.org/2/library/multiprocessing.html) allows one to run the program on multiple processes and sidestep the Global Interpreter Lock (GIL).
-    A pretty great alternative to my use of [GNU `parallel`](http://www.gnu.org/software/parallel/) with Ruby.
+    A pretty great alternative to my use of [GNU `parallel`](http://www.gnu.org/software/parallel/) with Ruby in [part 1](/2014/09/29/etl-language-showdown/).
 
 ### Elixir
 - Updated to Elixir version 1.0.4
 - Reduction no longer writes to intermediary file.
+- Actor model is beautiful in Elixir.
 - Changing this
 
 {% highlight elixir %}
@@ -123,7 +133,7 @@ to this
 HashDict.merge(...)
 {% endhighlight %}
 
-made a dramatic difference! It speaks to the youth of the Elixir. That being said, this subtelty is being fixed
+made a dramatic difference. It speaks to the youth of the Elixir. That being said, this subtelty is being fixed
 and won't catch unsuspecting programmers like myself again.
 
 [From the website:](http://elixir-lang.org/getting-started/maps-and-dicts.html#maps)
@@ -133,6 +143,9 @@ and won't catch unsuspecting programmers like myself again.
 ### Golang
 
 - Updated Golang to 1.4.2.
+- Initial performance was a disappointing 30s+, so I dug in and used [pprof](http://blog.golang.org/profiling-go-programs) to profile the code.
+    ![Golang Profiling](/public/images/etlGolangRegexp.jpg)
+- Go's Regular Expression engine really is as slow as a previous commenter mentioned. Switching to `strings.Contains` took it to 7s.
 - They've been hyped before, but I'm going to hype them again: GoLang's Channels are fantastic.
 
 A modification to the GoLang implementation liberally uses channels as a FIFO queue to great effect:
@@ -170,15 +183,14 @@ Spawn(*procs, func() {
 
 ## Conclusion
 
-- There's a lot of knowledge here. I definitely got what I wanted out of this comparison.
 - It's always a challenge (or a lot of fun) attempting to write the same thing in two languages, let alone five.
-A langauge's idioms sway an implementation in a particular direction. Long story short, there are a lot of discrepancies between the implementations.
+A langauge's idioms sway an implementation in a particular direction. Long story short, there are still a lot of discrepancies between the implementations.
 - Elixir and Golang have matured dramatically in a year's time.
 - It is damn difficult to parse Scala code when you've been away for a while. It's just **dense**.
 - [My previous conclusion](/2014/09/29/etl-language-showdown/) still holds up, check it out (it's at the bottom).
 - This whole experiment has lived far longer than I thought.
 
-## Think you can do better? Contribute.
+## Think you can do better? Want to see another language? Contribute.
 
 Submit a pull request with your code changes and I'll update the doc!
 
