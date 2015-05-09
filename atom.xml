@@ -1,0 +1,1587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>dimroc</title>
+ <link href="http://www.dimroc.com/atom.xml" rel="self"/>
+ <link href="http://www.dimroc.com/"/>
+ <updated>2015-05-09T12:04:43-04:00</updated>
+ <id>http://www.dimroc.com</id>
+ <author>
+   <name>Dimitri Roche</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL: Part 2</title>
+   <link href="http://www.dimroc.com/2015/05/07/etl-language-showdown-pt2/"/>
+   <updated>2015-05-07T11:13:39-05:00</updated>
+   <id>http://www.dimroc.com/2015/05/07/etl-language-showdown-pt2</id>
+   <content type="html">&lt;p&gt;A year ago, I wrote the same program in four languages to compare their productivity when performing ETL (extract-transform-load).
+Read about &lt;a href=&quot;/2014/09/29/etl-language-showdown/&quot;&gt;part 1 here&lt;/a&gt; and check out the &lt;a href=&quot;https://github.com/dimroc/etl-language-comparison&quot;&gt;source code&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The code has changed, the languages have evolved, and the hardware now includes a SSD drive. Where are they now?&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2&gt;Results&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Ruby w/ Celluloid (Global Interpreter Lock Bound, single core)&lt;/td&gt;
+    &lt;td&gt;43.7s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;JRuby w/ Celluloid&lt;/td&gt;
+    &lt;td&gt;15.8s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Ruby w/ &lt;a href=&quot;https://github.com/grosser/parallel&quot; target=&quot;_blank&quot;&gt;grosser/parallel&lt;/a&gt; (&lt;b&gt;not&lt;/b&gt; GNU Parallel)&lt;/td&gt;
+    &lt;td&gt;10.9s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Python w/ &lt;a href=&quot;https://docs.python.org/2/library/multiprocessing.html&quot; target=&quot;_blank&quot;&gt;Pool&lt;/a&gt;&lt;/td&gt;
+    &lt;td&gt;12.7s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Scala&lt;/td&gt;
+    &lt;td&gt;8.8s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Scala w/ Substring &lt;b&gt;(Skipped regex for performance analysis)&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;8.3s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Golang&lt;/td&gt;
+    &lt;td&gt;32.8s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Golang w/ Substring &lt;b&gt;(Skipped regex for performance analysis)&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;7.8s&lt;/td&gt;
+  &lt;/tr&gt;
+
+  &lt;tr&gt;
+    &lt;td&gt;Elixir&lt;/td&gt;
+    &lt;td&gt;21.8s&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+&lt;h2&gt;Recap&lt;/h2&gt;
+
+&lt;p&gt;The original goal was &lt;strong&gt;not&lt;/strong&gt; to see how fast each language could go, it was was to measure the length of time needed to
+write a solution in that language, and to subjectively measure the maintainability of that final solution learning about the gotchas on the way.
+But in the end everyone wants benchmarks.&lt;/p&gt;
+
+&lt;p&gt;It was assumed that runtimes would all be approximately the same, since this should have been an IO-bound problem. So why
+care about the speed of the language? Well, on my old MacBook Pro with a 5200 RPM HDD, this was not true. Is it true on my SSD?
+It still isn&amp;#39;t.&lt;/p&gt;
+
+&lt;h2&gt;The Hardware&lt;/h2&gt;
+
+&lt;p&gt;MacBook Pro 2.3GHz i7 (quad core) with 16GB RAM and SSD&lt;/p&gt;
+
+&lt;h2&gt;The Problem&lt;/h2&gt;
+
+&lt;p&gt;We have ~40M tweets spanning multiple files, with each tweet tagged with their New York City neighborhood. Discover which
+neighborhoods care the most about the New York Knicks by searching for the term &lt;code&gt;knicks&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2&gt;Questions and Concerns from &lt;a href=&quot;/2014/09/29/etl-language-showdown/&quot;&gt;Part 1&lt;/a&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Why am I writing to an intermediary file? Why don&amp;#39;t I do it all in memory? Now I do.&lt;/p&gt;
+
+&lt;p&gt;This comparison was derived from a larger ETL process that spanned multiple computers and therefore
+used intermediary files to pass along the information. This cookie-cutter experiment has no need for this,
+so it has been removed.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Why am I using regex and not a simple string search (GoLang&amp;#39;s regex sucks in 1.x.x)?&lt;/p&gt;
+
+&lt;p&gt;The implementations should be consistent across all languages for a fair comparison. Although
+the problem is simply searching for &lt;code&gt;knicks&lt;/code&gt;, I wanted the implementations to have the flexibility to
+to perform more powerful searches. That being said, Golang&amp;#39;s Regexp package performs dramatically worse than other languages.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In Scala, why did I use Akka instead of the lighter Parallel Collections?&lt;/p&gt;
+
+&lt;p&gt;Because I love Akka.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Implementation Changes&lt;/h2&gt;
+
+&lt;h3&gt;Ruby&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ruby version is now 2.2.2.&lt;/li&gt;
+&lt;li&gt;No longer uses GNU Parallel, but instead uses &lt;a href=&quot;https://github.com/grosser/parallel&quot;&gt;grosser/parallel&lt;/a&gt; to span multiple cores.&lt;/li&gt;
+&lt;li&gt;Implementation no longer writes to intermediary file.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Scala&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Upgraded to Scala 2.11.5 and Akka 2.3.10.&lt;/li&gt;
+&lt;li&gt;Reduction no longer writes to intermediary file.&lt;/li&gt;
+&lt;li&gt;Still uses Akka. If you think the &lt;a href=&quot;http://docs.scala-lang.org/overviews/parallel-collections/overview.html&quot;&gt;Parallel Collections&lt;/a&gt; library would be a better fit,
+which it very well might be, please feel free to contribute a pull request.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Python&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Version python3-3.4.3&lt;/li&gt;
+&lt;li&gt;A new Python implementation has been added for comparison&amp;#39;s sake.&lt;/li&gt;
+&lt;li&gt;The &lt;a href=&quot;https://docs.python.org/2/library/multiprocessing.html&quot;&gt;&lt;code&gt;Pool&lt;/code&gt; object&lt;/a&gt; allows one to run the program on multiple processes and sidestep the Global Interpreter Lock (GIL).
+A pretty great alternative to my use of &lt;a href=&quot;http://www.gnu.org/software/parallel/&quot;&gt;GNU &lt;code&gt;parallel&lt;/code&gt;&lt;/a&gt; with Ruby in &lt;a href=&quot;/2014/09/29/etl-language-showdown/&quot;&gt;part 1&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Elixir&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Updated to Elixir version 1.0.4&lt;/li&gt;
+&lt;li&gt;Reduction no longer writes to intermediary file.&lt;/li&gt;
+&lt;li&gt;Actor model is beautiful in Elixir.&lt;/li&gt;
+&lt;li&gt;No significant performance improvement when using String.contains instead of regex.&lt;/li&gt;
+&lt;li&gt;Profiled with &lt;a href=&quot;https://github.com/parroty/exprof&quot;&gt;exprof&lt;/a&gt; but didn&amp;#39;t see any low hanging fruit (I&amp;#39;m welcome to any feedback here).
+&lt;img src=&quot;/public/images/etlElixirProfiling.jpg&quot; alt=&quot;Elixir Profiling&quot;&gt;&lt;/li&gt;
+&lt;li&gt;Changing this&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span class=&quot;nc&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(...)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;to this&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span class=&quot;nc&quot;&gt;HashDict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(...)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;made a dramatic difference. It speaks to the youth of the Elixir. That being said, this subtelty is being fixed
+and won&amp;#39;t catch unsuspecting programmers like myself again.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://elixir-lang.org/getting-started/maps-and-dicts.html#maps&quot;&gt;From the website:&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Note: Maps were recently introduced into the Erlang VM with EEP 43. Erlang 17 provides a partial implementation of the EEP, where only &amp;quot;small maps&amp;quot; are supported. This means maps have good performance characteristics only when storing at maximum a couple of dozens keys. To fill in this gap, Elixir also provides the HashDict module which uses a hashing algorithm to provide a dictionary that supports hundreds of thousands keys with good performance.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;Golang&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Updated Golang to 1.4.2.&lt;/li&gt;
+&lt;li&gt;Initial performance was a disappointing 30s+, so I dug in and used &lt;a href=&quot;http://blog.golang.org/profiling-go-programs&quot;&gt;pprof&lt;/a&gt; to profile the code.
+&lt;img src=&quot;/public/images/etlGolangRegexp.jpg&quot; alt=&quot;Golang Profiling&quot;&gt;&lt;/li&gt;
+&lt;li&gt;Go&amp;#39;s Regular Expression engine really is as slow as a previous commenter mentioned. Switching to &lt;code&gt;strings.Contains&lt;/code&gt; took it to ~7s.&lt;/li&gt;
+&lt;li&gt;They&amp;#39;ve been hyped before, but I&amp;#39;m going to hype them again: GoLang&amp;#39;s Channels are fantastic.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A modification to the GoLang implementation liberally uses channels as a FIFO queue to great effect:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Spawns N routines, after each completes runs all whendone functions&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Spawn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;N&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;whendone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;waiting&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;atomic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;AddInt32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;waiting&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;whendone&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;nx&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}()&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h5&gt;Usage&lt;/h5&gt;
+
+&lt;p&gt;Note the channel &lt;code&gt;filenames&lt;/code&gt; acting as a thread-safe queue.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;nx&quot;&gt;filenames&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;procs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;Spawn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;procs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;filename&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;filenames&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Done&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It&amp;#39;s always a challenge (or a lot of fun) attempting to write the same thing in two languages, let alone five.
+A langauge&amp;#39;s idioms sway an implementation in a particular direction. Long story short, there are still a lot of discrepancies between the implementations.&lt;/li&gt;
+&lt;li&gt;Elixir and Golang have matured dramatically in a year&amp;#39;s time.&lt;/li&gt;
+&lt;li&gt;It is damn difficult to parse Scala code when you&amp;#39;ve been away for a while. It&amp;#39;s just &lt;strong&gt;dense&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;/2014/09/29/etl-language-showdown/&quot;&gt;My previous conclusion&lt;/a&gt; still holds up, check it out (it&amp;#39;s at the bottom of the link).&lt;/li&gt;
+&lt;li&gt;This whole experiment has lived far longer than I thought.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Think you can do better? Want to see another language? Contribute.&lt;/h2&gt;
+
+&lt;p&gt;Submit a pull request with your code changes and I&amp;#39;ll update the doc.&lt;/p&gt;
+
+&lt;h2&gt;Thanks&lt;/h2&gt;
+
+&lt;p&gt;Thanks to all those who contributed to the repo:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/egonelbre&quot;&gt;Egon Elbre&lt;/a&gt; - Go&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/gbulmer&quot;&gt;gbulmer&lt;/a&gt; - Go&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/josevalim&quot;&gt;José Valim&lt;/a&gt; - Elixir&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/aheld&quot;&gt;Aaron Held&lt;/a&gt; - Python&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Amazon Lambda to Autoscale Background Work</title>
+   <link href="http://www.dimroc.com/2015/04/20/amazon-lambda-for-autoscaling-work/"/>
+   <updated>2015-04-20T08:38:32-07:00</updated>
+   <id>http://www.dimroc.com/2015/04/20/amazon-lambda-for-autoscaling-work</id>
+   <content type="html">&lt;p&gt;Many hours have been spent optimizing the cost background work. &lt;a href=&quot;http://www.iron.io/&quot;&gt;Iron.io&lt;/a&gt; has Iron Worker that scales up when a job is submitted,
+&lt;a href=&quot;https://www.hirefire.io/&quot;&gt;HireFire&lt;/a&gt; spins up and down Heroku Dynos and AWS has Autoscale groups for EC2 instances.&lt;/p&gt;
+
+&lt;p&gt;Now &lt;a href=&quot;http://aws.amazon.com/lambda/&quot;&gt;Amazon Lambda&amp;#39;s&lt;/a&gt; joining the party. Only supporting node.js for the time being, this service magically autoscales
+based on size of whatever queue is feeding it. It responds to a new entry into an empty queue within milliseconds and is
+extremely cost efficient.&lt;/p&gt;
+
+&lt;p&gt;A part of me feels for the hundreds of companies that rolled out their own scalable backend only to see this deprecate all that work overnight.
+I would know, I worked on one.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Heroku announces ability to share apps as add ons</title>
+   <link href="http://www.dimroc.com/2015/01/30/heroku-announces-ability-to-share-addons/"/>
+   <updated>2015-01-30T14:12:36-05:00</updated>
+   <id>http://www.dimroc.com/2015/01/30/heroku-announces-ability-to-share-addons</id>
+   <content type="html">&lt;p&gt;Everytime I think I&amp;#39;m going to move off of Heroku for some fancy &lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt;
+setup, they announce something that pulls me back.&lt;/p&gt;
+
+&lt;p&gt;First it was the &lt;a href=&quot;https://blog.heroku.com/archives/2014/8/5/new-dashboard-and-metrics-beta&quot;&gt;metrics dashboard&lt;/a&gt; and now it&amp;#39;s the
+&lt;a href=&quot;https://blog.heroku.com/archives/2015/1/23/expanding_the_power_of_add_ons&quot;&gt;ability to share add ons across apps&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This allows one to share a service between their own personal apps, easing the transition to a microservice architecture. All
+with great metrics of course.&lt;/p&gt;
+
+&lt;p&gt;Well done.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Centralized Logging of iPhone apps with Papertrail</title>
+   <link href="http://www.dimroc.com/2015/01/08/centralized-logging-of-iphone-with-papertrail/"/>
+   <updated>2015-01-08T15:13:38-05:00</updated>
+   <id>http://www.dimroc.com/2015/01/08/centralized-logging-of-iphone-with-papertrail</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/PapertrailForIPhone.png&quot; alt=&quot;Papertrail for iPhone&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;I use &lt;a href=&quot;https://papertrailapp.com/&quot;&gt;Papertrail&lt;/a&gt; for all my server logging needs, and love it. I&amp;#39;m almost always bullish on the use of third party
+services to offload work from a product dev team. Not too many people want to spend time working on log drains, me included.&lt;/p&gt;
+
+&lt;p&gt;When doing iPhone development, working with logs outside of XCode is clumsy at best and usually nonexistent. And when your beta is in the wild, that&amp;#39;s not even an option
+because you&amp;#39;re unable to round up all your testers&amp;#39; devices.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;#39;t worry, I&amp;#39;m here to tell you your iOS app can be configured to automatically upload logs to &lt;a href=&quot;http://help.papertrailapp.com/kb/configuration/configuring-centralized-logging-from-ios-or-os-x-apps/&quot;&gt;Papertrail&lt;/a&gt;
+as described &lt;a href=&quot;http://help.papertrailapp.com/kb/configuration/configuring-centralized-logging-from-ios-or-os-x-apps/&quot;&gt;here&lt;/a&gt; within 15 minutes.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h3&gt;Status Quo&lt;/h3&gt;
+
+&lt;p&gt;The standard solution for all this are Crash Reports via Apple Connect, Crashlytics, Parse, etc. But these only take you so far because sometimes you need &lt;strong&gt;more
+than a call stack.&lt;/strong&gt; These logs will complement the crash report.&lt;/p&gt;
+
+&lt;h3&gt;Reference Material&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/CocoaLumberjack/CocoaLumberjack&quot;&gt;CocoaLumberjack&lt;/a&gt; is a pod that enables one to easily and asynchronously carry logs from the device to a destination, whether it be a terminal, a file, or a service. It&amp;#39;s the keystone to this arch, if you get what I&amp;#39;m saying.&lt;/li&gt;
+&lt;li&gt;PapertrailLumberjack allows one to transfer the logs from your iPhone to the Papertrail service.&lt;/li&gt;
+&lt;li&gt;Unfortunately, &lt;a href=&quot;http://help.papertrailapp.com/kb/configuration/configuring-centralized-logging-from-ios-or-os-x-apps/&quot;&gt;the instructions for PapertrailLumberjack&lt;/a&gt; are only talking about Objective C,
+and they refer to an outdated CocoaLumberjack.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Issues&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;The PapertrailLumberjack pod doesn&amp;#39;t support the current CocoaLumberjack.&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;No worries. &lt;a href=&quot;https://bitbucket.org/luisrecuenco/papertraillumberjack&quot;&gt;There is a patched PaperTrailLumberjack that supports CocoaLumberjack 2.x&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;PapertrailLumberjack incompatible with Swift CocoaLumberjack.&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;I never did get the Swift version of CocoaLumberjack working alongside the Obj C version of PapertrailLumberjack (there&amp;#39;s a nightmare waiting to happen when converting ObjC Macros to Swift)
+so I&amp;#39;m using the ObjC version with &lt;a href=&quot;https://gist.github.com/dimroc/2aef1b6b1e391f0085d2&quot;&gt;my own Swift wrapper&lt;/a&gt; as you can see below.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;As Swift and CocoaPods mature, PaperTrailLumberjack will eventually just work out of the box. Until then:&lt;/p&gt;
+
+&lt;h3&gt;Steps:&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Add CocoaLumberjack 2.x and the patched PaperTrailLumberjack to your Podfile, then &lt;code&gt;pod install&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;pod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;CocoaLumberjack&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;git@github.com:dimroc/CocoaLumberjack.git&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;PaperTrailLumberjack&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;https://bitbucket.org/luisrecuenco/papertraillumberjack.git&amp;#39;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Add the #imports to your bridging header file.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C++&quot; data-lang=&quot;C++&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#import &amp;quot;CocoaLumberjack.h&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#import &amp;quot;RMPaperTrailLogger.h&amp;quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;For Swift, add my DDLogHelper to your project (copy pasta).&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/dimroc/2aef1b6b1e391f0085d2.js&quot;&gt; &lt;/script&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Configure DDLog and PapertrailLumberjack with your settings.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;launch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Or any initializer method&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paperTrailLogger&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RMPaperTrailLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;paperTrailLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;MyHost.papertrailapp.com&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;paperTrailLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;myportnumber&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;DDLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;paperTrailLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;DDLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DDASLLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;DDLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DDTTYLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Log away.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;n&quot;&gt;DDLogHelper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Launching Papertrail logging for My App&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Compared to what I was doing before, I&amp;#39;m as happy as can be. And this was all with a free hosting plan. I&amp;#39;m still waiting to see what the impact on battery life and performance is. If you have any experience with this, drop me a line below.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Taming Callbacks in iOS: Bolts Framework</title>
+   <link href="http://www.dimroc.com/2014/12/17/bolt-framework-promisekit-or-reactive-cocoa-for-async/"/>
+   <updated>2014-12-17T18:53:26-05:00</updated>
+   <id>http://www.dimroc.com/2014/12/17/bolt-framework-promisekit-or-reactive-cocoa-for-async</id>
+   <content type="html">&lt;p&gt;Managing many asynchronous events in iOS can get hairy, but it&amp;#39;s a fact of life when working with
+remote services. So how do we avoid callback hell?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Promises&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Below I&amp;#39;ll explain why I chose the &lt;a href=&quot;https://github.com/BoltsFramework/Bolts-iOS&quot;&gt;&lt;strong&gt;Bolts Framework (BF)&lt;/strong&gt;&lt;/a&gt;
+over &lt;a href=&quot;https://github.com/mxcl/PromiseKit&quot;&gt;PromiseKit&lt;/a&gt; and &lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa&quot;&gt;ReactiveCocoa&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;A naive way to handle asynchronous code in Swift is with standard blocks. Let&amp;#39;s say we need to change the orientation of a video,
+save a thumbnail, and then save the video for a post. We could end up with something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;n&quot;&gt;videoAsset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fixOrientation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MFVideoAssetResponse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIImageJPEGRepresentation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thumbnail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageFile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PFFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;contentType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;image/jpg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;imageFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveInBackgroundWithBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;succeeded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;succeeded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataWithContentsOfMappedFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSData&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoFile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PFFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;contentType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;video/quicktime&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+                &lt;span class=&quot;n&quot;&gt;videoFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveInBackgroundWithBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;succeeded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Void&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;succeeded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveEventually&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;## \(error.description)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Horrible Error Handler 1!&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;## FAILED \(response.error.description)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Horrible Error Handler 2!&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Here&amp;#39;s the callback pyramid of doom. If you&amp;#39;re unfamiliar with this, you can read more about it &lt;a href=&quot;http://blogs.telerik.com/kendoui/posts/13-03-28/what-is-the-point-of-promises&quot;&gt;here (article is on javascript, but concept still applies)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;We don&amp;#39;t want this, and promises are the way to fix it. But which framework should we use?&lt;/p&gt;
+
+&lt;h3&gt;&lt;a href=&quot;https://github.com/ReactiveCocoa/ReactiveCocoa#chaining-dependent-operations&quot;&gt;Reactive Cocoa?&lt;/a&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Based on the principals of Functional Reactive Programming.&lt;/li&gt;
+&lt;li&gt;Required one to wrap everything with &lt;strong&gt;RAC&lt;/strong&gt; types.&lt;/li&gt;
+&lt;li&gt;Focused on handling streams, not my primary use case.&lt;/li&gt;
+&lt;li&gt;When all I need are promises, RAC was too heavy and obtrusive for my tastes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;a href=&quot;http://promisekit.org/&quot;&gt;PromiseKit?&lt;/a&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Inspired by Bolts.&lt;/li&gt;
+&lt;li&gt;Separate library for Objective C and Swift, so it can take advantage of Swift generics.&lt;/li&gt;
+&lt;li&gt;Comes with Objective C categories for many built in iOS types, like &lt;strong&gt;NSURLConnection&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;At the time of this writing, it does not have a pod for the Swift library because of CocoaPod&amp;#39;s limitations.&lt;/li&gt;
+&lt;li&gt;Not straightforward when switching between Objective C and Swift.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;a href=&quot;https://github.com/BoltsFramework/Bolts-iOS&quot;&gt;Bolts Framework&amp;#39;s BFTask?&lt;/a&gt; Yes.&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The simplest of the three.&lt;/li&gt;
+&lt;li&gt;Works seamlessly across Objective C and Swift.&lt;/li&gt;
+&lt;li&gt;Does not support Swift generics which can lead to some verbosity.&lt;/li&gt;
+&lt;li&gt;Supported natively by the Parse Framework, which is what I&amp;#39;m using.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I actually started with PromiseKit and just went to Bolts because I found it the simplest of the three. At first, I was all about the Swift support,
+but found myself going back and forth between Obj C and Swift, making Bolts a better match. As CocoaPods and Swift matures, I will definitely take
+another glance at PromiseKit. Right now, I&amp;#39;m extremely happy with BFTask:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;videoAsset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MFVideoAsset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BFTask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoAsset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fixOrientation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;continueWithSuccessBlock&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AnyObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MFVideoAssetResponse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MFVideoAssetResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;## Video Orientation Fixed to \(response.url)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIImageJPEGRepresentation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thumbnail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageFile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PFFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;contentType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;image/jpg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataWithContentsOfMappedFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSData&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoFile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PFFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;contentType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;video/quicktime&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;parallelTasks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSMutableArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveInBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveInBackground&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BFTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;forCompletionOfAllTasks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parallelTasks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;continueWithSuccessBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AnyObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PFObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Post&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;video&amp;quot;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;image&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageFile&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;video&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;videoFile&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveEventuallyAsTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And better error handling code because in true promise fashion, the caller can receive the error at the end regardless of where it happens:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;n&quot;&gt;PostRepository&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;createAsync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;videoAsset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;continueWithBlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BFTask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AnyObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PFObject&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Better Error Handler!&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;presentViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;UIAlertControllerFactory&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Error Saving Post&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;task&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Takeaway&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Smash your iOS pyramids of doom with &lt;a href=&quot;https://github.com/BoltsFramework/Bolts-iOS&quot;&gt;Bolts&lt;/a&gt; or &lt;a href=&quot;www.promisekit.org&quot;&gt;PromiseKit&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Handle to streams of potentially infinite data with ReactiveCocoa.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Not All Migrations are Equal: Schema vs. Data</title>
+   <link href="http://www.dimroc.com/2014/12/11/migrating-data-separate-from-the-schema/"/>
+   <updated>2014-12-11T18:42:07-05:00</updated>
+   <id>http://www.dimroc.com/2014/12/11/migrating-data-separate-from-the-schema</id>
+   <content type="html">&lt;p&gt;&lt;em&gt;Update 01/26/2015: Check out the &lt;a href=&quot;https://github.com/jasonfb/nondestructive_migrations&quot;&gt;nondestructive_migrations&lt;/a&gt; gem. It&amp;#39;s similar to dimroc/datafix but simpler because it
+leverages existing AR code. It does not however generate specs... yet.&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;You&amp;#39;ve been using &lt;a href=&quot;http://api.rubyonrails.org/classes/ActiveRecord/Migration.html&quot;&gt;Active Record Migrations&lt;/a&gt; to manage changes in
+your database and you love it. But then a model&amp;#39;s validations change, and all your existing data becomes invalid.&lt;/p&gt;
+
+&lt;p&gt;What do you do? Place it in an AR migration? Depends. Those are primarily for &lt;strong&gt;schema migrations&lt;/strong&gt; and this is not a schema change.&lt;/p&gt;
+
+&lt;p&gt;You need to run a &lt;strong&gt;data migration&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;What are your options?&lt;/p&gt;
+
+&lt;h2&gt;Stuff it into an AR migration? If it&amp;#39;s simple enough.&lt;/h2&gt;
+
+&lt;p&gt;It would probably be your first move. Sure, you can get away with a few hundred or even thousand of rows
+and no one will break a sweat. Let&amp;#39;s look at how you would do that.&lt;/p&gt;
+
+&lt;h3&gt;Bad Schema Migration&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ChangeAdminDefaultToFalseOnUsers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Migration&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;up&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;change_column_default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:admin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset_column_information&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Bad: Use of application code that changes over time.&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update_null_to_false!&lt;/span&gt; 
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Good Schema Migration&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ChangeAdminDefaultToFalseOnUsers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Migration&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# Create empty AR model that will attach to the users table,&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# and isolate migration from application code.&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;up&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;change_column_default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:admin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update_all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Better Schema Migration&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ChangeAdminDefaultToFalseOnUsers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Migration&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;up&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;change_column_default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:admin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;UPDATE users SET admin = false WHERE admin IS NULL&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Everything in &lt;strong&gt;db/migrate/&lt;/strong&gt; has to live for the life
+of the application, which is why using application code in an AR migration is frowned upon (sure, you can move onto schema:load and delete migrations, but let&amp;#39;s keep things simple for now).&lt;/p&gt;
+
+&lt;p&gt;That application code will change months or even weeks from now, and then running &lt;code&gt;rake db:migrate&lt;/code&gt; will be busted.&lt;/p&gt;
+
+&lt;p&gt;Most people get by using the &lt;strong&gt;Good&lt;/strong&gt; and &lt;strong&gt;Better&lt;/strong&gt; schema migration methods, but there comes a time when either the scale
+or the complexity of the migration warrants its own code. The time when pure SQL will only get you so far or when the runtime of the migration
+spans days not seconds.&lt;/p&gt;
+
+&lt;p&gt;What do you do?&lt;/p&gt;
+
+&lt;h2&gt;Create a one off rake task? No.&lt;/h2&gt;
+
+&lt;p&gt;Perhaps, but the code will be difficult to test and won&amp;#39;t have mechanisms in place to roll back to changes. Even if you refactor the logic out of
+the rake task into a separate ruby class, you will now have to maintain code that is ephemeral in nature. It merely exists for this one off data migration.&lt;/p&gt;
+
+&lt;p&gt;One approach is to create a &lt;strong&gt;oneshots.rake&lt;/strong&gt; file, but that ends up being a ghetto of random tasks with no test coverage that never gets cleaned up &lt;/p&gt;
+
+&lt;h1&gt;&lt;a href=&quot;https://github.com/dimroc/datafix&quot;&gt;Datafixes!&lt;/a&gt; Yes.&lt;/h1&gt;
+
+&lt;p&gt;Basically a mirror of AR migrations, every rails user will feel right at home with &lt;a href=&quot;https://github.com/dimroc/datafix&quot;&gt;datafixes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Install the gem from my repo:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;datafix&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;dimroc/datafix&amp;#39;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# The changes will eventually be incorporated into the main gem `datafix`&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Run the generator to create the datafix template:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&amp;gt; rails g datafix AddValidWholesalePriceToProducts
+  create  db/datafixes/20141211143848_add_valid_wholesale_price_to_products.rb
+  create  spec/db/datafixes/20141211143848_add_valid_wholesale_price_to_products_spec.rb&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Fill out the datafix with your data migration:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Datafixes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;AddValidWholesalePriceToProducts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Datafix&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;up&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Product&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;wholesale_price_cents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;product&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;product&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update_attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+        &lt;span class=&quot;ss&quot;&gt;wholesale_price_cents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;product&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fetch_price_from_amazon&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;down&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Then just run the rake tasks:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&amp;gt; rake db:datafix
+  migrating AddValidWholesalePriceToProducts up
+
+&amp;gt; rake db:datafix:status
+
+  database: somedatabase_development
+
+   Status   Datafix ID            Datafix Name
+  --------------------------------------------------
+     up    &lt;span class=&quot;m&quot;&gt;20141211143848&lt;/span&gt;       AddValidWholesalePriceToProducts&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Unlike AR migrations, it generates specs:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;rails_helper&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;db&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;datafixes&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;20141211143848_add_valid_wholesale_price_to_products&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;describe&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Datafixes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;AddValidWholesalePriceToProducts&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;describe&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;.up&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Fill out the describe block&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;let!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:product&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;product&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;FactoryGirl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:product&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;wholesale_price_cents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;product&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;product&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;should fix the price and be valid&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;product&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;be_valid&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;migrate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;up&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;product&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;be_valid&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And the real kicker: when the code has overstayed its welcome, you can just delete the datafix. That&amp;#39;s not so simple with a schema migration in &lt;strong&gt;db/migrate/&lt;/strong&gt;. 
+The datafix is ephemeral in nature and isn&amp;#39;t worth maintaining months down the road.&lt;/p&gt;
+
+&lt;p&gt;This is super handy in all the scenarios:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Denormalizing values to another table&lt;/li&gt;
+&lt;li&gt;Changing data to comply with changing validations&lt;/li&gt;
+&lt;li&gt;Long running data migrations that span days&lt;/li&gt;
+&lt;li&gt;Migrating from one table to another&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Wrap Up&lt;/h2&gt;
+
+&lt;p&gt;For data migrations, datafixes are far better than anything out there, but it&amp;#39;s still brand new and rough around the edges. It doesn&amp;#39;t even have
+&lt;strong&gt;rake db:datafix:rollback&lt;/strong&gt; yet! &lt;a href=&quot;https://github.com/dimroc/datafix&quot;&gt;Check it out!&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Note&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;The&lt;/em&gt; &lt;a href=&quot;https://github.com/dimroc/datafix&quot;&gt;&lt;strong&gt;dimroc&lt;/strong&gt;&lt;/a&gt; &lt;em&gt;fork has many upgrades to the Casecommons version, including the rake tasks that function like *rake db:migrate&lt;/em&gt;. It will eventually be incorporated into the Casecommons version
+when they stop sending email and look at the PR.*&lt;/p&gt;
+
+&lt;h3&gt;References&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/Casecommons/datafix&quot;&gt;Casecommons/datafix&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://railsguides.net/change-data-in-migrations-like-a-boss&quot;&gt;Change data in migrations like a boss&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.honeybadger.io/blog/2013/08/06/zero-downtime-migrations-of-large-databases-using-rails-postgres-and-redis&quot;&gt;Zero Downtime Migrations of Large Databases - Honeybadger&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Eager Pagination with Elasticsearch-rails</title>
+   <link href="http://www.dimroc.com/2014/11/12/eager-pagination-with-elasticsearch-rails/"/>
+   <updated>2014-11-12T08:43:15-05:00</updated>
+   <id>http://www.dimroc.com/2014/11/12/eager-pagination-with-elasticsearch-rails</id>
+   <content type="html">&lt;p&gt;So you&amp;#39;re searching millions of records with &lt;a href=&quot;https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-model&quot;&gt;Elasticsearch-model&lt;/a&gt;
+but want to eagerly load all associations when rendering your page for performance reasons. But wait, you&amp;#39;re using &lt;a href=&quot;https://github.com/amatsuda/kaminari&quot;&gt;Kaminari&lt;/a&gt; for pagination,
+and when you &lt;code&gt;includes(:association)&lt;/code&gt;, you lose the pagination support.&lt;/p&gt;
+
+&lt;p&gt;Below, you&amp;#39;ll see how a simple delegator will relieve your woes and eagerly load associations with support for pagination.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2&gt;The Problem&lt;/h2&gt;
+
+&lt;h4&gt;Controller&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;vi&quot;&gt;@gifts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Gift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;flower&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:page&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;includes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;View&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;paginate&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@gifts&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Error!&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;undefined&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`current_page&amp;#39; for #&amp;lt;Gift::ActiveRecord_Relation:0x007fa1845de2d8&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;The Solution&lt;/h2&gt;
+
+&lt;h4&gt;Controller&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Gift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;flower&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:page&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;
+&lt;span class=&quot;vi&quot;&gt;@gifts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;EagerPagination&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:scope_with_eager_loading&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Model&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Gift&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Elasticsearch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Model&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;belongs_to&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:scope_with_eager_loading&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;includes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Delegator&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;EagerPagination&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SimpleDelegator&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:scope&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@records&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@scope&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;public_send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;What&amp;#39;s going on here? &lt;code&gt;EagerPagination&lt;/code&gt; overrides the &lt;code&gt;def each&lt;/code&gt; method to use the eager loading scope,
+but delegates all other calls to the underlying records object that still has Kaminari pagination support.&lt;/p&gt;
+
+&lt;p&gt;My initial solution started to dive into the &lt;a href=&quot;https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-model&quot;&gt;Elasticsearch-model&lt;/a&gt;
+implementation, but in the end I felt that the ES gem shouldn&amp;#39;t burden itself with the responsibilities of handing AR scopes.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;m happy with how light this final outcome is. Simplicity is king.&lt;/p&gt;
+
+&lt;p&gt;Full example can be found in the gist below.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/dimroc/ccc6c80c747ee8f957f3.js&quot;&gt; &lt;/script&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Arelastic for your Elasticsearch Queries pt.1</title>
+   <link href="http://www.dimroc.com/2014/10/29/arelastic-for-building-your-es-queries/"/>
+   <updated>2014-10-29T08:45:25-04:00</updated>
+   <id>http://www.dimroc.com/2014/10/29/arelastic-for-building-your-es-queries</id>
+   <content type="html">&lt;p&gt;When doing more than just a simple search with &lt;a href=&quot;https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-model&quot;&gt;Elasticsearch-rails&lt;/a&gt;,
+a naive approach will lead you to this mess:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Article&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Fox Dogs&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+                          &lt;span class=&quot;ss&quot;&gt;highlight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Don&amp;#39;t be a sucker! Read on to see how &lt;a href=&quot;https://github.com/matthuhiggins/arelastic&quot;&gt;Arelastic&lt;/a&gt; can save you pain.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;If you don&amp;#39;t know already, the Elasticsearch (ES) API takes a JSON hash when perfoming queries or filters or both.
+Elasticsearch&amp;#39;s DSL is incredibly flexibly, but can quickly lead you down the path of unmaintanable hashes.&lt;/p&gt;
+
+&lt;p&gt;Here is the json for the always popular &lt;strong&gt;filtered query&lt;/strong&gt;, the search for a string after removing those outside
+the filter. In this case, the filter being greater than or equal to yesterday:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;filtered&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;query&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;match&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;tweet&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;full text search&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;filter&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;range&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;created&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;gte&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;now - 1d / d&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now let&amp;#39;s say you want to change the query from &lt;strong&gt;&amp;quot;full text search&amp;quot;&lt;/strong&gt; to &lt;strong&gt;&amp;quot;Rihanna&amp;quot;&lt;/strong&gt; (obviously). One might be tempted
+to have a method that drops in a variable:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;filtered_gte_query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query_term&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter_term&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;filtered&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;ss&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;ss&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;tweet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;query_term&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;ss&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;ss&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;created&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;gte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter_term&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And now we&amp;#39;re walking down the path to hell. Heaven forbid we want a filter than does less than or equal to, supports AND queries, or is chainable. The number
+of methods and hashes will spiral out of control.&lt;/p&gt;
+
+&lt;h2&gt;Introducing &lt;a href=&quot;https://github.com/matthuhiggins/arelastic&quot;&gt;Arelastic&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Modeled after Rails&amp;#39; &lt;a href=&quot;https://github.com/rails/arel&quot;&gt;Arel&lt;/a&gt; which is a SQL Abstract Syntax Tree (AST) manager,
+Arelastic is an AST manager for Elasticsearch Queries.&lt;/p&gt;
+
+&lt;p&gt;Rather than working with hashes, you work with objects that represent nodes in the AST:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Arelastic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Builders&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;book_id&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gteq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter_term&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Arelastic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Searches&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Arelastic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Queries&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Match&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;tweet&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;query_term&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;dsl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Arelastic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Searches&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Query&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Arelastic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Queries&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Filtered&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as_elastic&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;Article&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dsl&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Here&amp;#39;s one interesting line of code: &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Arelastic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Builders&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;book_id&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gteq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code&gt;gteq&lt;/code&gt; method exists alongside many other range filters, allowing one to make a chainable API much alike ActiveRecord.
+Funny enough, there exists an &lt;a href=&quot;https://github.com/data-axle/elastic_record&quot;&gt;ElasticRecord&lt;/a&gt; that&amp;#39;s built on top of this,
+and precedes the new official &lt;a href=&quot;https://github.com/elasticsearch/elasticsearch-rails&quot;&gt;Elasticsearch-rails&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The community is behind Elasticsearch-rails, but it has yet to introduce an Arel equivalent, and we all want to move towards that.
+Here&amp;#39;s hoping we can take Arelastic and incorporate it into Elasticsearch-rails so we no longer have to tame unwieldy hashes.&lt;/p&gt;
+
+&lt;p&gt;Now the implementation might look cryptic, but to those familiar with ES, you can see on the ES DSL&amp;#39;s page &lt;a href=&quot;http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-filtered-query.html&quot;&gt;here&lt;/a&gt;
+all the query and filter nodes available, and know there&amp;#39;s an equivalent mapping in the Arelastic library. This would be the building block to an ORM like interface we&amp;#39;re far more comfortable with.&lt;/p&gt;
+
+&lt;p&gt;Then we can write Elasticsearch queries like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;Gift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search_builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;color&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;red&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;match&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;flower&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;After &lt;a href=&quot;https://gist.github.com/dimroc/2eec84498b6a35550f48&quot;&gt;my first bold attempt right here&lt;/a&gt; to create a chainable API using monads,
+you can see how much simpler it is to create complicated Elasticsearch Queries:&lt;/p&gt;
+
+&lt;h3&gt;Consumption&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;GiftsController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationController&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;search_params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SearchBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;organization_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;current_organization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;user_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;current_user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;created_at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;gte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;days&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ago&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;id desc&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;vi&quot;&gt;@gifts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Gift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;search_params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:page&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In part 2, we&amp;#39;ll take the next step support even more ElasticSearch queries and see what it would take to make this badboy a gem.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Pundit for Roles on Rails</title>
+   <link href="http://www.dimroc.com/2014/10/23/pundit-for-roles/"/>
+   <updated>2014-10-23T09:58:56-04:00</updated>
+   <id>http://www.dimroc.com/2014/10/23/pundit-for-roles</id>
+   <content type="html">&lt;p&gt;Roles are almost always a requirement for a web app. There are many good options out there for Rails, with the old guard being &lt;a href=&quot;https://github.com/CanCanCommunity/cancancan&quot;&gt;CanCan&lt;/a&gt;
+and &lt;a href=&quot;https://github.com/RolifyCommunity/rolify&quot;&gt;Rolify&lt;/a&gt;. But then I met this newcomer, &lt;a href=&quot;https://github.com/elabs/pundit&quot;&gt;Pundit&lt;/a&gt;, and its
+simplicity stole the show.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;The Rails 3 goto was &lt;a href=&quot;https://github.com/CanCanCommunity/cancancan&quot;&gt;CanCan&lt;/a&gt;, and I loved it.
+CanCan worked great with Devise and helped encapsulate everything role related into &lt;strong&gt;Abilities&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pundit encapsulates authorization and scoping through &lt;strong&gt;Policies&lt;/strong&gt;, using pure ruby classes and amazingly intuitive convention over configuration.&lt;/p&gt;
+
+&lt;p&gt;This does mean that you will have to add &lt;code&gt;admin&lt;/code&gt; (or whatever you need) columns manually, but the simplicity of it all will save you in the long run.&lt;/p&gt;
+
+&lt;h4&gt;Policy&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PostPolicy&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;update?&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;admin?&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;published?&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Usage in Controller&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;update&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;authorize&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@post&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update_attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post_params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;respond_with&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@post&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice that the &lt;code&gt;Controller#update&lt;/code&gt; action will automatically invoke &lt;code&gt;Policy#update?&lt;/code&gt; by convention.&lt;/p&gt;
+
+&lt;p&gt;Sure, this will work for actions on individual members, like &lt;code&gt;update&lt;/code&gt;. But what about &lt;code&gt;index&lt;/code&gt;? That&amp;#39;s where scoping comes in:&lt;/p&gt;
+
+&lt;h4&gt;Scope&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;PostPolicy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationPolicy&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Scope&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:scope&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@scope&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;resolve&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;admin?&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:published&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4&gt;Usage in Controller&lt;/h4&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@posts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;policy_scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The snippets here were ripped off the GitHub page, &lt;a href=&quot;https://github.com/elabs/pundit&quot;&gt;check it out&lt;/a&gt; for yourself. It&amp;#39;s a fantastic gem.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Toggleable Fakes for better integration testing</title>
+   <link href="http://www.dimroc.com/2014/09/30/toggleable-fakes/"/>
+   <updated>2014-09-30T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/30/toggleable-fakes</id>
+   <content type="html">&lt;p&gt;During the development of &lt;a href=&quot;https://github.com/dimroc/iOS.ProjectMonitor&quot;&gt;iOS Project Monitor&lt;/a&gt;, I ran into the need
+to test against a few third party services. Engineyard&amp;#39;s Andy Delcambre gave a great talk on how to use test matrices and fake services
+to write one test that hits both your fake and the service.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Most people leap towards &lt;a href=&quot;https://github.com/bblimke/webmock&quot;&gt;WebMock&lt;/a&gt; or &lt;a href=&quot;https://github.com/vcr/vcr&quot;&gt;VCR&lt;/a&gt; to test against services. This is an alternate approach that is a little more
+upfront work but adds incredible confidence in your code.&lt;/p&gt;
+
+&lt;h3&gt;Overview&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create a &lt;code&gt;FakeThirdParty&lt;/code&gt; service.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;sinatra/base&amp;#39;&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FakePusher&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Sinatra&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/apps/:app_id/events&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;provides&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:json&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# start the server if ruby file executed directly&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;run!&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;app_file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$0&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FakeError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;503&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;application/json&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;error&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;server error&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FakeUnauthorized&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;401&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;application/json&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;error&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;unauthorized&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Using WebMock, route all traffic to &lt;code&gt;www.thirdparty.com&lt;/code&gt; to our sinatra fake. Take note of the &lt;code&gt;.to_rack&lt;/code&gt; method:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;webmock/rspec&amp;#39;&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;FakeSpecHelpers&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;servers_return_healthy&lt;/span&gt;
+      &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;WARNING: Stubbing out healthy servers&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;WebMock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stub_request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/.*api.pusherapp.com\/.*/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_rack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;FakePusher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;servers_return_error&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;WebMock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stub_request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/.*/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_rack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;FakeError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;servers_return_unauthorized&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;WebMock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stub_request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/.*/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_rack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;FakeUnauthorized&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;no&quot;&gt;RSpec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;FakeSpecHelpers&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;before&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:each&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;INTEGRATION&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;true&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;no&quot;&gt;WebMock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;allow_net_connect!&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+        &lt;span class=&quot;no&quot;&gt;WebMock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disable_net_connect!&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;servers_return_healthy&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Using an environment variable, &lt;code&gt;INTEGRATION=true&lt;/code&gt;, you can turn off the WebMock routing and have the tests hit the real service.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Challenges&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Performing a Tear down, or cleaning, your third party test environment can be hard, if not impossible.&lt;/li&gt;
+&lt;li&gt;Data from one test can then pollute other tests.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;For something a little more elaborate, check out iOS Project Monitor&amp;#39;s &lt;a href=&quot;https://github.com/dimroc/iOS.ProjectMonitor/blob/master/backend/spec/fakes/fake_parse.rb&quot;&gt;Fake Parse Service&lt;/a&gt; and the &lt;a href=&quot;https://github.com/dimroc/iOS.ProjectMonitor/blob/master/backend/spec/support/webmock.rb&quot;&gt;WebMock Routing&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;iframe src=&quot;//player.vimeo.com/video/26510145&quot; width=&quot;500&quot; height=&quot;283&quot; frameborder=&quot;0&quot; webkitallowfullscreen mozallowfullscreen allowfullscreen&gt;&lt;/iframe&gt; &lt;p&gt;&lt;a href=&quot;http://vimeo.com/26510145&quot;&gt;[16M05] Toggleable Mocks and Testing Strategies in a Service Oriented Architecture (en)&lt;/a&gt; from &lt;a href=&quot;http://vimeo.com/rubykaigi&quot;&gt;rubykaigi&lt;/a&gt; on &lt;a href=&quot;https://vimeo.com&quot;&gt;Vimeo&lt;/a&gt;.&lt;/p&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>A better error handling future for iOS with Swift</title>
+   <link href="http://www.dimroc.com/2014/09/30/error-handling-in-swift/"/>
+   <updated>2014-09-30T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/30/error-handling-in-swift</id>
+   <content type="html">&lt;p&gt;&lt;em&gt;Update: I now handle errors from callbacks with the &lt;a href=&quot;http://www.dimroc.com/2014/12/17/bolt-framework-promisekit-or-reactive-cocoa-for-async/&quot;&gt;Bolts Framework&lt;/a&gt;. Consider this article deprecated.&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Pattern matching is a fantastic mechanism found in functional programming languages, and &lt;a href=&quot;https://developer.apple.com/swift/&quot;&gt;Swift&lt;/a&gt; has it! Below, we&amp;#39;ll find out how to use it to encapsulate errors in asynchronous code.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h3&gt;Swift Enumerations&lt;/h3&gt;
+
+&lt;p&gt;Define different cases, resulting in new classes scoped to the enum.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GoogleGeocoderResponse&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MFLocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Instantiate one of the enumbs depending on the scenario:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;n&quot;&gt;manager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;baseUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AFHTTPRequestOperation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GoogleGeocoder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GoogleGeocoderResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GoogleGeocoderResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Use the &lt;code&gt;switch&lt;/code&gt; syntax to perform pattern matching against these enum classes:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;n&quot;&gt;GoogleGeocoder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coordinate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GoogleGeocoderResponse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;NSLog&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;One of the benefits to pattern matching is speed. Although one might infer run-time type checking in the &lt;code&gt;switch&lt;/code&gt;, it is all mostly done at compile time via polymorphism or some other mechanism.&lt;/p&gt;
+
+&lt;p&gt;This does not eliminate the need for &lt;code&gt;NSError&lt;/code&gt;. That approach is still recommended when interacting with UIKit, etc.&lt;/p&gt;
+
+&lt;p&gt;Check out &lt;a href=&quot;http://swiftlytyping.tumblr.com/post/88210131086/error-handling?utm_campaign=iOS_Dev_Weekly_Issue_150&amp;amp;utm_medium=email&amp;amp;utm_source=iOS%2BDev%2BWeekly&quot;&gt;Swiftlytyping&amp;#39;s post on Swift error handling&lt;/a&gt;
+for a more thorough example with generics.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Comparing Golang, Scala, Elixir and Ruby for ETL</title>
+   <link href="http://www.dimroc.com/2014/09/29/etl-language-showdown/"/>
+   <updated>2014-09-29T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/29/etl-language-showdown</id>
+   <content type="html">&lt;p&gt;How do the following languages stack up when running an extract, transform, and load (ETL) against ~40M tweets? Read on to find out more.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/&quot;&gt;Ruby, JRuby, and Parallel&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://golang.org/&quot;&gt;Golang 1.2&lt;/a&gt; - Imperative&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://scala-lang.org/&quot;&gt;Scala 2.10.4&lt;/a&gt; - Both Imperative and Functional&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://elixir-lang.org/&quot;&gt;Elixir 0.13.0&lt;/a&gt; - Functional&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2&gt;Goal&lt;/h2&gt;
+
+&lt;p&gt;Compare each language&amp;#39;s productivity, terseness and readability. The performance comparisons should not be taken too seriously. If anything,
+it is a bigger indication of my skillset and my ability to ramp up in that language rather than their performance capabilities. Nonetheless, they are here to reflect what I would realistically face.&lt;/p&gt;
+
+&lt;h2&gt;The Task&lt;/h2&gt;
+
+&lt;p&gt;Count the number of tweets that mention &lt;em&gt;knicks&lt;/em&gt; in their message and aggregate them based on the neighborhood of origin.
+The ~1GB dataset for this task, sampled below, contains a tweet&amp;#39;s message and its NYC neighborhood. &lt;a href=&quot;https://dimroc-public.s3.amazonaws.com/etl-language-comparison/tweets20140416.tar.gz&quot;&gt;It can be downloaded here&lt;/a&gt;.
+Too small to warrant Hadoop, but large enough to run in parallel. The algorithm maps each entry to a file, and reduces all files in memory for a final output.&lt;/p&gt;
+
+&lt;p&gt;Example Input (spans multiple files):&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;91  west-brighton   Brooklyn    Uhhh
+121 turtle-bay-east-midtown Manhattan   Say anything
+175 morningside-heights Manhattan   It feels half-cheating half-fulfilling to cite myself.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Example Output:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;midtown-midtown-south   4845
+hudson-yards-chelsea-flatiron-union-square  746
+battery-park-city-lower-manhattan   625
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Initial Assumption&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;These tasks are not run on Hadoop but do run concurrently. Performance numbers are expected to be moot since the CPU mostly sits idle waiting on Disk IO.&lt;/li&gt;
+&lt;li&gt;**UPDATE: Boy was the IO bound assumption wrong.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;The Hardware&lt;/h2&gt;
+
+&lt;p&gt;MacBook Pro 2.3GHz i7 (quad core) with 8GB RAM and 5200 RPM HDD&lt;/p&gt;
+
+&lt;h2&gt;The Languages&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/&quot;&gt;Ruby 2.1.0&lt;/a&gt; with &lt;a href=&quot;http://celluloid.io/&quot;&gt;Celluloid&lt;/a&gt;  - Exposes the GIL limitation in pure ruby and shows the multicore advantage of JRuby.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/&quot;&gt;Ruby 2.1.0&lt;/a&gt; and &lt;a href=&quot;http://www.gnu.org/software/parallel/&quot;&gt;GNU Parallel&lt;/a&gt;  - Uses GNU parallel to run ruby processes on multiple cores.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://golang.org/&quot;&gt;Golang 1.2&lt;/a&gt; - Imperative&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://scala-lang.org/&quot;&gt;Scala 2.10.4&lt;/a&gt; - Both Imperative and Functional&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://elixir-lang.org/&quot;&gt;Elixir 0.13.0&lt;/a&gt; - Functional&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Ruby&lt;/h2&gt;
+
+&lt;h4&gt;Features used&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Celluloid Actor Pool&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Observations&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Performance is very respectable when considering the GIL lock: &lt;code&gt;1m15.243s&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Performance is great when run on &lt;strong&gt;JRuby&lt;/strong&gt;, which uses all available cores: &lt;code&gt;0m41.268s&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Ruby with GNU Parallel&lt;/h3&gt;
+
+&lt;p&gt;This is effectively:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ parallel -j 100% -a commands.txt &amp;amp;&amp;amp; ruby reducer.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Features used&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;GNU Parallel to get around the GIL and more accurately mirror a real world scenario: Many single core workers running one ruby process (eg: Heroku dynos)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Observations&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Performance is excellent, with all cores on full blast: &lt;code&gt;40s&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;This implementation is cheating in some areas but serves as a good baseline for other comparisons.&lt;/li&gt;
+&lt;li&gt;Separate processes can be a maintenance nightmare. It leads to memory bloat, is difficult to coordinate failed processes, and can be difficult to deploy and scale. There is simplicity in being able to deploy one process that is capable of using all cores.&lt;/li&gt;
+&lt;li&gt;From experience, Ruby&amp;#39;s real weakness is its poor performance handling long-running jobs. Memory leaks run rampant. &lt;a href=&quot;http://blog.redfin.com/devblog/2010/05/how_and_why_twitter_uses_scala.html#.U10CzWRdXLh&quot;&gt;Twitter shared this opinion&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Golang&lt;/h2&gt;
+
+&lt;h4&gt;Features used&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;goroutines&lt;/li&gt;
+&lt;li&gt;channels&lt;/li&gt;
+&lt;li&gt;selects&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Observations&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Performance after first write with no optimizations: &lt;code&gt;3m23.165s&lt;/code&gt;. &lt;strong&gt;Was only using one core!&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Performance average after using all cores by manually setting GOMAXPROCS: &lt;code&gt;1m03.593s&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/17868419/how-can-my-go-program-keep-all-the-cpu-cores-busy&quot;&gt;Had to research why all cores weren&amp;#39;t used here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Ultimately, &lt;a href=&quot;http://golang.org/pkg/runtime/#GOMAXPROCS&quot;&gt;GOMAXPROCS will be removed&lt;/a&gt; and scheduling will automatically make use of all cores.&lt;/li&gt;
+&lt;li&gt;Golang&amp;#39;s libraries are fantastic but don&amp;#39;t have the mature optimizations of other languages (yet).&lt;/li&gt;
+&lt;li&gt;Ended up being the fewest lines of code across all languages, by a lot.&lt;/li&gt;
+&lt;li&gt;Golang is not functional, so don&amp;#39;t force functional programming concepts, like map and reduce. For loops for days...&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Moments of Joy&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Handling goroutines with &lt;code&gt;channel&lt;/code&gt;s and &lt;code&gt;select&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;inputFiles&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Finished mapping.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Iterating over a &lt;code&gt;map&lt;/code&gt; with &lt;code&gt;range&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Using &lt;code&gt;defer&lt;/code&gt; for cleanup of file resources.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Command-line debugger (but I didn&amp;#39;t need it).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Moments of Disappointment&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Verbose error handling. There are design patterns to better manage errors, but were skipped for this demo.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span class=&quot;nx&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ioutil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ReadDir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;inputDir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Having to explicitly set the number of cores to use via &lt;code&gt;GOMAXPROCS&lt;/code&gt; because of immature scheduling.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Lack of collection helpers like &lt;code&gt;map&lt;/code&gt; and &lt;code&gt;reduce&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Scala&lt;/h2&gt;
+
+&lt;h4&gt;Features used&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Akka (Supervisors and Actors)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Observations&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Performance after first write on first run: &lt;code&gt;50s&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Performance on subsequent runs: &lt;code&gt;27s&lt;/code&gt;. The JVM is probably doing something fancy.&lt;/li&gt;
+&lt;li&gt;All cores used.&lt;/li&gt;
+&lt;li&gt;Not as IO bound as originally thought. Attributed to the optimizations in the BufferedSource/BufferedWriter classes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Moments of Joy&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Witnessing the speed after the first write.&lt;/li&gt;
+&lt;li&gt;Seeing BDD style testing as default for ScalaTest.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Using &lt;code&gt;!&lt;/code&gt;, &lt;code&gt;?&lt;/code&gt;, and &lt;code&gt;receive&lt;/code&gt; to handle messages in the Actor system.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inputDir&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;outputDir&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;system&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ActorSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;MapSystem&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapSupervisor&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;actorOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Props&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;MapSupervisor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;mapsupervisor&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;future&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapSupervisor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ProcessDirectoryMessage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inputDir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;outputDir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;nc&quot;&gt;Await&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;future&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Duration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Inf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shutdown&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;sbt run&lt;/code&gt; and &lt;code&gt;sbt test&lt;/code&gt; work well, especially for fetching dependencies.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Realizing the power of Akka and Akka Cluster.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Moments of Disappointment&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Inability to debug via the command line.&lt;/li&gt;
+&lt;li&gt;Having to set implicit variables: &lt;code&gt;implicit val timeout = Timeout(5 minutes)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Having to use Java libraries for File IO.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Elixir&lt;/h2&gt;
+
+&lt;h4&gt;Features used&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Streams&lt;/li&gt;
+&lt;li&gt;pipeline operators&lt;/li&gt;
+&lt;li&gt;PIDs&lt;/li&gt;
+&lt;li&gt;All the Erlang and Elixir goodness&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Observations&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Performance average after first write with &lt;code&gt;:delayed_write&lt;/code&gt;: &lt;code&gt;2m30.508s&lt;/code&gt;. &lt;/li&gt;
+&lt;li&gt;This number says less about Elixir&amp;#39;s performance and more about how much I suck at writing Elixir code. Ease of writing performant code though is a valid factor.&lt;/li&gt;
+&lt;li&gt;Extremely productive language once one knows the module functions, but difficult to discover.&lt;/li&gt;
+&lt;li&gt;Clearly designed for use with a text editor and the command-line (It&amp;#39;s great).&lt;/li&gt;
+&lt;li&gt;The Elixir docs are usually the sole source of information, thankfully they are pretty good.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Moments of Joy&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/elixir-lang/vim-elixir&quot;&gt;MacVim Vundle!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Using Interactive Elixir, &lt;code&gt;iex&lt;/code&gt; and Mix is fantastic. Preferable to &lt;code&gt;sbt console&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Matching on assignment: &lt;code&gt;{:ok, result} = {:ok, 5}&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Functional style coupled with pipeline operators and anonymous methods makes for some beautifully code.&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Stream.into&lt;/code&gt; allows manipulation of infinite collections in a terse manner&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-elixir&quot; data-lang=&quot;elixir&quot;&gt;&lt;span class=&quot;n&quot;&gt;output&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:delayed_write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;|&amp;gt;&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;into&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;map_line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;Stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Moments of Disappointment&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The lack of objects is initially infuriating. Hard to encapsulate logic, and structs don&amp;#39;t seem like a substitute. It effectively means that most if not all built-in methods only return primitive types as opposed to objects.&lt;/li&gt;
+&lt;li&gt;Lack of online resources because of small community. Few Stack Overflow posts, etc.&lt;/li&gt;
+&lt;li&gt;Discoverability is tricky since methods are all module functions on primitive types, therefore you can&amp;#39;t look up the primitive type, but must know the relevant module.&lt;/li&gt;
+&lt;li&gt;Inability to fold/reduce from a stream in a straighforward manner. Had to hold contents in memory.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Only after returning to a functional language like Elixir do I realize the convenience of &lt;strong&gt;Object Oriented meets Functional&lt;/strong&gt;. Big ups to Scala.&lt;/li&gt;
+&lt;li&gt;The ability to return an object with relevant methods while still being immutable adds the power of discoverability, a huge advantage over the manipulation of maps and other primitives with module functions.&lt;/li&gt;
+&lt;li&gt;The big surprise was JRuby&amp;#39;s performance and the impact of being able to use all cores. Running Puma on JRuby is very compelling when using a system with multiple cores.&lt;/li&gt;
+&lt;li&gt;Golang&amp;#39;s simplicity is very refreshing and their built-in profiling contributes to a philosophy of hand-tuning code for the best performance.&lt;/li&gt;
+&lt;li&gt;Scala, on the other hand, has the user well removed from the low level, but the JVM handles a lot of optimizations for the programmer, and it shows. If only I didn&amp;#39;t need an IDE...&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For ETL operations, it would be remiss to ignore the Hadoop and Java ecosystem. Scala provides an incredible toolset for all ETL operations, but I can&amp;#39;t help but want to code in Golang.&lt;/p&gt;
+
+&lt;p&gt;As always, feel free to check out the &lt;a href=&quot;https://github.com/dimroc/etl-language-comparison/tree/v1&quot;&gt;source code&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Elasticsearch behind NGINX on AWS</title>
+   <link href="http://www.dimroc.com/2014/09/28/elasticsearch-nginx/"/>
+   <updated>2014-09-28T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/28/elasticsearch-nginx</id>
+   <content type="html">&lt;p&gt;Hosting on Heroku or any other multi-tenant PaaS means you&amp;#39;re sharing IP security with other people. Now your web services require at least basic auth
+when interacting with services like MySQL and Elasticsearch. We will run Elasticsearch behind nginx, which will enforce a username/pw for basic auth.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;To skip the details and get up and going locally, check out this &lt;a href=&quot;https://github.com/dimroc/secure-elasticsearch-vagrant&quot;&gt;GitHub repo with a Vagrantfile that uses Docker images to run Elasticsearch behind nginx&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you want a big boy&amp;#39;s deployment for production, check out &lt;a href=&quot;http://blogs.aws.amazon.com/application-management/post/Tx3MEVKS0A4G7R5/Deploying-Elasticsearch-with-OpsWorks&quot;&gt;AWS&amp;#39;s OpsWorks Layer for Elasticsearch&lt;/a&gt; &lt;/p&gt;
+
+&lt;p&gt;On to the fun:&lt;/p&gt;
+
+&lt;h3&gt;High-level Overview&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Nginx will be the only public facing ip, and serve as the gateway to all Elasticsearch nodes.&lt;/li&gt;
+&lt;li&gt;Nginx will enforce basic auth before proxying all HTTP requests to the ES nodes in a round robin fashion.
+
+&lt;ul&gt;
+&lt;li&gt;This will be done using an .htpasswd file.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After you&amp;#39;ve spun up Elasticsearch, go through the following steps:&lt;/p&gt;
+
+&lt;h3&gt;Example Nginx Proxy File&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-apache&quot; data-lang=&quot;apache&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Based on https://github.com/elasticsearch/kibana/blob/master/sample/nginx.conf&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;server&lt;/span&gt; {
+  &lt;span class=&quot;nb&quot;&gt;listen&lt;/span&gt;                &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; default_server;
+
+  &lt;span class=&quot;nb&quot;&gt;location&lt;/span&gt; / {
+    &lt;span class=&quot;nb&quot;&gt;proxy_pass&lt;/span&gt; http://elasticsearch:9200; # elastic search node
+    &lt;span class=&quot;nb&quot;&gt;proxy_set_header&lt;/span&gt; Host      $host;
+    &lt;span class=&quot;nb&quot;&gt;proxy_set_header&lt;/span&gt; X-Real-IP $remote_addr;
+
+    &lt;span class=&quot;nb&quot;&gt;auth_basic&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Restricted&amp;quot;&lt;/span&gt;;
+    &lt;span class=&quot;nb&quot;&gt;auth_basic_user_file&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;/etc/nginx/conf.d/elasticsearch.htpasswd&lt;/span&gt;;
+  &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;Generate elasticsearch.htpasswd file&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;htpasswd -c nginx/elasticsearch.htpasswd elasticsearch&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now run nginx with it pointing to ES, and you&amp;#39;re good to go.&lt;/p&gt;
+
+&lt;p&gt;Further reading: &lt;a href=&quot;http://engineering.wattpad.com/post/78037079531/using-nginx-as-a-proxy-for-elasticsearch-and-how-to&quot;&gt;Wattpad Engineering&amp;#39;s Using Nginx as a proxy for Elasticsearch&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Monitoring CI from your iPhone</title>
+   <link href="http://www.dimroc.com/2014/09/27/ios-project-monitor/"/>
+   <updated>2014-09-27T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/27/ios-project-monitor</id>
+   <content type="html">&lt;p&gt;Ever want to receive a push notification when a commit fails CI? Well, do I have news for you.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Project Monitor will monitor your travis-ci, travis-ci pro, and semaphore builds.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/dimroc/iOS.ProjectMonitor/master/client/ProjectMonitor/Images.xcassets/screens.imageset/screens.png&quot; alt=&quot;Project Monitor&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://itunes.apple.com/us/app/project-monitor/id857272990?ls=1&amp;amp;mt=8&quot;&gt;Available for free in the App Store&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/dimroc/iOS.ProjectMonitor&quot;&gt;And it&amp;#39;s open source on Github!&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Technologies Used:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Objective C&lt;/li&gt;
+&lt;li&gt;Ruby&lt;/li&gt;
+&lt;li&gt;Parse (MBaaS)&lt;/li&gt;
+&lt;li&gt;Sidekiq&lt;/li&gt;
+&lt;li&gt;Travis CI&lt;/li&gt;
+&lt;li&gt;CocoaPods&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>NYC Building Perimeters</title>
+   <link href="http://www.dimroc.com/2014/09/26/nyc-building-perimeters/"/>
+   <updated>2014-09-26T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/26/nyc-building-perimeters</id>
+   <content type="html">&lt;p&gt;I love NYC and WebGL. So I married the two by rendering NYC building perimeters with &lt;a href=&quot;http://threejs.org/&quot;&gt;ThreeJS&lt;/a&gt; using &lt;a href=&quot;https://nycopendata.socrata.com/&quot;&gt;NYC Open Data&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Starting with NYC:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/dimroc/nyc_building_perimeters/master/app/assets/images/icons/nyc.png&quot; alt=&quot;NYC&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;We can zoom into a neighborhood:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/dimroc/nyc_building_perimeters/raw/master/public/readme/NbcLowerEastSideManhattan.png&quot; alt=&quot;LES Buildings&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Batches were broken up by neighborhood.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/dimroc/nyc_building_perimeters/raw/master/public/readme/buildingsInNeighborhoods.png&quot; alt=&quot;Batch by hood&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.dimroc.com/nyc_building_perimeters/#/neighborhoods/lower-east-side&quot;&gt;See it for yourself&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Three takeaways I didn&amp;#39;t foresee:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The heavy downloads needed to get to all the 3D json files to the browser (it&amp;#39;s even more than I had feared).&lt;/li&gt;
+&lt;li&gt;The large amounts of RAM needed to render the models (no fancy LOD given the zoom levels).&lt;/li&gt;
+&lt;li&gt;The poor garbage collection when toggling between neighborhoods exacerbated 2.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;See more technical details on the &lt;a href=&quot;https://github.com/dimroc/nyc_building_perimeters&quot;&gt;github page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Check out the release of &lt;a href=&quot;http://vizicities.com/&quot;&gt;ViziCities&lt;/a&gt;, an impressive rendering of cities. Check out &lt;a href=&quot;http://vizicities.apps.rawk.es/demo.html#40.71432818342427,-73.98659111120529&quot;&gt;NYC&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>NYC Neighborhood Term Frequency</title>
+   <link href="http://www.dimroc.com/2014/09/25/hood-frequency/"/>
+   <updated>2014-09-25T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/25/hood-frequency</id>
+   <content type="html">&lt;p&gt;Which New York neighborhoods care the most about startups? Aggregating across ~50M tweets with Elasticsearch looking for the term &lt;em&gt;startups&lt;/em&gt; gave me an answer.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/HoodFrequency.png&quot; alt=&quot;Hood Frequency&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;See results for other searches &lt;a href=&quot;http://www.newtweetcity.com/frequencies/manhattan?q=startups&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Tweets as Pixels in NYC</title>
+   <link href="http://www.dimroc.com/2014/09/24/tweets-as-pixels/"/>
+   <updated>2014-09-24T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/09/24/tweets-as-pixels</id>
+   <content type="html">&lt;p&gt;What do you get when you brighten a pixel every time you get a tweet&amp;#39;s location? That&amp;#39;s what &lt;a href=&quot;https://blog.twitter.com/2013/the-geography-of-tweets&quot;&gt;Miguel Rios&lt;/a&gt; asked
+in his post &lt;a href=&quot;https://blog.twitter.com/2013/the-geography-of-tweets&quot;&gt;The Geography of Tweets&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;Here&amp;#39;s my very own rendering of NYC after gathering geotagged tweets in 2013:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://newtweetcity.s3.amazonaws.com/snapshots/nyc/nyc_20140216T230944%2B0000.png&quot; alt=&quot;Entire NYC&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;Fascinating deductions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The gridded street blocks really pop out because of what I assume are pedestrians tweeting on the sidewalks.&lt;/li&gt;
+&lt;li&gt;A lot of people tweet when they drive. Look closely and you can even see all the main bridges (Brooklyn, Williamsburgh, etc).&lt;/li&gt;
+&lt;li&gt;The Staten Island Ferry near the bottom of the photo is an incident of tweets being sent over water.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Zooming into Manhattan, we can see the following:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://newtweetcity.s3.amazonaws.com/snapshots/manhattan/manhattan_20140217T220012%2B0000.png&quot; alt=&quot;Manhattan Tweets&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;More can be see at &lt;a href=&quot;http://www.newtweetcity.com/&quot;&gt;New Tweet City&lt;/a&gt;. Check out the &lt;a href=&quot;https://github.com/dimroc/new_tweet_city&quot;&gt;source code&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Intro to ThreeJS... using ThreeJS</title>
+   <link href="http://www.dimroc.com/2014/08/20/intro-to-threejs-slides/"/>
+   <updated>2014-08-20T00:00:00-04:00</updated>
+   <id>http://www.dimroc.com/2014/08/20/intro-to-threejs-slides</id>
+   <content type="html">&lt;p&gt;I&amp;#39;m a big believer in learning by doing. So when I set out to learn ThreeJS, I did it by making &lt;a href=&quot;http://www.dimroc.com/reveal.js-threejs/&quot;&gt;this sweet slide deck&lt;/a&gt;.
+Click through to check out details.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;canvas id=&quot;spinningCube&quot;&gt;&lt;/canvas&gt;
+
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+var dimroc = (function() {
+  return { gfx: {
+    width: 320,
+    height: 250
+  }};
+})();
+
+var renderSpinningCube = function(canvas) {
+  var scene = new THREE.Scene();
+
+  var camera = new THREE.PerspectiveCamera( 30, dimroc.gfx.width / dimroc.gfx.height, 1, 1000 );
+  camera.position.set(0, 3, 7);
+  camera.lookAt( new THREE.Vector3(0,0,0));
+
+  var scale = 2.5;
+  var geometry = new THREE.BoxGeometry( scale, scale, scale );
+  var material = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, wireframeLinewidth: 3 } );
+
+  var mesh = new THREE.Mesh( geometry, material );
+  scene.add( mesh );
+
+  var axisHelper = new THREE.AxisHelper(50);
+  scene.add( axisHelper );
+
+  var renderer = new THREE.WebGLRenderer({canvas: canvas, antialias: true, alpha: true});
+  renderer.setSize( dimroc.gfx.width, dimroc.gfx.height );
+
+  function animate() {
+    requestAnimationFrame( animate, canvas );
+    mesh.rotation.y += 0.008;
+    renderer.render( scene, camera );
+  }
+
+  animate();
+}
+
+renderSpinningCube($(&#39;#spinningCube&#39;)[0]);
+
+&lt;/script&gt;
+
+&lt;p&gt;Using &lt;a href=&quot;http://lab.hakim.se/reveal-js/#/&quot;&gt;reveal.js&lt;/a&gt;, an html framework for presentations, I added self-contained javascript ThreeJS samples on each slide to
+demonstrate a particular feature of ThreeJS.&lt;/p&gt;
+
+&lt;p&gt;Here is the standard spinning cube example:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;samples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;spinning_cube&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;scene&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;THREE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Scene&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;camera&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;THREE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PerspectiveCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sample_defaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sample_defaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;camera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;camera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;lookAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;THREE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Vector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;scale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;2.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;geometry&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;THREE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CubeGeometry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;scale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;material&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;THREE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MeshBasicMaterial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0xdddddd&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mesh&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;THREE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;geometry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;material&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;scene&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mesh&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;renderer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;THREE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;WebGLRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;canvas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;antialias&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;renderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sample_defaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sample_defaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+      &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;active&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+      &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;animate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;requestAnimationFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;animate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;canvas&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;active&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sample_defaults&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;paused&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;nx&quot;&gt;mesh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rotation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.008&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;nx&quot;&gt;renderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;scene&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;camera&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+      &lt;span class=&quot;nx&quot;&gt;animate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})();&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;By tagging slides with a &lt;code&gt;data-sample&lt;/code&gt; attribute, the corresponding javascript example kicks in and does its WebGL magic.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;section&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;canvas&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;data-sample=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;spinning_cube&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;style=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;display:inline&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/canvas&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/section&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;See all the ThreeJS javascript samples &lt;a href=&quot;https://github.com/dimroc/reveal.js-threejs/tree/gh-pages/js/samples&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Check out the actual &lt;a href=&quot;http://www.dimroc.com/reveal.js-threejs/#/&quot;&gt;Intro to ThreeJS Slideshow&lt;/a&gt;. &lt;a href=&quot;https://github.com/dimroc/reveal.js-threejs&quot;&gt;Source Code&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+
+</feed>

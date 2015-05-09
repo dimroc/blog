@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Toggleable Fakes for better integration testing &middot; dimroc
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/tagging.css">
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/custom.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+
+  <!-- Javascript -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script src="/public/javascript/detectmobilebrowser.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-43559997-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+
+  <body class="sidebar-overlay">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="https://github.com/dimroc">GitHub</a>
+    <a class="sidebar-nav-item" href="http://experiments.dimroc.com">Experiments</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/dimroc">@dimroc</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>Tags</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+    
+      <a class="sidebar-nav-item" href=/tag/webgl>webgl</a>
+    
+      <a class="sidebar-nav-item" href=/tag/javascript>javascript</a>
+    
+      <a class="sidebar-nav-item" href=/tag/twitter>twitter</a>
+    
+      <a class="sidebar-nav-item" href=/tag/nyc>nyc</a>
+    
+      <a class="sidebar-nav-item" href=/tag/elasticsearch>elasticsearch</a>
+    
+      <a class="sidebar-nav-item" href=/tag/ios>ios</a>
+    
+      <a class="sidebar-nav-item" href=/tag/ruby>ruby</a>
+    
+      <a class="sidebar-nav-item" href=/tag/elixir>elixir</a>
+    
+      <a class="sidebar-nav-item" href=/tag/golang>golang</a>
+    
+      <a class="sidebar-nav-item" href=/tag/scala>scala</a>
+    
+      <a class="sidebar-nav-item" href=/tag/etl>etl</a>
+    
+      <a class="sidebar-nav-item" href=/tag/swift>swift</a>
+    
+      <a class="sidebar-nav-item" href=/tag/testing>testing</a>
+    
+      <a class="sidebar-nav-item" href=/tag/rails>rails</a>
+    
+      <a class="sidebar-nav-item" href=/tag/python>python</a>
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2015. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h2 class="masthead-title">
+            <a href="/" title="Home">dimroc</a>
+            <small>blog</small>
+            <span class="masthead-links">
+              <a href="http://experiments.dimroc.com" title="Experiments">See Experiments</a>
+            </span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Toggleable Fakes for better integration testing</h1>
+  <span class="post-date">30 Sep 2014</span>
+  <span class="post-comments"><a href="#disqus_thread"></a></span>
+  <p>During the development of <a href="https://github.com/dimroc/iOS.ProjectMonitor">iOS Project Monitor</a>, I ran into the need
+to test against a few third party services. Engineyard&#39;s Andy Delcambre gave a great talk on how to use test matrices and fake services
+to write one test that hits both your fake and the service.</p>
+
+<!--more-->
+
+<p>Most people leap towards <a href="https://github.com/bblimke/webmock">WebMock</a> or <a href="https://github.com/vcr/vcr">VCR</a> to test against services. This is an alternate approach that is a little more
+upfront work but adds incredible confidence in your code.</p>
+
+<h3>Overview</h3>
+
+<ul>
+<li>Create a <code>FakeThirdParty</code> service.</li>
+</ul>
+
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">&#39;sinatra/base&#39;</span>
+
+  <span class="k">class</span> <span class="nc">FakePusher</span> <span class="o">&lt;</span> <span class="no">Sinatra</span><span class="o">::</span><span class="no">Base</span>
+    <span class="n">post</span> <span class="s2">&quot;/apps/:app_id/events&quot;</span><span class="p">,</span> <span class="ss">provides</span><span class="p">:</span> <span class="ss">:json</span> <span class="k">do</span>
+      <span class="no">JSON</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">read</span><span class="p">)</span>
+      <span class="p">{}</span><span class="o">.</span><span class="n">to_json</span>
+    <span class="k">end</span>
+
+    <span class="c1"># start the server if ruby file executed directly</span>
+    <span class="n">run!</span> <span class="k">if</span> <span class="n">app_file</span> <span class="o">==</span> <span class="vg">$0</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">FakeError</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+      <span class="o">[</span> <span class="mi">503</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;application/json&#39;</span> <span class="p">},</span> <span class="o">[</span><span class="p">{</span> <span class="s2">&quot;error&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;server error&quot;</span> <span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="o">]</span> <span class="o">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">class</span> <span class="nc">FakeUnauthorized</span>
+    <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">call</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+      <span class="o">[</span> <span class="mi">401</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;application/json&#39;</span> <span class="p">},</span> <span class="o">[</span><span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;unauthorized&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">to_json</span><span class="o">]</span> <span class="o">]</span>
+    <span class="k">end</span>
+  <span class="k">end</span></code></pre></div>
+
+<ul>
+<li>Using WebMock, route all traffic to <code>www.thirdparty.com</code> to our sinatra fake. Take note of the <code>.to_rack</code> method:</li>
+</ul>
+
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="nb">require</span> <span class="s1">&#39;webmock/rspec&#39;</span>
+
+  <span class="k">module</span> <span class="nn">FakeSpecHelpers</span>
+    <span class="k">def</span> <span class="nf">servers_return_healthy</span>
+      <span class="nb">puts</span> <span class="s2">&quot;WARNING: Stubbing out healthy servers&quot;</span>
+      <span class="no">WebMock</span><span class="o">.</span><span class="n">stub_request</span><span class="p">(</span><span class="ss">:any</span><span class="p">,</span> <span class="sr">/.*api.pusherapp.com\/.*/</span><span class="p">)</span><span class="o">.</span><span class="n">to_rack</span><span class="p">(</span><span class="no">FakePusher</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">servers_return_error</span>
+      <span class="no">WebMock</span><span class="o">.</span><span class="n">stub_request</span><span class="p">(</span><span class="ss">:any</span><span class="p">,</span> <span class="sr">/.*/</span><span class="p">)</span><span class="o">.</span><span class="n">to_rack</span><span class="p">(</span><span class="no">FakeError</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">servers_return_unauthorized</span>
+      <span class="no">WebMock</span><span class="o">.</span><span class="n">stub_request</span><span class="p">(</span><span class="ss">:any</span><span class="p">,</span> <span class="sr">/.*/</span><span class="p">)</span><span class="o">.</span><span class="n">to_rack</span><span class="p">(</span><span class="no">FakeUnauthorized</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="no">RSpec</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">include</span> <span class="no">FakeSpecHelpers</span>
+
+    <span class="n">config</span><span class="o">.</span><span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
+      <span class="k">if</span> <span class="no">ENV</span><span class="o">[</span><span class="s2">&quot;INTEGRATION&quot;</span><span class="o">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+        <span class="no">WebMock</span><span class="o">.</span><span class="n">allow_net_connect!</span>
+      <span class="k">else</span>
+        <span class="no">WebMock</span><span class="o">.</span><span class="n">disable_net_connect!</span>
+        <span class="n">servers_return_healthy</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span></code></pre></div>
+
+<ul>
+<li>Using an environment variable, <code>INTEGRATION=true</code>, you can turn off the WebMock routing and have the tests hit the real service.</li>
+</ul>
+
+<h3>Challenges</h3>
+
+<ol>
+<li>Performing a Tear down, or cleaning, your third party test environment can be hard, if not impossible.</li>
+<li>Data from one test can then pollute other tests.</li>
+</ol>
+
+<p>For something a little more elaborate, check out iOS Project Monitor&#39;s <a href="https://github.com/dimroc/iOS.ProjectMonitor/blob/master/backend/spec/fakes/fake_parse.rb">Fake Parse Service</a> and the <a href="https://github.com/dimroc/iOS.ProjectMonitor/blob/master/backend/spec/support/webmock.rb">WebMock Routing</a>.</p>
+
+<p><iframe src="//player.vimeo.com/video/26510145" width="500" height="283" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="http://vimeo.com/26510145">[16M05] Toggleable Mocks and Testing Strategies in a Service Oriented Architecture (en)</a> from <a href="http://vimeo.com/rubykaigi">rubykaigi</a> on <a href="https://vimeo.com">Vimeo</a>.</p></p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2015/05/07/etl-language-showdown-pt2/">
+            Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL: Part 2
+            <small>07 May 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/04/20/amazon-lambda-for-autoscaling-work/">
+            Amazon Lambda to Autoscale Background Work
+            <small>20 Apr 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2015/01/30/heroku-announces-ability-to-share-addons/">
+            Heroku announces ability to share apps as add ons
+            <small>30 Jan 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'dimroc'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'dimroc'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+  var s = document.createElement('script'); s.async = true;
+  s.type = 'text/javascript';
+  s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+
+
+  </body>
+</html>
