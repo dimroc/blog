@@ -8,7 +8,7 @@ tags: ruby elixir golang scala python etl
 A year ago, I wrote the same program in four languages to compare their productivity when performing ETL (extract-transform-load).
 Read about [part 1 here](/2014/09/29/etl-language-showdown/) and check out the [source code](https://github.com/dimroc/etl-language-comparison).
 
-The code has changed, the languages have evolved, and the hardware now includes a SSD drive. Where are they now?
+The code has changed, the languages have evolved, and the hardware now includes a SSD drive. So, :here are they now?
 
 <!--more-->
 
@@ -63,13 +63,12 @@ The code has changed, the languages have evolved, and the hardware now includes 
 
 ## Recap
 
-The original goal was **not** to see how fast each language could go, it was was to measure the length of time needed to
-write a solution in that language, and to subjectively measure the maintainability of that final solution learning about the gotchas on the way.
-But in the end everyone wants benchmarks.
+The original goal was **not** to see how fast each language could go. Rather, it was was to measure the length of time needed to
+write a solution and subjectively measure the maintainability of said solution, all while learning each language's gotchas on the way.
+But, in the end, everyone wants benchmarks.
 
 It was assumed that runtimes would all be approximately the same, since this should have been an IO-bound problem. So why
-care about the speed of the language? Well, on my old MacBook Pro with a 5200 RPM HDD, this was not true. Is it true on my SSD?
-It still isn't.
+care about the speed of the language? Well, on my old MacBook Pro with a 5200 RPM HDD, this was not true and, surprisingly, it still isn't on my SSD.
 
 ## The Hardware
 
@@ -77,12 +76,12 @@ MacBook Pro 2.3GHz i7 (quad core) with 16GB RAM and SSD
 
 ## The Problem
 
-We have ~40M tweets spanning multiple files, with each tweet tagged with their New York City neighborhood. Discover which
+We have ~40M tweets spanning multiple files, with each tweet tagged with their New York City neighborhood. We want to discover which
 neighborhoods care the most about the New York Knicks by searching for the term `knicks`.
 
 ## Questions and Concerns from [Part 1](/2014/09/29/etl-language-showdown/)
 
-1. Why am I writing to an intermediary file? Why don't I do it all in memory? Now I do.
+1. Why was I writing to an intermediary file? Why didn't I do it all in memory? Well, now I do.
 
     This comparison was derived from a larger ETL process that spanned multiple computers and therefore
     used intermediary files to pass along the information. This cookie-cutter experiment has no need for this,
@@ -90,7 +89,7 @@ neighborhoods care the most about the New York Knicks by searching for the term 
 
 2. Why am I using regex and not a simple string search (GoLang's regex sucks in 1.x.x)?
 
-    The implementations should be consistent across all languages for a fair comparison. Although
+    The implementations should be consistent across all languages for a fair comparison. Even though
     the problem is simply searching for `knicks`, I wanted the implementations to have the flexibility to
     to perform more powerful searches. That being said, Golang's Regexp package performs dramatically worse than other languages.
 
@@ -124,7 +123,7 @@ which it very well might be, please feel free to contribute a pull request.
 - No significant performance improvement when using String.contains instead of regex.
 - Profiled with [exprof](https://github.com/parroty/exprof) but didn't see any low hanging fruit (I'm welcome to any feedback here).
     ![Elixir Profiling](/public/images/etlElixirProfiling.jpg)
-- Changing this
+- Changing
 
 {% highlight elixir %}
 Map.merge(...)
@@ -136,8 +135,8 @@ to this
 HashDict.merge(...)
 {% endhighlight %}
 
-made a dramatic difference. It speaks to the youth of the Elixir. That being said, this subtelty is being fixed
-and won't catch unsuspecting programmers like myself again.
+made a dramatic difference. It speaks to the youth of the Elixir. That being said, this subtlety is being fixed
+so it won't catch unsuspecting programmers like myself again.
 
 [From the website:](http://elixir-lang.org/getting-started/maps-and-dicts.html#maps)
 
@@ -149,7 +148,7 @@ and won't catch unsuspecting programmers like myself again.
 - Initial performance was a disappointing 30s+, so I dug in and used [pprof](http://blog.golang.org/profiling-go-programs) to profile the code.
     ![Golang Profiling](/public/images/etlGolangRegexp.jpg)
 - Go's Regular Expression engine really is as slow as a previous commenter mentioned. Switching to `strings.Contains` took it to ~7s.
-- They've been hyped before, but I'm going to hype them again: GoLang's Channels are fantastic.
+- They've been hyped before, and I'm going to hype them again: GoLang's Channels are fantastic.
 
 A modification to the GoLang implementation liberally uses channels as a FIFO queue to great effect:
 
@@ -187,9 +186,9 @@ Spawn(*procs, func() {
 ## Conclusion
 
 - It's always a challenge (or a lot of fun) attempting to write the same thing in two languages, let alone five.
-A langauge's idioms sway an implementation in a particular direction. Long story short, there are still a lot of discrepancies between the implementations.
+Each language's idioms sway an implementation in a particular direction. Long story short, there are still a lot of discrepancies between the implementations.
 - Elixir and Golang have matured dramatically in a year's time.
-- It is damn difficult to parse Scala code when you've been away for a while. It's just **dense**.
+- It is damn difficult to parse Scala code when you've been away for a while. It's just... **dense**.
 - [My previous conclusion](/2014/09/29/etl-language-showdown/) still holds up, check it out (it's at the bottom of the link).
 - This whole experiment has lived far longer than I thought.
 
