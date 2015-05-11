@@ -8,7 +8,7 @@ tags: ruby elixir golang scala python etl
 A year ago, I wrote the same program in four languages to compare their productivity when performing ETL (extract-transform-load).
 Read about [part 1 here](/2014/09/29/etl-language-showdown/) and check out the [source code](https://github.com/dimroc/etl-language-comparison).
 
-The code has changed, the languages have evolved, and the hardware now includes a SSD drive. So, :here are they now?
+The code has changed, the languages have evolved, and the hardware now includes a SSD drive. So, where are they now?
 
 <!--more-->
 
@@ -26,7 +26,7 @@ The code has changed, the languages have evolved, and the hardware now includes 
   </tr>
 
   <tr>
-    <td>Ruby w/ <a href="https://github.com/grosser/parallel" target="_blank">grosser/parallel</a> (<b>not</b> GNU Parallel)</td>
+    <td>Ruby w/ <a href="https://github.com/grosser/parallel" target="_blank">grosser/parallel</a> (<b>not GNU Parallel</b>)</td>
     <td>10.9s</td>
   </tr>
 
