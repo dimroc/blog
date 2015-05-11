@@ -4,6 +4,11 @@ title: Comparing Golang, Scala, Elixir and Ruby for ETL
 tags: ruby elixir golang scala etl
 ---
 
+*Update 05/11/2015: After reading this, check out [part 2](/2015/05/07/etl-language-showdown-pt2/) to
+see how updates to the younger languages (Elixir, Golang) and changes to the algorithm (no intermediary reduction file) affected results.*
+
+---
+
 How do the following languages stack up when running an extract, transform, and load (ETL) against ~40M tweets? Read on to find out more.
 
 * [Ruby, JRuby, and Parallel](https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/)

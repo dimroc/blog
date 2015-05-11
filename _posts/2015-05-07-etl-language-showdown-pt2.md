@@ -6,7 +6,7 @@ tags: ruby elixir golang scala python etl
 ---
 
 A year ago, I wrote the same program in four languages to compare their productivity when performing ETL (extract-transform-load).
-Read about [part 1 here](/2014/09/29/etl-language-showdown/) and check out the [source code](https://github.com/dimroc/etl-language-comparison).
+Read about [part 1 here](/2014/09/29/etl-language-showdown/) and feel free to check out the [source code](https://github.com/dimroc/etl-language-comparison).
 
 The code has changed, the languages have evolved, and the hardware now includes a SSD drive. So, where are they now?
 
@@ -90,8 +90,9 @@ neighborhoods care the most about the New York Knicks by searching for the term 
 2. Why am I using regex and not a simple string search (GoLang's regex sucks in 1.x.x)?
 
     The implementations should be consistent across all languages for a fair comparison. Even though
-    the problem is simply searching for `knicks`, I wanted the implementations to have the flexibility to
-    to perform more powerful searches. That being said, Golang's Regexp package performs dramatically worse than other languages.
+    the problem is simply searching for `knicks`, I wanted the implementations to have the flexibility
+    to perform more powerful searches. That being said, Golang's Regexp package performs dramatically worse than other languages
+    so I included results using `strings.Contains`.
 
 3. In Scala, why did I use Akka instead of the lighter Parallel Collections?
 
@@ -135,8 +136,7 @@ to this
 HashDict.merge(...)
 {% endhighlight %}
 
-made a dramatic difference. It speaks to the youth of the Elixir. That being said, this subtlety is being fixed
-so it won't catch unsuspecting programmers like myself again.
+made a dramatic difference. It speaks to the youth of the Elixir.
 
 [From the website:](http://elixir-lang.org/getting-started/maps-and-dicts.html#maps)
 
