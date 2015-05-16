@@ -11,7 +11,7 @@ in his post [The Geography of Tweets](https://blog.twitter.com/2013/the-geograph
 
 Here's my very own rendering of NYC after gathering geotagged tweets in 2013:
 
-![Entire NYC](https://newtweetcity.s3.amazonaws.com/snapshots/nyc/nyc_20140216T230944%2B0000.png)
+![Entire NYC](/public/images/nyc_20140216T230944.jpg)
 
 Fascinating deductions:
 
@@ -21,6 +21,6 @@ Fascinating deductions:
 
 Zooming into Manhattan, we can see the following:
 
-![Manhattan Tweets](https://newtweetcity.s3.amazonaws.com/snapshots/manhattan/manhattan_20140217T220012%2B0000.png)
+![Manhattan Tweets](/public/images/manhattan_20140217T220012.jpg)
 
 More can be see at [New Tweet City](http://www.newtweetcity.com/). Check out the [source code](https://github.com/dimroc/new_tweet_city).
