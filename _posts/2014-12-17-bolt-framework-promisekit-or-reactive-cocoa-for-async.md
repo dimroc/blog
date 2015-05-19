@@ -127,3 +127,4 @@ PostRepository.createAsync(videoAsset).continueWithBlock(task: BFTask!) -> AnyOb
 
 * Smash your iOS pyramids of doom with [Bolts](https://github.com/BoltsFramework/Bolts-iOS) or [PromiseKit](www.promisekit.org).
 * Handle to streams of potentially infinite data with ReactiveCocoa.
+* See the source code for all these samples [here](https://github.com/dimroc/manhattan_forum)
