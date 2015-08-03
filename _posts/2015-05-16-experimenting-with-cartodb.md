@@ -2,6 +2,7 @@
 layout: post
 title: "Experimenting with Twitter Data in CartoDB"
 date: "Sat May 16 07:04:50 -0400 2015"
+tags: twitter
 ---
 
 Lately, I've been experimenting with a variety of mapping solutions. Starting with the barebones Leaflet (amazing), and then taking things a step
