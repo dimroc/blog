@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Cross Compiled Go with Alpine Linux and Docker"
+title: "Cross Compiled Go with Alpine Linux make a tiny Docker image"
 date: "Sat Aug 20 10:46:35 -0400 2015"
 tags: go docker
 ---
