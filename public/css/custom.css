@@ -37,3 +37,12 @@
   display: block;
   margin: auto;
 }
+
+img {
+  margin: auto;
+}
+
+iframe {
+  margin: auto;
+  display: block;
+}
