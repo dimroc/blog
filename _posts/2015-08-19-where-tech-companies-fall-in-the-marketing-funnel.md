@@ -7,7 +7,7 @@ tags: business
 
 I'm talking to a bunch of sales guys and they start to mention how
 the big boys in tech (google search, facebook, yahoo, youtube, twitter, etc) all control varying
-amounts of marketing dollars in the [Purchase Funnel, aka the Marketing Funnel](https://en.wikipedia.org/wiki/Purchase_funnel).
+amounts of marketing dollars in the [Purchase Funnel](https://en.wikipedia.org/wiki/Purchase_funnel).
 
 The what?
 
