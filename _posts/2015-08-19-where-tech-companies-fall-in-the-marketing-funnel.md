@@ -16,7 +16,7 @@ You know, AIDA:
 ![AIDA Marketing Funnel](/public/images/aida-funnel1.gif)
 
 Dropped right after **ABC** (Always Be Closing) in
-[Glengarry Glen Ross](http://www.imdb.com/title/tt0104348/), AIDA is a very popular acronym used in sales to describe to Purchase Funnel.
+[Glengarry Glen Ross](http://www.imdb.com/title/tt0104348/), AIDA is a very popular acronym used in marketing to describe to Purchase Funnel.
 
 <iframe width="420" height="315" src="https://www.youtube.com/embed/SOrsThlgGxc" frameborder="0" allowfullscreen></iframe>
 
