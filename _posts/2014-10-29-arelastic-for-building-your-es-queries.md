@@ -5,6 +5,9 @@ date: "Wed Oct 29 08:45:25 -0400 2014"
 tags: ruby elasticsearch
 ---
 
+*Update 08/2015: [Elasticsearch-ruby has its own DSL](https://github.com/elastic/elasticsearch-ruby/tree/master/elasticsearch-dsl).
+It's officially supported by Elasticsearch so be sure to check it out.*
+
 When doing more than just a simple search with [Elasticsearch-rails](https://github.com/elasticsearch/elasticsearch-rails/tree/master/elasticsearch-model),
 a naive approach will lead you to this mess:
 
