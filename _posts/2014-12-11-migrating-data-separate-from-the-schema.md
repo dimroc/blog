@@ -66,10 +66,10 @@ class ChangeAdminDefaultToFalseOnUsers < ActiveRecord::Migration
 end
 {%endhighlight%}
 
-Everything in **db/migrate/** has to live for the life
-of the application, which is why using application code in an AR migration is frowned upon (sure, you can move onto schema:load and delete migrations, but let's keep things simple for now).
+With most people's usage pattern, everything in **db/migrate/** has to live for months due to habitual `rake db:migrate` invocations,
+which is why using application code in an AR migration is frowned upon (sure, you can move onto schema:load and delete migrations, but let's keep things simple for now).
 
-That application code will change months or even weeks from now, and then running `rake db:migrate` will be busted.
+That application code will change weeks or even days from now, and then running `rake db:migrate` will be busted.
 
 Most people get by using the **Good** and **Better** schema migration methods, but there comes a time when either the scale
 or the complexity of the migration warrants its own code. The time when pure SQL will only get you so far or when the runtime of the migration
