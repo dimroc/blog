@@ -95,21 +95,24 @@ In order to promote consistency across implementations, I've introduced the foll
   for example, runtimes can aggresssively grab memory despite the application not using all of it. It would
   be great to track peak memory usage for the runs, so that we can now plot memory consumption along with execution time.
 
-### Langauges Available
+### Langauges Covered
 
-* Ruby
-* Golang
-* Scala
-* Nim
-* Node
-* PHP
-* Erlang
-* Elixir
-* Rust
-* Python
-* C#
+<table>
+<tr> <th>Language</th><th>Owner</th> </tr>
+<tr> <td>Ruby</td><td></td> </tr>
+<tr> <td>Golang</td><td></td> </tr>
+<tr> <td>Scala</td><td></td> </tr>
+<tr> <td>Nim</td><td></td> </tr>
+<tr> <td>Node</td><td></td> </tr>
+<tr> <td>PHP</td><td></td> </tr>
+<tr> <td>Erlang</td><td></td> </tr>
+<tr> <td>Elixir</td><td></td> </tr>
+<tr> <td>Rust</td><td></td> </tr>
+<tr> <td>Python</td><td></td> </tr>
+<tr> <td>C#</td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
+</table>
 
-Hype up your language by improving the current implementation! [Submit a PR.](https://github.com/dimroc/etl-language-comparison)
+Hype up your language by improving the current implementation! Become an owner. [Submit a PR.](https://github.com/dimroc/etl-language-comparison)
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 <script>
