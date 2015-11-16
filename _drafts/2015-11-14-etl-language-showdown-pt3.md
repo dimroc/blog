@@ -4,14 +4,16 @@ title: "ETL Language Showdown Part 3"
 date: "Nov 14 10:52:19 -0400 2015"
 ---
 
-_This article is a continuation of the Extract-Transform-Load (ETL) showdown [parts 1](/2014/09/29/etl-language-showdown/) and
-[2](/2015/05/07/etl-language-showdown-pt2). Check them out for additional context._
+_This article is a continuation of the Extract-Transform-Load (ETL) showdown series. Check them out for additional context._
+
+* _[Comparing Golang, Scala, Elixir and Ruby for ETL](/2014/09/29/etl-language-showdown/)_
+* _[Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL: Part 2](/2015/05/07/etl-language-showdown-pt2)_
 
 In this post, we will compare a Map Reduce solution to count the number of times `knicks`
 is mentioned in ~40M tweets spanning multiple files. This originally came about as a way to compare vanilla
 [GIL-bound](https://en.wikipedia.org/wiki/Global_interpreter_lock) Ruby implementations against Scala
 and Golang. It has since evolved into a [repo of idiomatic ETL solutions](https://github.com/dimroc/etl-language-comparison)
-for a variety of languages.
+for a variety of languages (10 at the time of this writing).
 
 ## Shortcuts led to apple and orange comparisons
 
@@ -40,7 +42,9 @@ Here are the previous implementations described in [part 2 of the ETL showdown](
 
 # Takeaway
 
-Instead, use this repo as a reference for writing idiomatic ETL solutions in the language of your choice.
+The results have a healthy amount of variety. Going into [part 1](/2014/09/29/etl-language-showdown/), it was believed that
+the results of multi-threaded approaches would be the same because the problem was be IO bound. Well, that was wrong.
+Instead of using this as a speed comparison across languages, use this repo as a reference for writing idiomatic ETL solutions in the language of your choice.
 [Check out the repo.](https://github.com/dimroc/etl-language-comparison)
 
 In order to promote consistency across implementations, I've introduced the following:
@@ -60,30 +64,34 @@ In order to promote consistency across implementations, I've introduced the foll
 
 ## New School Observations and Shortcuts
 
-### Erlang
+We've since added even more languages, each with their own nuances.
+[Nim](http://nim-lang.org/) is a newcomer I've never heard of but it performed surprisingly well.
+Below you'll find some notes on each implementation.
+
+### [Erlang](https://github.com/dimroc/etl-language-comparison/tree/master/erlang)
 
 1. Leverages [Binary Pattern Matching](http://www.erlang.org/doc/efficiency_guide/binaryhandling.html).
 2. Holds all data in memory as opposed to streaming input line by line.
 
-### Nim
+### [Nim](https://github.com/dimroc/etl-language-comparison/tree/master/nim)
 
 1. Implementation seems identical to the ruby version (streaming input with regex but using multiple cores) and it is blazing fast. The first I've heard of [Nim](http://nim-lang.org/).
 
-### Rust
+### [Rust](https://github.com/dimroc/etl-language-comparison/tree/master/rust)
 
 1. Regex solution is identical to reference implementation.
 2. Substring solution only deals with ASCII.
 3. Man is it fast. Would love someone to take another look at the Rust implementation to see how it might be taking shortcuts against the reference implementation.
 
-### PHP
+### [PHP](https://github.com/dimroc/etl-language-comparison/tree/master/php)
 
 1. Only doing substring checks against ASCII.
 2. Single threaded.
 3. Included just to grow the library of implementations. Improvements and pull requests are welcome.
 
-### Node JS
+### [Node JS](https://github.com/dimroc/etl-language-comparison/tree/master/nodejs)
 
-1. Uses cluster to get around the Global Interpreter Lock (GIL).
+1. Uses [cluster](https://nodejs.org/api/cluster.html) to get around the Global Interpreter Lock (GIL).
 2. The workers communicate a match to the cluster master, effectively skipping the reduction step.
 
 
@@ -91,28 +99,28 @@ In order to promote consistency across implementations, I've introduced the foll
 
 * The number of languages being covered has grown past my ability to maintain. If you would like to **own** a particular language's implementation,
   please let me know and feel free to submit PR's my way.
-* Another area of interest is memory consumption. Tracking memory consumption can be tricky, 
-  for example, runtimes can aggresssively grab memory despite the application not using all of it. It would
+* Another area of interest is memory consumption. Tracking memory consumption can be tricky.
+  For example, runtimes can aggresssively grab memory despite the application not using all of it. It would
   be great to track peak memory usage for the runs, so that we can now plot memory consumption along with execution time.
 
 ### Langauges Covered
 
 <table>
 <tr> <th>Language</th><th>Owner</th> </tr>
-<tr> <td>Ruby</td><td></td> </tr>
-<tr> <td>Golang</td><td></td> </tr>
-<tr> <td>Scala</td><td></td> </tr>
-<tr> <td>Nim</td><td></td> </tr>
-<tr> <td>Node</td><td></td> </tr>
-<tr> <td>PHP</td><td></td> </tr>
-<tr> <td>Erlang</td><td></td> </tr>
-<tr> <td>Elixir</td><td></td> </tr>
-<tr> <td>Rust</td><td></td> </tr>
-<tr> <td>Python</td><td></td> </tr>
-<tr> <td>C#</td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/ruby">Ruby</a></td><td>Your name here!</td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/golang">Golang</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/scala">Scala</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nim">Nim</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nodejs">Node</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/php">PHP</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/erlang">Erlang</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/elixir">Elixir</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/rust">Rust</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/python">Python</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/csharp">C#</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
 </table>
 
-Hype up your language by improving the current implementation! Become an owner. [Submit a PR.](https://github.com/dimroc/etl-language-comparison)
+Hype up your language by improving the current implementation! Give me a shout by [raising an issue](https://github.com/dimroc/etl-language-comparison/issues) to become an owner.
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 <script>
