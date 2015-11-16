@@ -107,7 +107,7 @@ Below you'll find some notes on each implementation.
 
 <table>
 <tr> <th>Language</th><th>Owner</th> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/ruby">Ruby</a></td><td>Your name here!</td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/ruby">Ruby</a></td><td> </td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/golang">Golang</a></td><td></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/scala">Scala</a></td><td></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nim">Nim</a></td><td></td> </tr>
@@ -118,6 +118,8 @@ Below you'll find some notes on each implementation.
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/rust">Rust</a></td><td></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/python">Python</a></td><td></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/csharp">C#</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/shell">shell</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/perl">perl</a></td><td><a href="https://github.com/sitaramc">sitaramc</a></td> </tr>
 </table>
 
 Hype up your language by improving the current implementation! Give me a shout by [raising an issue](https://github.com/dimroc/etl-language-comparison/issues) to become an owner.
