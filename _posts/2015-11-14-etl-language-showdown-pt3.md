@@ -43,7 +43,7 @@ Here are the previous implementations described in [part 2 of the ETL showdown](
 # Takeaway
 
 The results have a healthy amount of variety. Going into [part 1](/2014/09/29/etl-language-showdown/), it was believed that
-the results of multi-threaded approaches would be the same because the problem was be IO bound. Well, that was wrong.
+the results of multi-threaded approaches would be the same because the problem would be IO bound. Well, that was wrong.
 Instead of using this as a speed comparison across languages, use this repo as a reference for writing idiomatic ETL solutions in the language of your choice.
 [Check out the repo.](https://github.com/dimroc/etl-language-comparison)
 
@@ -91,7 +91,7 @@ Below you'll find some notes on each implementation.
 
 ### [Node JS](https://github.com/dimroc/etl-language-comparison/tree/master/nodejs)
 
-1. Uses [cluster](https://nodejs.org/api/cluster.html) to get around the Global Interpreter Lock (GIL).
+1. Uses [cluster](https://nodejs.org/api/cluster.html) to get around the [Global Interpreter Lock (GIL)](https://en.wikipedia.org/wiki/Global_interpreter_lock).
 2. The workers communicate a match to the cluster master, effectively skipping the reduction step.
 
 
