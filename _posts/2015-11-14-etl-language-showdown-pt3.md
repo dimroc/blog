@@ -113,9 +113,9 @@ Below you'll find some notes on each implementation.
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nim">Nim</a></td><td></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nodejs">Node</a></td><td></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/php">PHP</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/erlang">Erlang</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/elixir">Elixir</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/rust">Rust</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/erlang">Erlang</a></td><td><a href="https://github.com/potatosalad">potatosalad</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/elixir">Elixir</a></td><td><a href="https://github.com/josevalim">josevalim</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/rust">Rust</a></td><td><a href="https://github.com/potatosalad">potatosalad</a></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/python">Python</a></td><td></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/csharp">C#</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
 <tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/shell">shell</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
