@@ -5,7 +5,7 @@ date: "Thu May 7 11:13:39 -0500 2015"
 tags: ruby elixir golang scala python etl
 ---
 
-A year ago, I wrote the same program in four languages to compare their productivity when performing ETL (extract-transform-load).
+A year ago, I wrote the same program in four languages to compare their productivity when performing [ETL (extract-transform-load)](https://en.wikipedia.org/wiki/Extract,_transform,_load).
 Read about [part 1 here](/2014/09/29/etl-language-showdown/) and feel free to check out the [source code](https://github.com/dimroc/etl-language-comparison).
 
 The code has changed, the languages have evolved, and the hardware now includes a SSD drive. So, where are they now?

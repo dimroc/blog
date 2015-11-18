@@ -9,7 +9,7 @@ see how updates to the younger languages (Elixir, Golang) and changes to the alg
 
 ---
 
-How do the following languages stack up when running an extract, transform, and load (ETL) against ~40M tweets? Read on to find out more.
+How do the following languages stack up when running an [extract, transform, and load (ETL)](https://en.wikipedia.org/wiki/Extract,_transform,_load) against ~40M tweets? Read on to find out more.
 
 * [Ruby, JRuby, and Parallel](https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/)
 * [Golang 1.2](http://golang.org/) - Imperative
