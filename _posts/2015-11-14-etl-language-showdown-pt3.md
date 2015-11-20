@@ -10,11 +10,20 @@ Check these posts out for additional context and check out the [repo](https://gi
 * _[Comparing Golang, Scala, Elixir and Ruby for ETL](/2014/09/29/etl-language-showdown/)_
 * _[Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL: Part 2](/2015/05/07/etl-language-showdown-pt2)_
 
+---
+
+_Analyses and discussions done in this ETL series have led to the following language pull requests:_
+
+1. _[Add BIF binary:split/2,3 to Erlang](https://github.com/erlang/otp/pull/771)_
+2. _[Improve case insensitive regex in Golang](https://github.com/golang/go/issues/13288)_
+
+---
+
 In this post, we will compare a Map Reduce solution to count the number of times `knicks`
 is mentioned in ~40M tweets spanning multiple files. This originally came about as a way to compare vanilla
 [GIL-bound](https://en.wikipedia.org/wiki/Global_interpreter_lock) Ruby implementations against Scala
 and Golang. It has since evolved into a [repo of idiomatic ETL solutions](https://github.com/dimroc/etl-language-comparison)
-for a variety of languages (10 at the time of this writing).
+for a variety of languages (ten at the time of this writing).
 
 ## Shortcuts led to apple and orange comparisons
 
