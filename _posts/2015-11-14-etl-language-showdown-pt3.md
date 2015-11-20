@@ -4,7 +4,8 @@ title: "ETL Language Showdown Part 3"
 date: "Nov 14 10:52:19 -0400 2015"
 ---
 
-_This article is a continuation of the [Extract-Transform-Load (ETL)](https://en.wikipedia.org/wiki/Extract,_transform,_load) showdown series. Check them out for additional context._
+_This article is a continuation of the [Extract-Transform-Load (ETL)](https://en.wikipedia.org/wiki/Extract,_transform,_load) showdown series.
+Check these posts out for additional context and check out the [repo](https://github.com/dimroc/etl-language-comparison)._
 
 * _[Comparing Golang, Scala, Elixir and Ruby for ETL](/2014/09/29/etl-language-showdown/)_
 * _[Comparing Golang, Scala, Elixir, Ruby, and now Python3 for ETL: Part 2](/2015/05/07/etl-language-showdown-pt2)_
