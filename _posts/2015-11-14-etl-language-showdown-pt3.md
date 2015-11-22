@@ -25,6 +25,27 @@ is mentioned in ~40M tweets spanning multiple files. This originally came about 
 and Golang. It has since evolved into a [repo of idiomatic ETL solutions](https://github.com/dimroc/etl-language-comparison)
 for a variety of languages (ten at the time of this writing).
 
+### Langauges Covered
+
+<table>
+<tr> <th>Language</th><th>Owner</th> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/ruby">Ruby</a></td><td> </td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/golang">Golang</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/scala">Scala</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nim">Nim</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nodejs">Node</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/php">PHP</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/erlang">Erlang</a></td><td><a href="https://github.com/potatosalad">potatosalad</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/elixir">Elixir</a></td><td><a href="https://github.com/josevalim">josevalim</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/rust">Rust</a></td><td><a href="https://github.com/potatosalad">potatosalad</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/python">Python</a></td><td></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/csharp">C#</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/shell">shell</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
+<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/perl">perl</a></td><td><a href="https://github.com/sitaramc">sitaramc</a></td> </tr>
+</table>
+
+_Hype up your language by improving the current implementation. Give me a shout by [raising an issue](https://github.com/dimroc/etl-language-comparison/issues) to become an owner._
+
 ## Shortcuts led to apple and orange comparisons
 
 During this adventure, my Golang solution wasn't as performant as I had hoped because the regex
@@ -112,27 +133,6 @@ Below you'll find some notes on each implementation.
 * Another area of interest is memory consumption. Tracking memory consumption can be tricky.
   For example, runtimes can aggresssively grab memory despite the application not using all of it. It would
   be great to track peak memory usage for the runs, so that we can now plot memory consumption along with execution time.
-
-### Langauges Covered
-
-<table>
-<tr> <th>Language</th><th>Owner</th> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/ruby">Ruby</a></td><td> </td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/golang">Golang</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/scala">Scala</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nim">Nim</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/nodejs">Node</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/php">PHP</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/erlang">Erlang</a></td><td><a href="https://github.com/potatosalad">potatosalad</a></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/elixir">Elixir</a></td><td><a href="https://github.com/josevalim">josevalim</a></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/rust">Rust</a></td><td><a href="https://github.com/potatosalad">potatosalad</a></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/python">Python</a></td><td></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/csharp">C#</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/shell">shell</a></td><td><a href="https://github.com/mganss">mganss</a></td> </tr>
-<tr> <td><a href="https://github.com/dimroc/etl-language-comparison/tree/master/perl">perl</a></td><td><a href="https://github.com/sitaramc">sitaramc</a></td> </tr>
-</table>
-
-Hype up your language by improving the current implementation! Give me a shout by [raising an issue](https://github.com/dimroc/etl-language-comparison/issues) to become an owner.
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 <script>
