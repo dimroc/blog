@@ -6,6 +6,7 @@ date: "Mon Dec 14 20:58:56 -0500 2015"
 
 Notes:
 
+* ##### COINCIDE WITH CROSS CITY SEARCH RELEASE #####
 * Productivity just isn't there
 * Boilerplate takes forever
 * Client siding routing with react-router is extremely time consuming
