@@ -2,6 +2,7 @@
 layout: post
 title: "ETL Language Showdown Part 3"
 date: "Nov 14 10:52:19 -0400 2015"
+tags: etl go ruby scala elixir
 ---
 
 _This article is a continuation of the [Extract-Transform-Load (ETL)](https://en.wikipedia.org/wiki/Extract,_transform,_load) showdown series.

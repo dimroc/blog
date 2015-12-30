@@ -2,6 +2,7 @@
 layout: post
 title: "Boilerplate for the best of Go and React"
 date: "Sun Nov 22 10:35:14 -0500 2015"
+tags: go react
 ---
 
 Want in on the killer combo of Golang with React? Check out the [go-starter-kit](https://github.com/olebedev/go-starter-kit).

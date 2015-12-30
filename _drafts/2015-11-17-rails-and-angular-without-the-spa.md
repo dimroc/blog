@@ -2,6 +2,7 @@
 layout: post
 title: "rails-and-angular-without-the-spa"
 date: "Tue Nov 17 19:15:02 -0500 2015"
+tags: ruby rails angular
 ---
 
 A full on angular single page application (SPA) is overkill 90% of the time.

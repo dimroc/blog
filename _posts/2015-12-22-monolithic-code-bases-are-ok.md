@@ -2,6 +2,7 @@
 layout: post
 title: "Many Services Doesn't Mean Many Repos: Monolithic Code Bases Are OK"
 date: "Tue Dec 22 19:17:02 -0500 2015"
+tags: architecture
 ---
 
 There's been a recent obsession with microservices.
