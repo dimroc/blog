@@ -7,7 +7,7 @@ tags: go react elasticsearch docker
 
 Just released [Urban Events](http://urbanevents.dimroc.com/?q=tattoos)!
 
-![Urban Events](/public/images/UrbanEvents.jpg)
+[![Urban Events](/public/images/UrbanEvents.jpg)](http://urbanevents.dimroc.com/?q=tattoos)
 
 * This experiment allows one to search for media across cities and neighborhoods.
 * The technology used was Golang, React JS, Webpack, Elasticsearch, and Docker.
