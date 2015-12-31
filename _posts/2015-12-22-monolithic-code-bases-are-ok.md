@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Many Services Doesn't Mean Many Repos: Monolithic Code Bases Are OK"
+title: "Many Services Doesn't Mean Many Repos"
 date: "Tue Dec 22 19:17:02 -0500 2015"
 tags: architecture
 ---
