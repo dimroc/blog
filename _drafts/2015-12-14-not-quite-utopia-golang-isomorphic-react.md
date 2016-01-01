@@ -21,6 +21,7 @@ Notes:
   * Had to roll that back for part of the app (cityweb) because we had native dependencies (go-duktape)
   * Webpack, the client side pipeline, was quiet a chore to set up, although there was a learning curve there.
   * Ended up using make files to create one liners to build go, build the docker image, and then push created image.
+* Isomorphic javascript starts off great, falls apart when half the client libraries you need require the `window` object
 
 
 Conclusion:
