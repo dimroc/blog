@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Tutum CLI to exec Docker"
+title: "tutum exec to replace heroku run"
 date: "Sun Jan 10 13:56:40 -0500 2016"
 tags: tutum docker
 ---
