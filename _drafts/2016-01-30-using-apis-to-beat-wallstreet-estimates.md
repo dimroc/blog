@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Using APIs to beat Wallstreet"
+title: "Using APIs to beat Wallstreet Estimates"
 date: "Sat Jan 30 12:23:53 -0500 2016"
 tags: business
 ---
