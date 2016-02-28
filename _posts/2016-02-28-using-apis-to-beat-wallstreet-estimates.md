@@ -63,13 +63,13 @@ on the stock. My finance world and my development world were completely distinct
 
 It seems obvious now, but I never went into my side projects to discover signals, and looking at the information, the perfect trade
 would have been a pair trade shorting TWTR and buying FB (owner of Instagram). But I felt I had missed the boat on TWTR. I actually hadn't,
-but I've been burned by bottom fishing before and I wasn't gonna do that again. Not me, no sir.
+but I've been burned by bottom fishing before and I wasn't going to do that again. Not me, no sir.
 
 Then in January, I landed on this [nugget of information about Instagram](http://blog.business.instagram.com/post/128686033016/150909-advertisinglaunch):
 
 > We’re excited to announce that starting this month, advertisers both large and small can run campaigns on Instagram. In addition, ads are now available in more than 30 new countries—including Italy, Spain, Mexico, India and South Korea—and will be launching in markets around the world on Sept. 30.
 
-September 30th 2015. Which means that [FB Q4 Earnings](http://investor.fb.com/releasedetail.cfm?ReleaseID=952040), released in January, will be the first earnings release with IG ad revenue for a full quarter.
+September 30th 2015. This means that [FB Q4 Earnings](http://investor.fb.com/releasedetail.cfm?ReleaseID=952040), released in January, was the first earnings release with IG ad revenue for a full quarter.
 My, my are the stars aligning! Couple this with some napkin math on their estimates (**translation**: pure speculation), I was going in for the buy.
 
 ## Buying options for leverage right before earnings release
