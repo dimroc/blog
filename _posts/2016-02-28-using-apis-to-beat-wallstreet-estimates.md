@@ -91,4 +91,4 @@ It was by far the surest I had ever been that a stock would pop on earnings, and
 and I didn't have it. But you always say that after a successful trade! It was a great experience and I'm hoping that the stars
 will align again, but I've accepted that it might not happen for months, quarters, or even years.
 
-Feel free to comment below!
+Comment below!
