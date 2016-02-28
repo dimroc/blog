@@ -60,7 +60,7 @@ on the stock. My finance world and my development world were completely distinct
 <img src="/public/images/twitterbeatdastreet/VennEpiphany.jpg" alt="Venn Epiphany" style="max-width: 400px; width: 100%;"/>
 
 It seems obvious now, but I never went into my side projects to discover signals, and looking at the information, the perfect trade
-would have been a pair trade shorting TWTR and buying FB (owner of Instagram). But I felt I had missed the boat on TWTR. I actually hadn't
+would have been a pair trade shorting TWTR and buying FB (owner of Instagram). But I felt I had missed the boat on TWTR. I actually hadn't,
 but I've been burned by bottom fishing before and I wasn't gonna do that again. Not me, no sir.
 
 Then in January, I landed on this [nugget of information about Instagram](http://blog.business.instagram.com/post/128686033016/150909-advertisinglaunch):
