@@ -29,9 +29,9 @@ This tweet, despite being all text, is actually classified as an `image` in the 
 }
 {% endhighlight %}
 
-I knew a lot of the traffic was Instagram but I wasn't sure how much. Good thing I fed all my tweets into Elasticsearch, because it has a data visualization
-tool called [Kibana](https://www.elastic.co/products/kibana) that allowed me to chart what percentage of twitter images were actually Instagram links.
-Let's start with New York City:
+I knew a lot of the traffic was Instagram but I wasn't sure how much. All my tweets live in Elasticsearch, which has a data visualization
+tool called [Kibana](https://www.elastic.co/products/kibana). It allowed me to chart what percentage of twitter images were actually Instagram links.
+Let's start with New York City and see what we have:
 
 ![Twitter NYC Stacked](/public/images/twitterbeatdastreet/TwitterNycImagesStacked.jpg)
 
