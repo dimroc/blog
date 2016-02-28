@@ -57,7 +57,7 @@ I've been getting fleeced by the [TWTR](https://www.google.com/finance?q=TWTR&ei
 I knew of this fall 2015 and did not act on it. This was because I didn't realize I could use twitter's API as a buy or sell signal
 on the stock. My finance world and my development world were completely distinct. And then this happened.
 
-<img src="/public/images/twitterbeatdastreet/VennEpiphany.jpg" alt="Venn Epiphany" style="max-width: 500px;"/>
+<img src="/public/images/twitterbeatdastreet/VennEpiphany.jpg" alt="Venn Epiphany" style="max-width: 400px; width: 100%;"/>
 
 It seems obvious now, but I never went into my side projects to discover signals, and looking at the information, the perfect trade
 would have been a pair trade shorting TWTR and buying FB (owner of Instagram). But I felt I had missed the boat on TWTR. I actually hadn't
