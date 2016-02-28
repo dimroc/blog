@@ -57,7 +57,7 @@ I've been getting fleeced by the TWTR stock for a while now, **even while having
 I knew of this fall 2015 and did not act on it. This was because I didn't realize I could use twitter's API as a buy or sell signal
 on the stock. My finance world and my development world were completely distinct. And then this happened.
 
-![Venn Epiphany](/public/images/twitterbeatdastreet/VennEpiphany.jpg)
+<img src="/public/images/twitterbeatdastreet/VennEpiphany.jpg" alt="Venn Epiphany" style="max-width: 500px;"/>
 
 It seems obvious now, but I never went into my side projects to discover signals, and looking at the information, the perfect trade
 would have been a pair trade shorting TWTR and buying FB (owner of Instagram). But I felt I had missed the boat on TWTR. I actually hadn't
@@ -68,7 +68,7 @@ Then in January, I landed on this [nugget of information about Instagram](http:/
 > We’re excited to announce that starting this month, advertisers both large and small can run campaigns on Instagram. In addition, ads are now available in more than 30 new countries—including Italy, Spain, Mexico, India and South Korea—and will be launching in markets around the world on Sept. 30.
 
 September 30th 2015. Which means that FB Q4 Earnings releasing in January will be the first earnings release with IG ad revenue for a full quarter.
-My, my are the stars aligning! Couple this with some napkin math on their estimates (**translation**: pure speculation), I was gonna go in for the buy.
+My, my are the stars aligning! Couple this with some napkin math on their estimates (**translation**: pure speculation), I was going in for the buy.
 
 ## Buying options for leverage right before earnings release
 
@@ -76,7 +76,7 @@ My, my are the stars aligning! Couple this with some napkin math on their estima
 
 It's not a game anymore. The options had a strike price of $99 and cost me just under $900 (that's all I risked, I know, don't tell me about it).
 
-When the market bell closed on the 28th, FB stock dipped to $94.50. GG y'all, this was fun.
+When the market bell closed on the 28th, FB stock dipped to $94.50. GG y'all, 🍻, this was fun.
 
 But wait, then earnings were released. It spiked up to as high as $112. I waited until the next morning and I was out of there:
 
@@ -91,4 +91,4 @@ It was by far the surest I had ever been that a stock would pop on earnings, and
 and I didn't have it. But you always say that after a successful trade! It was a great experience and I'm hoping that the stars
 will align again, but I've accepted that it might not happen for months, quarters, or even years.
 
-Feel free to drop comments below!
+Feel free to comment below!
