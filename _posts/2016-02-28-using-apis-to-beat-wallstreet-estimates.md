@@ -54,7 +54,7 @@ its own platform.
 ## How does Wallstreet come in?
 
 I've been getting fleeced by the [TWTR](https://www.google.com/finance?q=TWTR&ei=rxbTVvGnLNaNmAGo2q64Ag) stock for a while now, **even while having this knowledge months ago.**
-I knew of this fall 2015 and did not act on it. This was because I didn't realize I could use twitter's API as a buy or sell signal
+I knew of this in the Summer of 2015 and did nothing. I was reluctant to use the Twitter API as a buy or sell signal
 on the stock. My finance world and my development world were completely distinct. And then this happened.
 
 <img src="/public/images/twitterbeatdastreet/VennEpiphany.jpg" alt="Venn Epiphany" style="max-width: 400px; width: 100%;"/>
