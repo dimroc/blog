@@ -5,10 +5,10 @@ date: "Sun Feb 28 12:23:53 -0500 2016"
 tags: business finance
 ---
 
-I made a killer trade the other day. It was a near guarateed win. And it came from a buy signal on a side project. Let me walk you through it.
+I made a killer trade the other day. And it came from a buy signal on a side project. Let me walk you through it.
 
 I've been farming tweets from cities for years now. They've spun out into experimental projects like [Urban Events](/2015/12/29/search-across-cities/) and
-[New Tweet City](/2014/09/24/tweets-as-pixels/). When investigating Twitter media, one thing that became very apparent was that most twitter images actually
+[New Tweet City](/2014/09/24/tweets-as-pixels/). When investigating Twitter media, one thing that became apparent was that most twitter images actually
 belonged to Instagram (IG).
 
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/HunterEliteGene">@HunterEliteGene</a> And your favorite level?</p>&mdash; Minibar Austin (@MinibarAustin) <a href="https://twitter.com/MinibarAustin/status/703329275970244611">February 26, 2016</a></blockquote>
@@ -41,7 +41,7 @@ Man that's a lot of Instagram. Let's check it out as a percentage.
 
 ![Twitter NYC Percentage](/public/images/twitterbeatdastreet/TwitterNycMediaSplit.jpg)
 
-Damn bruv. Peaked at 92%! So here's where I give you the disclaimer about which tweets I'm analyzing.
+Peaked at 92%! So here's where I give you the disclaimer about which tweets I'm analyzing.
 **This is only applicable to geotagged tweets with media.** After all, if it's not geotagged I can't tell if it's coming out of NYC.
 
 Still. Let's take a look at some other cities:
@@ -56,7 +56,7 @@ its own platform.
 ## How does Wall Street come in?
 
 I've been getting fleeced by the [TWTR](https://www.google.com/finance?q=TWTR&ei=rxbTVvGnLNaNmAGo2q64Ag) stock for a while now, **even while having this knowledge months ago.**
-I knew of this in the Summer of 2015 and did nothing. I was reluctant to use the Twitter API as a buy or sell signal
+I knew of this in the Summer of 2015, **when TWTR was $51 (it's now $17)**, and did nothing. I was reluctant to use the Twitter API as a buy or sell signal
 on the stock. My finance world and my development world were completely distinct. And then this happened.
 
 <img src="/public/images/twitterbeatdastreet/VennEpiphany.jpg" alt="Venn Epiphany" style="max-width: 400px; width: 100%;"/>
@@ -87,10 +87,19 @@ But wait, then earnings were released. It spiked up to as high as $112. I waited
 Exercising 300 FB shares became $32,748, I got my first margin call and needed to shore up cash. I just dumped the shares
 and took home a profit of around $3k.
 
-## All of that for $3K
+## Don't forget the context!
+
+Remembering the context of all this is important. Before 2016, Twitter's outlook wasn't so bleak. In December 2014, a Twitter exec threw this [jab](http://fortune.com/2014/12/11/twitter-evan-williams-instagram/)
+
+> Twitter co-founder Evan Williams: 'I don't give a shit' if Instagram has more users
+
+Now add a finding that claims a majority of your `image` traffic belongs to your rival. Perhaps they'll say Twitter has
+always been about the 140 character tweet. After pushing [Moments](http://money.cnn.com/2015/10/06/technology/twitter-moments/), unlikely.
+
+## All of that for only $3K
 
 It was by far the surest I had ever been that a stock would pop on earnings, and I was timid. I needed some Wolf of Wall Street that day
-and I didn't have it. But you always say that after a successful trade! It was a great experience and I'm hoping that the stars
+and I didn't have it. But you always say that after a successful trade. It was a great experience and I'm hoping that the stars
 will align again, but I've accepted that it might not happen for months, quarters, or even years.
 
 Comment below!
