@@ -2,7 +2,7 @@
 layout: post
 title: "Using Twitter API to beat the [Wall]Street"
 date: "Sun Feb 28 12:23:53 -0500 2016"
-tags: business
+tags: business finance
 ---
 
 I made a killer trade the other day. It was a near guarateed win. And it came from a buy signal on a side project. Let me walk you through it.
