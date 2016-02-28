@@ -7,8 +7,8 @@ tags: business finance
 
 I made a killer trade the other day. It was a near guarateed win. And it came from a buy signal on a side project. Let me walk you through it.
 
-I've been farming tweets from cities for years now. They've spun out into experimental projects like [Urban Events](http://urbanevents.dimroc.com/?q=tattoos) and
-[New Tweet City](http://www.newtweetcity.com/boroughs/manhattan). When investigating Twitter media, one thing that became very apparent was that most twitter images actually
+I've been farming tweets from cities for years now. They've spun out into experimental projects like [Urban Events](/2015/12/29/search-across-cities/) and
+[New Tweet City](/2014/09/24/tweets-as-pixels/). When investigating Twitter media, one thing that became very apparent was that most twitter images actually
 belonged to Instagram (IG).
 
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/HunterEliteGene">@HunterEliteGene</a> And your favorite level?</p>&mdash; Minibar Austin (@MinibarAustin) <a href="https://twitter.com/MinibarAustin/status/703329275970244611">February 26, 2016</a></blockquote>
