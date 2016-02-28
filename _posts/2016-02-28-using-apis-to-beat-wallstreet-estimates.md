@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Using Twitter API to beat the [Wall]Street"
+title: "Using Twitter API to beat the [Wall] Street"
 date: "Sun Feb 28 12:23:53 -0500 2016"
 tags: business finance
 ---
@@ -51,7 +51,7 @@ its own platform.
 
 <img src="/public/images/twitterbeatdastreet/Bruh.jpeg" width="300px" alt="Bruh"/>
 
-## How does Wallstreet come in?
+## How does Wall Street come in?
 
 I've been getting fleeced by the [TWTR](https://www.google.com/finance?q=TWTR&ei=rxbTVvGnLNaNmAGo2q64Ag) stock for a while now, **even while having this knowledge months ago.**
 I knew of this in the Summer of 2015 and did nothing. I was reluctant to use the Twitter API as a buy or sell signal
@@ -87,7 +87,7 @@ and took home a profit of around $3k.
 
 ## All of that for $3K
 
-It was by far the surest I had ever been that a stock would pop on earnings, and I was timid. I needed some Wolf of Wallstreet that day
+It was by far the surest I had ever been that a stock would pop on earnings, and I was timid. I needed some Wolf of Wall Street that day
 and I didn't have it. But you always say that after a successful trade! It was a great experience and I'm hoping that the stars
 will align again, but I've accepted that it might not happen for months, quarters, or even years.
 
