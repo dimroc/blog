@@ -1,10 +1,7 @@
 # Dependencies
-markdown:         redcarpet
-highlighter:      pygments
 
 # Permalinks
 permalink:        pretty
-relative_permalinks: true
 
 # Setup
 title:            dimroc
@@ -31,3 +28,7 @@ version:          2.1.0
 
 github:
   repo:           https://github.com/dimroc/blog
+
+gems:
+  - jekyll-paginate
+  - jekyll-gist

@@ -16,7 +16,7 @@ were actually links to Instagram (IG) rather than Twitter images.
 
 In JSON format:
 
-{% highlight javascript %}
+```
 {
   "id": 703309386622615600,
   "text": "I captured every level of drunk last night 📷🍺 @ 6th Street, Austin, TX https://t.co/ZEspPWrfPR",
@@ -24,27 +24,24 @@ In JSON format:
   "entities": {
     "urls": [{
         "url": "https://t.co/ZEspPWrfPR",
-        "display_url": "instagram.com/p/BCQx8Z3gNiC/", // Important!
-        ...
+        "display_url": "instagram.com/p/BCQx8Z3gNiC/" //Important!
       }]
-  },
-  ...
+  }
 }
-{% endhighlight %}
+```
 
 This tweet, despite being all text, contains media at the end of the tunnel. So I grabbed the Instagram image
 and reclassified the tweet as `image` in my system:
 
 
-{% highlight javascript %}
+```
 {
   "id":"703309386622615553",
-  "mediaType":"image", // *Important* Marked as Image
-  "mediaUrl":"https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/12724735_1711188682429506_1029304848_n.jpg?ig_cache_key=MTE5MzY3MzU1NjQ3NTU2NjIxMA%3D%3D.2.l", // has instagram url
-  "text":"I captured every level of drunk last night 📷🍺...",
-  ...
+  "mediaType":"image", *Important*
+  "mediaUrl":"https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/12724735_1711188682429506_1029304848_n.jpg?ig_cache_key=MTE5MzY3MzU1NjQ3NTU2NjIxMA%3D%3D.2.l", //instagram
+  "text":"I captured every level of drunk last night 📷🍺..."
 }
-{% endhighlight %}
+```
 
 <div style="text-align: center;">
   <img src="/public/images/twitterbeatdastreet/LevelOfDrunk.jpg" alt="Level Of Drunk" width="200px" style="display:inline-block;">
