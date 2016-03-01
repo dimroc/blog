@@ -8,31 +8,53 @@ tags: business finance
 I made a killer trade the other day. And it came from a buy signal on a side project. Let me walk you through it.
 
 I've been farming tweets from cities for years now. They've spun out into experimental projects like [Urban Events](/2015/12/29/search-across-cities/) and
-[New Tweet City](/2014/09/24/tweets-as-pixels/). When investigating Twitter media, one thing that became apparent was that most twitter images actually
-belonged to Instagram (IG).
+[New Tweet City](/2014/09/24/tweets-as-pixels/). When investigating Twitter media, one thing that became apparent was that many tweets
+were actually links to Instagram (IG) rather than Twitter images.
 
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/HunterEliteGene">@HunterEliteGene</a> And your favorite level?</p>&mdash; Minibar Austin (@MinibarAustin) <a href="https://twitter.com/MinibarAustin/status/703329275970244611">February 26, 2016</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-This tweet, despite being all text, is actually classified as an `image` in the Twitter API. And this is how it ends up in my application:
+In JSON format:
+
+{% highlight javascript %}
+{
+  "id": 703309386622615600,
+  "text": "I captured every level of drunk last night 📷🍺 @ 6th Street, Austin, TX https://t.co/ZEspPWrfPR",
+  "source": "<a href=\"http://instagram.com\" rel=\"nofollow\">Instagram</a>",
+  "entities": {
+    "urls": [{
+        "url": "https://t.co/ZEspPWrfPR",
+        "display_url": "instagram.com/p/BCQx8Z3gNiC/", // Important!
+        ...
+      }]
+  },
+  ...
+}
+{% endhighlight %}
+
+This tweet, despite being all text, contains media at the end of the tunnel. So I grabbed the Instagram image
+and reclassified the tweet as `image` in my system:
+
 
 {% highlight javascript %}
 {
   "id":"703309386622615553",
   "mediaType":"image", // *Important* Marked as Image
   "mediaUrl":"https://scontent.cdninstagram.com/t51.2885-15/s640x640/sh0.08/e35/12724735_1711188682429506_1029304848_n.jpg?ig_cache_key=MTE5MzY3MzU1NjQ3NTU2NjIxMA%3D%3D.2.l", // has instagram url
-  "text":"I captured every level of drunk last night 📷🍺 @ 6th Street, Austin, TX https://t.co/ZEspPWrfPR",
-  "city":"austin",
-  "createdAt":"2016-02-26T20:03:19Z",
-  "fullName":"imdotish",
+  "text":"I captured every level of drunk last night 📷🍺...",
   ...
 }
 {% endhighlight %}
 
-## How many Twitter Images are actually Instagram?
+<div style="text-align: center;">
+  <img src="/public/images/twitterbeatdastreet/LevelOfDrunk.jpg" alt="Level Of Drunk" width="200px" style="display:inline-block;">
+  <div>Keeping it classy, dirty 6th</div>
+</div>
+
+## How many Images are actually Instagram?
 
 I knew a lot of the traffic were links to Instagram but I wasn't sure how much. All my tweets live in Elasticsearch, which has a data visualization
-tool called [Kibana](https://www.elastic.co/products/kibana). It allowed me to chart what percentage of twitter images were actually Instagram links.
+tool called [Kibana](https://www.elastic.co/products/kibana). It allowed me to chart what percentage of images were actually Instagram links.
 Let's start with New York City and see what we have:
 
 ![Twitter NYC Stacked](/public/images/twitterbeatdastreet/TwitterNycImagesStacked.jpg)
@@ -85,7 +107,7 @@ But wait, then earnings were released. It spiked up to as high as $112. I waited
 ![Facebook Call Options BOOM](/public/images/twitterbeatdastreet/FacebookCallOptionsBOOM.jpg)
 
 Exercising 300 FB shares became $32,748, I got my first margin call and needed to shore up cash. I just dumped the shares
-and took home a profit of around $3k.
+and took home a profit of around $3k, just over 300% of the initial ~$900.
 
 ## Don't forget the context!
 
