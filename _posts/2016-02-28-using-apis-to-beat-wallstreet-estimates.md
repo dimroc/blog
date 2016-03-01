@@ -14,7 +14,7 @@ were actually links to Instagram (IG) rather than Twitter images.
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/HunterEliteGene">@HunterEliteGene</a> And your favorite level?</p>&mdash; Minibar Austin (@MinibarAustin) <a href="https://twitter.com/MinibarAustin/status/703329275970244611">February 26, 2016</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-In JSON format:
+In JSON
 
 ```
 {
@@ -33,6 +33,9 @@ In JSON format:
 This tweet, despite being all text, contains media at the end of the tunnel. So I grabbed the Instagram image
 and reclassified the tweet as `image` in my system:
 
+<div style="text-align: center;">
+  <img src="/public/images/twitterbeatdastreet/LevelOfDrunk.jpg" alt="Level Of Drunk" width="200px" style="display:inline-block;">
+</div>
 
 ```
 {
@@ -42,11 +45,6 @@ and reclassified the tweet as `image` in my system:
   "text":"I captured every level of drunk last night 📷🍺..."
 }
 ```
-
-<div style="text-align: center;">
-  <img src="/public/images/twitterbeatdastreet/LevelOfDrunk.jpg" alt="Level Of Drunk" width="200px" style="display:inline-block;">
-  <div>Keeping it classy, dirty 6th</div>
-</div>
 
 ## How many Images are actually Instagram?
 
