@@ -1,15 +1,17 @@
 ---
 layout: post
-title: "Using Twitter API to beat the [Wall] Street"
+title: "Using Twitter API to beat the (Wall) Street"
 date: "Sun Feb 28 12:23:53 -0500 2016"
 tags: business finance
 ---
 
 I made a killer trade the other day. And it came from a buy signal on a side project. Let me walk you through it.
 
+## Tweet Farmer
+
 I've been farming tweets from cities for years now. They've spun out into experimental projects like [Urban Events](/2015/12/29/search-across-cities/) and
-[New Tweet City](/2014/09/24/tweets-as-pixels/). When investigating Twitter media, one thing that became apparent was that many tweets
-were actually links to Instagram (IG) rather than Twitter images.
+[New Tweet City](/2014/09/24/tweets-as-pixels/). When investigating Twitter media, it became apparent that many tweets
+were actually links to Instagram (IG).
 
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/HunterEliteGene">@HunterEliteGene</a> And your favorite level?</p>&mdash; Minibar Austin (@MinibarAustin) <a href="https://twitter.com/MinibarAustin/status/703329275970244611">February 26, 2016</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -30,7 +32,7 @@ In JSON
 }
 ```
 
-This tweet, despite being all text, contains media at the end of the tunnel. So I grabbed the Instagram image
+This tweet, despite being all text, has a URL and contains media at the end of the tunnel. So I grabbed the Instagram image
 and reclassified the tweet as `image` in my system:
 
 <div style="text-align: center;">
@@ -46,31 +48,32 @@ and reclassified the tweet as `image` in my system:
 }
 ```
 
-## How many Images are actually Instagram?
+## How many Images were actually Instagram?
 
-I knew a lot of the traffic were links to Instagram but I wasn't sure how much. All my tweets live in Elasticsearch, which has a data visualization
-tool called [Kibana](https://www.elastic.co/products/kibana). It allowed me to chart what percentage of images were actually Instagram links.
-Let's start with New York City and see what we have:
+I had to know. Fortunately, all my tweets lived in [Elasticsearch](https://www.elastic.co/), which has a data visualization
+tool called [Kibana](https://www.elastic.co/products/kibana).
+I charted the number of `media` tweets that were actually Instagram links per city.
+Let's start with a look at New York City below:
 
 ![Twitter NYC Stacked](/public/images/twitterbeatdastreet/TwitterNycImagesStacked.jpg)
 
-Man that's a lot of Instagram. Let's check it out as a percentage.
+Man, that's a lot of Instagram. Let's check it out as a percentage.
 
 ![Twitter NYC Percentage](/public/images/twitterbeatdastreet/TwitterNycMediaSplit.jpg)
 
 Peaked at 92%! So here's where I give you the disclaimer about which tweets I'm analyzing.
 **This is only applicable to geotagged tweets with media.** After all, if it's not geotagged I can't tell if it's coming out of NYC.
 
-Still. Let's take a look at some other cities:
+Let's take a look at some other cities:
 
 ![Twitter Cities Percentage](/public/images/twitterbeatdastreet/TwitterMediaOriginSplitsStacked.jpg)
 
-Shout out to LA for **only having 64% of traffic from Instagram**. So on Twitter's best day, it only has 36% of images on
+Shout out to LA for **only having 64% of traffic from Instagram**. So on Twitter's best day, it only had 36% of images on
 its own platform.
 
 <img src="/public/images/twitterbeatdastreet/Bruh.jpeg" width="300px" alt="Bruh"/>
 
-## How does Wall Street come in?
+## How did Wall Street come in?
 
 I've been getting fleeced by the [TWTR](https://www.google.com/finance?q=TWTR&ei=rxbTVvGnLNaNmAGo2q64Ag) stock for a while now, **even while having this knowledge months ago.**
 I knew of this in the Summer of 2015, **when TWTR was $51 (it's now $17)**, and did nothing. I was reluctant to use the Twitter API as a buy or sell signal
@@ -78,7 +81,7 @@ on the stock. My finance world and my development world were completely distinct
 
 <img src="/public/images/twitterbeatdastreet/VennEpiphany.jpg" alt="Venn Epiphany" style="max-width: 400px; width: 100%;"/>
 
-It seems obvious now, but I never went into my side projects to discover signals, and looking at the information, the perfect trade
+It seems obvious now, but I never went into my side projects to discover signals. Looking at the information, the perfect trade
 would have been a pair trade shorting TWTR and buying FB (owner of Instagram). But I felt I had missed the boat on TWTR. I actually hadn't,
 but I've been burned by bottom fishing before and I wasn't going to do that again. Not me, no sir.
 
@@ -86,10 +89,10 @@ Then in January, I landed on this [nugget of information about Instagram](http:/
 
 > We’re excited to announce that starting this month, advertisers both large and small can run campaigns on Instagram. In addition, ads are now available in more than 30 new countries—including Italy, Spain, Mexico, India and South Korea—and will be launching in markets around the world on Sept. 30.
 
-September 30th 2015. This means that [FB Q4 Earnings](http://investor.fb.com/releasedetail.cfm?ReleaseID=952040), released in January, was the first earnings release with IG ad revenue for a full quarter.
+September 30th 2015. This means that [FB Q4 Earnings](http://investor.fb.com/releasedetail.cfm?ReleaseID=952040), released in January, would be the first earnings release with IG ad revenue for a full quarter.
 My, my are the stars aligning! Couple this with some napkin math on their estimates (**translation**: pure speculation), I was going in for the buy.
 
-## Buying options for leverage right before earnings release
+## Buying options for leverage
 
 ![Facebook Options Confirmation](/public/images/twitterbeatdastreet/FBOptionConfirmation.jpg)
 
@@ -97,11 +100,11 @@ It's not a game anymore. The options had a strike price of $99 and cost me just 
 
 When the market bell closed on the 28th, [FB](https://www.google.com/finance?q=NASDAQ%3AFB&ei=shbTVuHoJpazmAGNw5HQBQ) stock dipped to $94.50. GG y'all, 🍻, this was fun.
 
-But wait, then earnings were released. It spiked up to as high as $112. I waited until the next morning and I was out of there:
+And then earnings were released. It spiked up to as high as $112. I waited until the next morning and I was out of there:
 
 ![Facebook Call Options BOOM](/public/images/twitterbeatdastreet/FacebookCallOptionsBOOM.jpg)
 
-Exercising 300 FB shares became $32,748, I got my first margin call and needed to shore up cash. I just dumped the shares
+Exercising 300 FB shares became $32,748, I got my first margin call and needed to shore up some cash. I just dumped the shares
 and took home a profit of around $3k, just over 300% of the initial ~$900.
 
 ## Don't forget the context!
@@ -119,4 +122,4 @@ It was by far the surest I had ever been that a stock would pop on earnings, and
 and I didn't have it. But you always say that after a successful trade. It was a great experience and I'm hoping that the stars
 will align again, but I've accepted that it might not happen for months, quarters, or even years.
 
-Comment below!
+Comment below.
