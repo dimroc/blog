@@ -121,5 +121,3 @@ always been about the 140 character tweet. After pushing [Moments](http://money.
 It was by far the surest I had ever been that a stock would pop on earnings, and I was timid. I needed some Wolf of Wall Street that day
 and I didn't have it. But you always say that after a successful trade. It was a great experience and I'm hoping that the stars
 will align again, but I've accepted that it might not happen for months, quarters, or even years.
-
-Comment below.
