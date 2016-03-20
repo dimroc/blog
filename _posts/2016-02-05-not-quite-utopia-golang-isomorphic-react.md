@@ -15,7 +15,7 @@ Notes:
   * Both the golang and react ecosystems are in flux.
   * What's best practice this year will be abandonware next year.
 * Client siding routing with react-router is extremely time consuming
-  * Gets even hard when you add redux, but redux-simple-router helps
+  * Gets even harder when you add redux, but redux-simple-router helps
   * Difficulty bumps up another level when you run into bugs rendering js server side.
   * Good luck debugging javascript rendered in duktape on golang.
 * Isomorphic javascript starts off great, falls apart when half the client libraries you need require the `window` object
