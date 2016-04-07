@@ -26,8 +26,8 @@ and other amazing innovations continue a vicious price war in the consumer space
 
 ## Japan: The Canary in the Coal Mine
 
-Japan's stagflation period of the 90s is what we'll be looking at. Present day Japan has gotten so desperate,
-they've resorted to a [negative rate](http://www.cnbc.com/2016/04/07/what-the-bank-of-japan-boj-will-do-now-that-negative-rates-have-disappointed.html)
+[Japan's stagflation](https://en.wikipedia.org/wiki/Lost_Decade_(Japan)) period of the 90s is what we'll be looking at. Some have said that it continued into 2010, and I don't think it ever stopped.
+Present day Japan has gotten so desperate, they've resorted to a [negative rate](http://www.cnbc.com/2016/04/07/what-the-bank-of-japan-boj-will-do-now-that-negative-rates-have-disappointed.html)
 to force people to spend money.
 
 ## What to do? Short!
