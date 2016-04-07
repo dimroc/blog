@@ -33,3 +33,6 @@ to force people to spend money.
 ## What to do? Short!
 
 I've taken short positions in BP and NOK.
+
+* BP: Unsustainable dividend of 8%, ridiculous EPS of -2.12, and no, it's not priced in.
+* NOK: Market Cap of 33B is going to erode over time, layoffs signal contraction not growth over the long term.
