@@ -32,4 +32,4 @@ to force people to spend money.
 
 ## What to do? Short!
 
-I've take short positions in BP and NOK.
+I've taken short positions in BP and NOK.
