@@ -19,6 +19,9 @@ than complete economic collapse, growth rates we saw a few decades ago are no wh
 Did the QE just delay the inevitable? If the war on drugs taught us anything, it's that you can't stop
 the invisible hand of the economy.
 
+### Mortgage Rates proof of long running deflation
+![Long Running 30 Year Mortgage Rates](/public/images/DeflationProof30YearFixedRateMortgageAverage.jpg)
+
 ## Technology has made us too efficient
 
 The cost of goods continue to dive, and so will prices, adding to the deflationary pressure. $5 Ubers, free international calling via Skype,
