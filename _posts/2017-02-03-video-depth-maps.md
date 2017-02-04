@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "video-depth-maps"
+title: "Video Depth Maps, Zed and NVDA"
 date: "Fri Feb 03 15:55:29 -0800 2017"
 ---
 
@@ -12,9 +12,11 @@ It all starts with a stereo video:
 
 <video src="/public/videos/elsegundo-leftright.mp4" controls></video>
 
-and after some math, becomes a left and depth video:
+and after some math, becomes a __left and depth video__:
 
 <video src="/public/videos/elsegundo-leftdepth.mp4" controls></video>
+
+The whiteness of each pixel in the video to the right dictates how far away that object is from the camera. A completely white pixel is 2 feet away and a gray pixel could be say 10 feet away.
 
 ## How is this magic possible?
 
@@ -25,19 +27,22 @@ I had a lot of help from the [Zed stereo camera](https://www.stereolabs.com/):
 They are using [Nvidia's CUDA](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&uact=8&ved=0ahUKEwj5iNHGlPXRAhUqj1QKHV2ZApwQFggqMAE&url=http%3A%2F%2Fwww.nvidia.com%2Fobject%2Fcuda_home_new.html&usg=AFQjCNFOgRLjdcy04deySQVzAVHfj9Pbiw&sig2=KDG8MuXe2l5WwLJUJNietA&bvm=bv.146094739,d.cGw)
 to run GPGPU algorithms against the stereo images to calculate the depth of each pixel.
 
-![Baseline Depth Calculation](/public/images/stereo-geometry.png)
-Read more about it [here](http://www.slideshare.net/yuhuang/passive-stereo-vision-with-deep-learning).
-
 ## Not Always Perfect
 
 <video src="/public/videos/pier_high_exposure.mp4" controls></video>
 
-As you can see in the video above, distance dramatically affects the depth perception. This is because the distance the camera are from each other, bifocal length, dictates
-how much disparity it can calculate in the stereo images. This is why the iPhone 7 Plus can only do portrait mode at 8 feet away.
+As you can see in the video above, distance dramatically affects depth perception. The horizon is obviously __not__ the closest thing to the camera.
+
+The farther the two lenses are from each other, called the baseline, the farther away it can perceive depth.
+But then the closer things are ignored. The iPhone 7 Plus can only do portrait mode at 8 feet away because of the baseline length between its dual cameras.
+
+![Baseline Depth Calculation](/public/images/stereo_depth.jpg)
+Read more about it generating depth maps from stereo images [here at OpenCV](http://docs.opencv.org/3.2.0/dd/d53/tutorial_py_depthmap.html).
 
 ## Future
 
-This is all extremely relevant in the realm of autonomous vehicles. And that space is on fire. Just look at nVidia's stock the last year:
+This is all extremely relevant in the realm of autonomous vehicles. And that space is on fire. Want to know how far an rock is from a car? Generate a depth map in real time.
+And that's exactly what nVidia's graphics cards allow you to do. The market seems excited by it, take a look at nVidia's stock price the last year:
 
 ![Nvidia Stock](/public/images/nvidia_stock.jpg)
 

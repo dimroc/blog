@@ -46,3 +46,7 @@ iframe {
   margin: auto;
   display: block;
 }
+
+video {
+  max-width: 800px;
+}
