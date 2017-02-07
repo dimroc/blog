@@ -34,16 +34,17 @@ to run GPGPU algorithms against the stereo images to calculate the depth of each
 
 As you can see in the video above, distance dramatically affects depth perception. The horizon is obviously __not__ the closest thing to the camera.
 
-The farther the two lenses are from each other, called the baseline, the farther away it can perceive depth.
-But then the closer things are ignored. The iPhone 7 Plus can only do portrait mode at 8 feet away because of the baseline length between its dual cameras.
+The farther away the two lenses are from each other, the farther away it can perceive depth. Inversely, the narrower
+the baseline, the closer it can perceive depth. This distance is called the baseline.
+The iPhone 7 Plus can only do portrait mode eight feet away because of the baseline length between its dual cameras on such a small form factor.
 
 ![Baseline Depth Calculation](/public/images/stereo_depth.jpg)
 Read more about it generating depth maps from stereo images [here at OpenCV](http://docs.opencv.org/3.2.0/dd/d53/tutorial_py_depthmap.html).
 
 ## Future
 
-This is all extremely relevant in the realm of autonomous vehicles. And that space is on fire. Want to know how far an rock is from a car? Generate a depth map in real time.
-And that's exactly what nVidia's graphics cards allow you to do. The market seems excited by it, take a look at nVidia's stock price the last year:
+This is all extremely relevant in the realm of autonomous vehicles. And that space is on fire. Want to know how far a rock is from a car? Generate a depth map in real time.
+And that's exactly what NVidia's graphics cards allow you to do. The market seems excited by it, take a look at nVidia's stock price the last year:
 
 ![Nvidia Stock](/public/images/nvidia_stock.jpg)
 
