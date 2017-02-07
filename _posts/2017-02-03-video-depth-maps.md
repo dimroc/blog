@@ -11,11 +11,11 @@ My latest experiment has been to generate video depth maps with the goal of spli
 
 It all starts with a stereo video:
 
-<video src="/public/videos/elsegundo-leftright.mp4" controls></video>
+<video src="/public/videos/elsegundo-leftright.mp4" controls="true" type="video/mp4" poster="/public/images/videodepth/leftright.jpg"></video>
 
 and after some math, becomes a __left and depth video__:
 
-<video src="/public/videos/elsegundo-leftdepth.mp4" controls></video>
+<video src="/public/videos/elsegundo-leftdepth.mp4" controls="true" type="video/mp4" poster="/public/images/videodepth/leftdepth.jpg"></video>
 
 The whiteness of each pixel in the video to the right dictates how far away that object is from the camera. A completely white pixel is 2 feet away and a gray pixel could be say 10 feet away.
 
@@ -30,7 +30,7 @@ to run GPGPU algorithms against the stereo images to calculate the depth of each
 
 ## Not Always Perfect
 
-<video src="/public/videos/pier_high_exposure.mp4" controls></video>
+<video src="/public/videos/pier_high_exposure.mp4" controls="true" type="video/mp4" poster="/public/images/videodepth/leftdeptherror.jpg"></video>
 
 As you can see in the video above, distance dramatically affects depth perception. The horizon is obviously __not__ the closest thing to the camera.
 
