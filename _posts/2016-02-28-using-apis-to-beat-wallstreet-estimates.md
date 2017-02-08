@@ -5,7 +5,7 @@ date: "Sun Feb 28 12:23:53 -0500 2016"
 tags: business finance
 ---
 
-I made a killer trade the other day. And it came from a buy signal on a side project. Let me walk you through it.
+I made a killer trade the other day. And it came from a buy signal on a side project. It showed me that Instagram was cannibalizing Twitter image traffic over time. Let me walk you through it.
 
 ## Tweet Farmer
 
