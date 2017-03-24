@@ -19,6 +19,10 @@ and after some math, becomes a __left and depth video__:
 
 The whiteness of each pixel in the video to the right dictates how far away that object is from the camera. A completely white pixel is 2 feet away and a gray pixel could be say 10 feet away.
 
+Here are a few others:
+
+![Library of Left and Depths](/public/images/videodepth/collection.jpg)
+
 ## How is this magic possible?
 
 I had a lot of help from the [Zed stereo camera](https://www.stereolabs.com/):
