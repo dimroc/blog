@@ -2,7 +2,7 @@
 layout: post
 title: "Machine Learning NYC Neighborhoods"
 date: "Wed Jan 13 10:15:46 -0500 2016"
-tags: aws elixir
+tags: aws elixir machine-learning
 ---
 
 Check out the [NYC Neighborhood Predictor](http://machinelearninghoods.dimroc.com)!
