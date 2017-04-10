@@ -7,7 +7,7 @@ tags: aws machine-learning
 
 _This article talks about a solution that involved sensitive information.
 As a result, all the names and numbers have been replaced with bogus
-information.  The concepts are still relevant and applicable!_
+information.  The concepts are still relevant and applicable._
 
 Everyone has an insurance number, and no one knows their actual insurance policy.
 Is it car or life insurance? Is it Platinum Shield Standard or Platinum Shield
