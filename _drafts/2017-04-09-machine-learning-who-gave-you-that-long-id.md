@@ -43,3 +43,7 @@ have a pattern to them, and this is how we'll learn them.
 ![Prediction Searcher](/public/images/machine-learning-ids/Parachute_Policy_Predictor.jpg)
 ![Features Spreadsheet](/public/images/machine-learning-ids/ParachuteInsuranceNumbersExpandedFeatureList.jpg)
 ![Heat Map](/public/images/machine-learning-ids/PredictionHeatMap.jpg)
+![First Digit - Two](/public/images/machine-learning-ids/firstDigitTwoPolicies.png)
+![First Digit - Three](/public/images/machine-learning-ids/firstDigitThreePolicies.png)
+![First Digit - Many](/public/images/machine-learning-ids/firstDigitManyPolicies.png)
+![Second Digit - Three](/public/images/machine-learning-ids/secondDigitThreePolicies.png)
