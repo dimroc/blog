@@ -181,7 +181,8 @@ The code above performs a few key steps:
       ```
   - [More documentation can be found here](http://docs.aws.amazon.com/machine-learning/latest/dg/data-rearrangement.html)
 - Data Schema
-  - Describes each csv column with AWS Machine Learning metadata. The example below is for a Multiclass Classification Model
+  - Describes each csv column with AWS Machine Learning metadata. The example
+  below is for a [Multiclass Classification Model](http://docs.aws.amazon.com/machine-learning/latest/dg/multiclass-classification.html)
   - ```json
       {
         "version" : "1.0",

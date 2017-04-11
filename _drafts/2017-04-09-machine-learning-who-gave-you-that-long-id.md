@@ -21,7 +21,7 @@ Andrew Ng of Stanford and Coursera](https://www.coursera.org/learn/machine-learn
 - Regex might not exist for that particular provider
 - Cannot learn and improve over time like a machine learning model can.
 - Still unmanageable working with tens if not hundreds of providers
-as opposed to one multiclassifying model
+  as opposed to one [Multiclass Classification Model](http://docs.aws.amazon.com/machine-learning/latest/dg/multiclass-classification.html)
 
 
 ## How do we machine learn a string?
