@@ -181,8 +181,7 @@ The code above performs a few key steps:
       ```
   - [More documentation can be found here](http://docs.aws.amazon.com/machine-learning/latest/dg/data-rearrangement.html)
 - Data Schema
-  - Describes each csv column with AWS Machine Learning metadata. The example
-  below is for a [Multiclass Classification Model](http://docs.aws.amazon.com/machine-learning/latest/dg/multiclass-classification.html)
+  - Describes each csv column with AWS Machine Learning metadata. The example below is for a Multiclass Classification Model
   - ```json
       {
         "version" : "1.0",
@@ -256,8 +255,9 @@ calls using the IDs you just received.
     wait_for_ml(:evaluation_available)
   end
 ```
-- Generates a F1 Heat Map
-  - ![F1 Heat Map](/public/images/machine-learning-ids/PredictionHeatMap.jpg)
+- Generates a [performance visualization](http://docs.aws.amazon.com/machine-learning/latest/dg/multiclass-model-insights.html)
+
+<img src="/public/images/machine-learning-ids/Multiclass_Model_Insights_-_Amazon_Machine_Learning.jpg" alt="F1 Heat Map" style="max-width:500px;"/>
 
 ## Create Realtime Endpoint
 
