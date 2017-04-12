@@ -7,7 +7,7 @@ tags: aws machine-learning ruby etl
 
 Automating the creation of your machine learning (ML) model can allow your
 services to evolve over time, automatically. This article assumes you have
-used AWS ML Web Interface or have some understanding of AWS ML.
+used the AWS ML Web Interface or have some understanding of AWS ML.
 
 Ideally, we would have a model that would use Stochastic Gradient Descent
 and would learn per query. But when you want a low maintenance solution such
@@ -17,8 +17,8 @@ since AWS ML models are immutable by design.
 You can, however, retrain a new model and then flip the switch so queries go
 to the new endpoint.
 
-Achieving this requires the classic **ETL** or Extract, Transform, Load. This article
-will be focusing on that last step **Load**. And the hardest step in the **load**:
+In our setup, achieving this requires a classic Extract, Transform, Load or **ETL**. This article
+will be focusing on that last step **Load**. And the hardest step in the AWS ML **load**:
 Creating Data Sources.
 
 Before we talk about **load** though, let's set up a simple extract and transform
@@ -51,7 +51,7 @@ end
   by AWS Machine Learning models
 - What those features are depends on your data and your machine learning model,
   whether it be simple linear regression or a deep neural network
-- Figuring out features is outside the scope of this article but read [Machine Learning Long Ids](tofix)
+- Figuring out features is outside the scope of this article but read [Machine Learning Long Ids](/2017/04/09/machine-learning-who-gave-you-that-long-id/)
   for some more insight, or better yet, take [Andrew Ng's Machine Learning Course](https://www.coursera.org/learn/machine-learning)
 
 ```ruby
