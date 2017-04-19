@@ -90,8 +90,6 @@ confident decision boundaries around certain policies. It'll just be in
 
 Imagine 20 features, one per digit, all collaborating to isolate the pattern.
 
---- INSERT 3d IMAGE
-
 Visualizing three dimensions can get trippy, so twenty plus is unrealistic.
 As such, we place our trust in math and our test set that the combination of
 these dimensions will yield confident answers.
