@@ -48,7 +48,11 @@ Read more about it generating depth maps from stereo images [here at OpenCV](htt
 ## Future
 
 This is all extremely relevant in the realm of autonomous vehicles. And that space is on fire. Want to know how far a rock is from a car? Generate a depth map in real time.
-And that's exactly what NVidia's graphics cards allow you to do. The market seems excited by it, take a look at nVidia's stock price the last year:
+And that's exactly what NVidia's graphics cards allow you to do. They excel at simple calculations run in parallel across datasets,
+which is exactly what neural networks in machine learning do. This general purpose usage of the GPU (GPGPU) has led to video
+cards being snatched up by Deep Learning data centers to get an edge in AI.
+
+The market seems excited by it, take a look at nVidia's stock price the last year:
 
 ![Nvidia Stock](/public/images/nvidia_stock.jpg)
 
