@@ -7,6 +7,7 @@ tags: ruby elixir golang scala etl
 *Update 05/11/2015: After reading this, check out [part 2](/2015/05/07/etl-language-showdown-pt2/) to
 see how updates to the younger languages (Elixir, Golang) and changes to the algorithm (no intermediary reduction file) affected results.*
 
+*Update: There is now a [part 3](/2015/11/14/etl-language-showdown-pt3/)*
 ---
 
 How do the following languages stack up when running an [extract, transform, and load (ETL)](https://en.wikipedia.org/wiki/Extract,_transform,_load) against ~40M tweets? Read on to find out more.
@@ -186,7 +187,7 @@ $ parallel -j 100% -a commands.txt && ruby reducer.rb
 - All the Erlang and Elixir goodness
 
 #### Observations
-- Performance average after first write with `:delayed_write`: `2m30.508s`. 
+- Performance average after first write with `:delayed_write`: `2m30.508s`.
 - This number says less about Elixir's performance and more about how much I suck at writing Elixir code. Ease of writing performant code though is a valid factor.
 - Extremely productive language once one knows the module functions, but difficult to discover.
 - Clearly designed for use with a text editor and the command-line (It's great).

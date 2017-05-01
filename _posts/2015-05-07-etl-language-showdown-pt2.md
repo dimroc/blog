@@ -10,6 +10,7 @@ Read about [part 1 here](/2014/09/29/etl-language-showdown/) and feel free to ch
 
 The code has changed, the languages have evolved, and the hardware now includes a SSD drive. So, where are they now?
 
+*Update: There is now also a [part 3](/2015/11/14/etl-language-showdown-pt3/)*
 <!--more-->
 
 ## Results
