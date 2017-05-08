@@ -20,7 +20,7 @@ Flow:
 1. Extract frames from video
 2. Generate matte using [Portrait Segmentation](http://xiaoyongshen.me/webpage_portrait/index.html) on each frame
 3. [Style transfer](https://github.com/lengstrom/fast-style-transfer) on original frame
-4. Generate foreground by using the matte as a mask on the style frame
+4. Generate foreground by using the matte as a mask on the styled frame
 5. Composite new video by placing foreground over original video
 
 This road was longer than I thought it would be. The standard neural networks that people are introduced to,
@@ -40,7 +40,7 @@ these excellent articles:
 Xiaoyong Shen, et al. started off by fine-tuning a existing CNN for portraits.
 This CNN is known as the [Fully Convolutional Network, or FCN,](https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf)
 and is extremely popular. Shen's first result is known as the Portrait FCN,
-a FCN with certain layers retrained against portraits, and that's what's been used for this experiment.
+an FCN with certain layers retrained against portraits. The Portrait FCN is what's used to generate the matte in this experiment.
 
 ## Style Transfer
 
@@ -61,6 +61,6 @@ I plan to continue experimenting in this space, and even forked over for some re
 _[Fragbox](https://www.falcon-nw.com/desktops/fragbox/design)_
 
 
-Up until now, I've been using the amazing [Floyd Hub](www.floydhub.com), the Heroku for Deep Learning.
+Up until now, I've been using the amazing [Floyd Hub](https://www.floydhub.com), the Heroku for Deep Learning.
 Definitely check it out. Even if you have your own hardware, it's great to have some NVidia K80s at your disposal
 to speed up experiements.
