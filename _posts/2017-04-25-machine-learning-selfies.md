@@ -5,8 +5,6 @@ date: "Tue Apr 25 22:25:38 -0400 2017"
 tags: python machine-learning
 ---
 
-## Machine Learning My Face!
-
 [_Inspired by Automatic Portrait Segmentation for Image Stylization_](http://xiaoyongshen.me/webpage_portrait/index.html)
 and _[Fast Style Transfer](https://github.com/lengstrom/fast-style-transfer)_.
 
