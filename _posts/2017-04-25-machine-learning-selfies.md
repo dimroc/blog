@@ -42,6 +42,20 @@ This CNN is known as the [Fully Convolutional Network, or FCN,](https://people.e
 and is extremely popular. Shen's first result is known as the Portrait FCN,
 an FCN with certain layers retrained against portraits. The Portrait FCN is what's used to generate the matte in this experiment.
 
+### Artifacts
+
+The matting isn't perfect.
+
+<img src="/public/images/machine-learning-selfie-segmentation/matte_140.jpg" alt="Matte Imperfections" style="max-width:200px"/>
+
+As you can see here, the blotch in the top right is obviously not part of the selfie or the foreground, while the black blotch
+in the bottom is part of the foreground.
+This is because our Portrait FCN isn't doing the best job it could, but there are better solutions out there
+already, such as [Portrait FCN+](http://xiaoyongshen.me/webpage_portrait/index.html) that uses a fixed
+portrait trimap to assist the model when generating the matte.
+
+I plan to take another approach however. More on that in the next experiment.
+
 ## Style Transfer
 
 Once we have the foreground, we use [Logan Engstrom's style transfer](https://github.com/lengstrom/fast-style-transfer) to give it a cartoon like effect, and then
@@ -49,7 +63,9 @@ place it back in the original video. A style reminiscent of [Roger Rabbit](https
 
 Here's an example of style transfer on an entire video before matting:
 
-<video src="/public/videos/suit1_scaled.mp4" controls="true" type="video/mp4" poster="/public/images/machine-learning-selfie-segmentation/suit1_scaled.jpg"></video>
+<video src="/public/videos/suit1_scaled.mp4" controls="true" type="video/mp4" style="max-width: 200px"
+  poster="/public/images/machine-learning-selfie-segmentation/suit1_scaled.jpg">
+</video>
 
 ## Wrap Up
 
