@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Selfie Segmentation and Style Transfer"
+title: "Automatic Selfie Segmentation and Style Transfer"
 date: "Tue Apr 25 22:25:38 -0400 2017"
 tags: python machine-learning
 ---
