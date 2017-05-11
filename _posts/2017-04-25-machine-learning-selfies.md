@@ -13,7 +13,7 @@ on machine learning and neural networks, I apply a technique called object segme
 with mixed results but a promising future. This is all heavily inspired by the paper
 [Automatic Portrait Segmentation for Image Stylization by Xiaoyong Shen, et al.](http://xiaoyongshen.me/webpage_portrait/index.html)
 
-<video src="/public/videos/allFourOutputUdnie.mp4" controls="true" type="video/mp4" poster="/public/images/machine-learning-selfie-segmentation/mlPortraitsAllFour.jpg"></video>
+<video src="/public/videos/allFourOutputUdniePhotoshop.mp4" controls="true" type="video/mp4" poster="/public/images/machine-learning-selfie-segmentation/mlPortraitsAllFour.jpg"></video>
 
 Flow:
 
