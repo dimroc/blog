@@ -18,14 +18,15 @@ with mixed results but a promising future. This is all heavily inspired by the p
 Flow:
 
 1. Extract frames from video
-2. Generate matte using [Portrait Segmentation](http://xiaoyongshen.me/webpage_portrait/index.html) on each frame
+2. Generate matte using [portrait segmentation](http://xiaoyongshen.me/webpage_portrait/index.html) on each frame
+  - Uses pixel level classification between two categories: foreground and background
 3. [Style transfer](https://github.com/lengstrom/fast-style-transfer) on original frame
 4. Generate foreground by using the matte as a mask on the styled frame
 5. Composite new video by placing foreground over original video
 
 This road was longer than I thought it would be. The standard neural networks that people are introduced to,
 referred to as fully connected layers (FC), don't suffice with images because it cannot scale up to many pixels,
-there are simply too many nodes in the network.
+there are simply too many nodes in the network. Instead, we use the increasingly popular Convolutional Neural Networks.
 
 ## Convolutional Neural Networks (CNNs)
 
