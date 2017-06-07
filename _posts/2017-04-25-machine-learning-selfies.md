@@ -20,17 +20,22 @@ Flow:
 1. Extract frames from video
 2. Generate matte using [portrait segmentation](http://xiaoyongshen.me/webpage_portrait/index.html) on each frame
   - Uses pixel level classification between two categories: foreground and background
-3. [Style transfer](https://github.com/lengstrom/fast-style-transfer) on original frame
-4. Generate foreground by using the matte as a mask on the styled frame
+3. [Style transfer](https://github.com/lengstrom/fast-style-transfer) on original frame for cartoon effect
+4. Cut out foreground by using the matte as a mask on the styled frame
 5. Composite new video by placing foreground over original video
 
 This road was longer than I thought it would be. The standard neural networks that people are introduced to,
-referred to as fully connected layers (FC), don't suffice with images because it cannot scale up to many pixels,
-there are simply too many nodes in the network. Instead, we use the increasingly popular Convolutional Neural Networks.
+referred to as fully connected layers (FC), don't suffice with images because it cannot scale up to many pixels.
+There are simply too many nodes in the network. Instead, we use the increasingly popular Convolutional Neural Networks
+that are particularly good at classifying images. But rather than merely classifying the image as a face,
+we want to classify each pixel as either foreground or background.
+
+For this, we use a [Fully Convolutional Network](https://docs.google.com/presentation/d/10XodYojlW-1iurpUsMoAZknQMS36p7lVIfFZ-Z7V_aY/edit#slide=id.g529579d43_1_292)
+to perform pixelwise predictions: pixels in, pixels out.
 
 ## Convolutional Neural Networks (CNNs)
 
-Then came CNNs: Neural Networks for images. These are connected layers of kernels (or filters) to detect
+Neural Networks for images. These are connected layers of kernels (or filters) to detect
 features that a collection of pixels have, such as edges. Imagine a kernel being a 5x5 matrix of values used
 to detect image properties at a specific section, or receptive field. For more information, read
 these excellent articles:
@@ -38,10 +43,16 @@ these excellent articles:
 - [Intuitive Explanation of Convolutional Neural Networks](https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/)
 - [Architecture of Convolutional Neural Networks](http://cs231n.github.io/convolutional-networks/)
 
-Xiaoyong Shen, et al. started off by fine-tuning a existing CNN for portraits.
-This CNN is known as the [Fully Convolutional Network, or FCN,](https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf)
-and is extremely popular. Shen's first result is known as the Portrait FCN,
-an FCN with certain layers retrained against portraits. The Portrait FCN is what's used to generate the matte in this experiment.
+## Fully Convolutional Networks
+
+CNNs were predominantly used to classify images. Is it a dog or cat?
+Then the problem of object segmentation came, extracting the pixels that make up the dog or cat.
+[Fully Convolutional Network](https://docs.google.com/presentation/d/10XodYojlW-1iurpUsMoAZknQMS36p7lVIfFZ-Z7V_aY/edit#slide=id.g529579d43_1_292)
+solves that problem.
+
+[Xiaoyong Shen, et al.](http://xiaoyongshen.me/webpage_portrait/index.html) fine-tuned the
+reference FCN implementation specifically for portraits, and a reimplementation of that is
+what you see in this post. It is called the Portrait FCN.
 
 ### Artifacts
 
@@ -71,12 +82,9 @@ Here's an example of style transfer on an entire video before matting:
 ## Wrap Up
 
 This gave me fantastic exposure to machine learning on media and the world of Convolutional Neural Networks,
-I plan to continue experimenting in this space, and even forked over for some real hardware to boot:
+I plan to continue experimenting in this space, and even forked over for an external GPU (eGPU):
 
-![Fragbox](/public/images/FragBox3-Dark.png)
-
-_[Fragbox](https://www.falcon-nw.com/desktops/fragbox/design)_
-
+[eGPU 2017 Comparison](https://egpu.io/external-gpu-buyers-guide-2017/)
 
 Up until now, I've been using the amazing [Floyd Hub](https://www.floydhub.com), the Heroku for Deep Learning.
 Definitely check it out. Even if you have your own hardware, it's great to have some NVidia K80s at your disposal
