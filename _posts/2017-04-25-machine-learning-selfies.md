@@ -70,8 +70,15 @@ I plan to take another approach however. More on that in the next experiment.
 
 ## Style Transfer
 
-Once we have the foreground, we use [Logan Engstrom's style transfer](https://github.com/lengstrom/fast-style-transfer) to give it a cartoon like effect, and then
-place it back in the original video. A style reminiscent of [Roger Rabbit](https://www.youtube.com/watch?v=gpDaNqSXxp0).
+Once we have the foreground, we use [Logan Engstrom's style transfer](https://github.com/lengstrom/fast-style-transfer) to take the aesthetic from
+a painting, like the one shoanw below, and intelligently apply it to a photo, resulting in a cartoon like effect.
+A style reminiscent of [Roger Rabbit](https://www.youtube.com/watch?v=gpDaNqSXxp0).
+
+<img src="/public/images/machine-learning-selfie-segmentation/udnie.jpg" alt="Udnie" style="max-width:300px"/>
+
+<a href="https://www.youtube.com/watch?v=xVJwwWQlQ1o" target="_blank">
+  <img src="/public/images/machine-learning-selfie-segmentation/fox_udnie.gif" alt="Fox Udnie" style="max-width:300px"/>
+</a>
 
 Here's an example of style transfer on an entire video before matting:
 
