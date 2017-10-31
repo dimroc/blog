@@ -71,7 +71,7 @@ I plan to take another approach however. More on that in the next experiment.
 ## Style Transfer
 
 Once we have the foreground, we use [Logan Engstrom's style transfer](https://github.com/lengstrom/fast-style-transfer) to take the aesthetic from
-a painting, like the one shoanw below, and intelligently apply it to a photo, resulting in a cartoon like effect.
+a painting, like the one shown below, and intelligently apply it to a photo, resulting in a cartoon like effect.
 A style reminiscent of [Roger Rabbit](https://www.youtube.com/watch?v=gpDaNqSXxp0).
 
 <img src="/public/images/machine-learning-selfie-segmentation/udnie.jpg" alt="Udnie" style="max-width:300px"/>
