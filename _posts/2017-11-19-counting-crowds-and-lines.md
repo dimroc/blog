@@ -48,7 +48,7 @@ Crowd photo from the UCF Dataset
 </small></a></center>
 
 Based on [multi-scale convolutional neural network (CNN) for crowd counting](https://arxiv.org/pdf/1702.02359.pdf),
-one trains the network to output values close to one wherever it thinks there is a head. The sum
+one trains the network to output values from zero to one wherever it thinks there is a head. The sum
 of all these pixels then results in the count of the crowd.
 
 Let's look at density maps applied to the shake cam:
