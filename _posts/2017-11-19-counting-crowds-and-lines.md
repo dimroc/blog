@@ -99,6 +99,7 @@ Not necessary, but I'm very happy with the setup.
 
 1. Umbrellas. Not a head but still a person.
 2. Shadows. Around noon there can be some strong shadows resembling people.
+3. Winter Darkness. It gets much darker much sooner in November and December. Yet the model was trained predominantly with images of people in daylight.
 
 ## Check it out
 
