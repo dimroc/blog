@@ -64,7 +64,7 @@ Let's look at density maps applied to the shake cam. Don't worry about the color
 
 As you can see above, we have:
 
-1. The annotated image curtesy of AWS Mechanical Turk.
+1. The annotated image courtesy of AWS Mechanical Turk.
 2. The calculated ground truth by setting head locations to one and then gaussian blurring.
 3. The model's prediction after being trained with ground truths.
 
