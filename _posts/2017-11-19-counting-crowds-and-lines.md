@@ -15,16 +15,20 @@ around lunch to figure out if that trip was worth it.
 <a href="https://www.shakeshack.com/location/madison-square-park" target="_blank">
 <img src="/public/images/count/shakecam.jpg" alt="Shake Cam" width="200px"/>
 </a>
+<center><small>14 person line, not bad</small></center>
 
 Rather than do this manually (come on, it's nearly 2018), it would be great if this could be done
-for us. Object detection has received a lot of attention in the deep learning space, but it's
-ill-suited for scenes with highly congested objects like crowds. In this post, I'll talk about
-how I implemented [multi-scale convolutional neural network (CNN)](https://arxiv.org/pdf/1702.02359.pdf)
-for crowd and line counting.
+for us. Then, to take that idea further, imagine being able to measure foot traffic on a month to month basis
+or to measure the impact of a new promotional campaign.
 
 <a href="http://www.countingcompany.com" target="_blank">
 <img src="/public/images/count/countLineDualShot.jpg" alt="Count Alpha" width="600px"/>
 </a>
+
+Object detection has received a lot of attention in the deep learning space, but it's
+ill-suited for highly congested scenes like crowds. In this post, I'll talk about
+how I implemented [multi-scale convolutional neural network (CNN)](https://arxiv.org/pdf/1702.02359.pdf)
+for crowd and line counting.
 
 ## Why not object detection
 
