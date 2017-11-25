@@ -3,6 +3,7 @@ layout: post
 title: "Counting Crowds and Lines"
 date: "Sun Nov 19 17:06:05 -0500 2017"
 tags: kubernetes machine-learning python aws
+crosspost_to_medium: true
 ---
 
 _This post details the creation of the first version of [countingcompany.com](http://www.countingcompany.com),
