@@ -6,8 +6,8 @@ tags: kubernetes machine-learning python aws
 crosspost_to_medium: true
 ---
 
-_This post details the creation of the first version of [countingcompany.com](http://www.countingcompany.com),
-check it out!_
+_Post now available on [Medium](https://medium.com/@dimroc/counting-crowds-and-lines-fe08c98612b3). It's my first
+post, give me a clap! The ML and site for this post can be found at [countingcompany.com](http://www.countingcompany.com)._
 
 In Union Square, NYC, there's the untoppable burger joint name Shake Shack that's
 always crowded. A group of us would obsessively check the [Shake Cam](https://www.shakeshack.com/location/madison-square-park/)
@@ -125,9 +125,7 @@ These following challenges have contributed to erroneous line predictions:
 
 As I discover more of these scenarios, I'll know what data to gather for a model retraining.
 
-## Check it out
-
-[Counting Company](http://www.countingcompany.com)
+## [Check it out](http://www.countingcompany.com)
 
 <a href="http://www.countingcompany.com" target="_blank">
 <img src="/public/images/count/countLineDualShot.jpg" alt="Count Alpha" width="600px"/>
