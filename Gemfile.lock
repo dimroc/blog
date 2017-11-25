@@ -45,5 +45,8 @@ DEPENDENCIES
   jekyll-paginate
   jekyll-tagging
 
+RUBY VERSION
+   ruby 2.2.1p85
+
 BUNDLED WITH
-   1.10.6
+   1.16.0
