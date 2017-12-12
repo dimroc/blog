@@ -122,13 +122,12 @@ These following challenges have contributed to erroneous line predictions:
 1. Umbrellas. Not a head but still a person.
 2. Shadows. Around noon there can be some strong shadows resembling people.
 3. Winter Darkness. It gets much darker much sooner in November and December. Yet the model was trained predominantly with images of people in daylight.
+4. Winter Snow. Training data never had snow, and now we have mistakes like this:
+
+<img src="/public/images/count/snownotpeople.jpg" alt="Count Mistaking Snow" width="500px"/>
 
 As I discover more of these scenarios, I'll know what data to gather for a model retraining.
 
 ## [Check it out](http://www.countingcompany.com)
-
-<a href="http://www.countingcompany.com" target="_blank">
-<img src="/public/images/count/countLineDualShot.jpg" alt="Count Alpha" width="600px"/>
-</a>
 
 _Feel free to drop a line below if you have any questions._
