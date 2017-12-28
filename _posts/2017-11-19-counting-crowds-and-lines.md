@@ -6,8 +6,7 @@ tags: kubernetes machine-learning python aws
 crosspost_to_medium: true
 ---
 
-_Post now available on [Medium](https://medium.com/@dimroc/counting-crowds-and-lines-fe08c98612b3). It's my first
-post, give me a clap! The ML and site for this post can be found at [countingcompany.com](http://www.countingcompany.com)._
+_The ML and site for this post can be found at [countingcompany.com](http://www.countingcompany.com)._
 
 In Union Square, NYC, there's the untoppable burger joint name Shake Shack that's
 always crowded. A group of us would obsessively check the [Shake Cam](https://www.shakeshack.com/location/madison-square-park/)
