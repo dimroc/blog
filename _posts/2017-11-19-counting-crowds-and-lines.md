@@ -10,7 +10,9 @@ _Updated with video footage of the UCF Mall dataset:_
 <video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" style="max-width:600px"></video>
 _The ML and site for this post can be found at [countingcompany.com](http://www.countingcompany.com)._
 
-In Union Square, NYC, there's the untoppable burger joint name Shake Shack that's
+<hr/>
+
+In Union Square, NYC, there's the untoppable burger joint named Shake Shack that's
 always crowded. A group of us would obsessively check the [Shake Cam](https://www.shakeshack.com/location/madison-square-park/)
 around lunch to figure out if that trip was worth it.
 
