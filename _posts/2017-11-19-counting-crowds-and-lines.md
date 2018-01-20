@@ -7,7 +7,7 @@ crosspost_to_medium: true
 ---
 
 _Updated with video footage of the UCF Mall dataset:_
-<video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" style="max-width:600px"></video>
+<video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" width="600px"></video>
 _The ML and site for this post can be found at [countingcompany.com](http://www.countingcompany.com)._
 
 <hr/>
