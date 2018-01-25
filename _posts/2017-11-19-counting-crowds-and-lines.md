@@ -6,7 +6,7 @@ tags: kubernetes machine-learning python aws
 crosspost_to_medium: true
 ---
 
-_Updated with video footage of the UCF Mall dataset:_
+_Updated with video footage of the [CUHK Mall Dataset](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html):_
 <video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" width="600px"></video>
 _The ML and site for this post can be found at [countingcompany.com](http://www.countingcompany.com)._
 
