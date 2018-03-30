@@ -8,7 +8,7 @@ crosspost_to_medium: true
 
 _Updated with video footage of the [CUHK Mall Dataset](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html):_
 <video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" width="600px"></video>
-_The ML and site for this post can be found at [countingcompany.com](http://www.countingcompany.com)._
+_The ML and site for this post can be found [here](http://count.dimroc.com)._
 
 <hr/>
 
@@ -25,7 +25,7 @@ Rather than do this manually (come on, it's nearly 2018), it would be great if t
 for us. Then, to take that idea further, imagine being able to measure foot traffic on a month to month basis
 or to measure the impact of a new promotional campaign.
 
-<a href="http://www.countingcompany.com" target="_blank">
+<a href="http://count.dimroc.com" target="_blank">
 <img src="/public/images/count/countLineDualShot.jpg" alt="Count Alpha" width="600px"/>
 </a>
 
@@ -131,7 +131,7 @@ These following challenges have contributed to erroneous line predictions:
 
 As I discover more of these scenarios, I'll know what data to gather for a model retraining.
 
-## [Check it out](http://www.countingcompany.com)
+## [Check it out](http://count.dimroc.com)
 
 _Feel free to drop a line below if you have any questions._
 
