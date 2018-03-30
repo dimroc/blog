@@ -134,3 +134,20 @@ As I discover more of these scenarios, I'll know what data to gather for a model
 ## [Check it out](http://www.countingcompany.com)
 
 _Feel free to drop a line below if you have any questions._
+
+### References
+
+- Multi-scale Convolutional Neural Networks for Crowd Counting
+  Lingke Zeng, Xiangmin Xu, Bolun Cai, Suo Qiu, Tong Zhang
+  [Page](https://arxiv.org/abs/1702.02359) [PDF](https://arxiv.org/pdf/1702.02359.pdf)
+- Fully Convolutional Crowd Counting On Highly Congested Scenes
+  Mark Marsden, Kevin McGuinness, Suzanne Little and Noel E. O’Connor
+  [PDF](https://arxiv.org/pdf/1612.00220.pdf)
+- Multi-Source Multi-Scale Counting in Extremely Dense Crowd Images
+  Haroon Idrees, Imran Saleemi, Cody Seibert, Mubarak Shah
+  IEEE International Conference on Computer Vision and Pattern Recognition (CVPR), 2013
+  [PDF](http://crcv.ucf.edu/papers/cvpr2013/Counting_V3o.pdf)
+- From Semi-Supervised to Transfer Counting of Crowds
+  C. C. Loy, S. Gong, and T. Xiang
+  in Proceedings of IEEE International Conference on Computer Vision, pp. 2256-2263, 2013 (ICCV)
+  [PDF](http://personal.ie.cuhk.edu.hk/~ccloy/files/iccv_2013_crowd.pdf) [Project Page](http://personal.ie.cuhk.edu.hk/~ccloy/project_semi_counting/index.html)
