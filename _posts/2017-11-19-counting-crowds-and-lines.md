@@ -8,7 +8,7 @@ crosspost_to_medium: true
 
 _Updated with video footage of the [CUHK Mall Dataset](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html):_
 <video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" width="600px"></video>
-_The ML and site for this post can be found [here](http://count.dimroc.com)._
+_Feel free to check out the [site](http://count.dimroc.com) or the [source code](https://github.com/dimroc/counting_company)._
 
 <hr/>
 
@@ -131,7 +131,7 @@ These following challenges have contributed to erroneous line predictions:
 
 As I discover more of these scenarios, I'll know what data to gather for a model retraining.
 
-## [Check it out](http://count.dimroc.com)
+## Check out [the site](http://count.dimroc.com) and the [source](https://github.com/dimroc/counting_company).
 
 _Feel free to drop a line below if you have any questions._
 
