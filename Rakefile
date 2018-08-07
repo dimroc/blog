@@ -9,7 +9,7 @@ task :deploy do
   Dir.chdir "tmp/deployment/_site"
   system("touch .nojekyll")
   system("git init")
-  system("git remote add origin git@github.com:dimroc/blog.git")
+  system("git remote add origin https://github.com/dimroc/blog.git")
   system("git checkout -b gh-pages")
   system("git add .")
   system("git commit -m 'Deployment #{Time.now}'")
