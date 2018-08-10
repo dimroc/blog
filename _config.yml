@@ -14,7 +14,7 @@ author:
   name:           'Dimitri Roche'
   twitter:        https://twitter.com/dimroc
   github:         https://github.com/dimroc
-  experiments:    http://experiments.dimroc.com
+  experiments:    https://experiments.dimroc.com
 
 paginate:         100
 excerpt_separator: <!--more-->
