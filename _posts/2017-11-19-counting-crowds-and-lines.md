@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Counting Crowds and Lines"
+title: "Counting Crowds and Lines with AI"
 date: "Sun Nov 19 17:06:05 -0500 2017"
 tags: kubernetes machine-learning python aws
 crosspost_to_medium: true
