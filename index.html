@@ -229,7 +229,7 @@
   <div class="post">
     <h3 class="custom post-title">
       <a href="/2018/08/12/counting-crowds-with-coreml/">
-        Counting Crowds with Edge AI on Apple's Core ML
+        Moving AI from the Cloud to the Edge with Crowd Count and Apple's Core ML
       </a>
     </h3>
 
@@ -239,12 +239,13 @@
     <!--<div class="custom summary">-->
       <!--<p><img src="/public/images/count/CrowdCountiOS.gif" alt="iOS Crowd Counting in action" /></p>
 
-<p>After successfully counting crowds in python in the cloud, which you can read about
-<a href="/2017/11/19/counting-crowds-and-lines/">here</a>, I took it upon myself to run the very same models
+<p>After successfully counting crowds in python, <a href="/2017/11/19/counting-crowds-and-lines/">which you can read about
+here</a>, I took it upon myself to run the very same models
 on the iPhone with Core ML (ML: Machine Learning).
-This is currently being branded as Edge AI: neural networks run on a local device (edge) as opposed to the cloud.</p>
+Core ML and MLKit open up a new domain for computing that’s being branded as Edge AI, where neural networks run on a local device (edge) as opposed to the cloud.
+The <a href="https://github.com/dimroc/count/tree/master/ios">source code for this experiment is available here</a>.</p>
 
-<p>In this article, we’ll go over these seven steps to cover the migration from python Keras to Core ML:</p>
+<p>In this article, we’ll go over seven facets of migrating from Cloud AI to Edge AI:</p>
 
 <ol>
   <li>Building the Crowd Classifier with Create ML</li>

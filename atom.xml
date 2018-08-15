@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="http://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="http://blog.dimroc.com/"/>
- <updated>2018-08-15T08:06:01-04:00</updated>
+ <updated>2018-08-15T08:17:00-04:00</updated>
  <id>http://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -13,18 +13,19 @@
 
  
  <entry>
-   <title>Counting Crowds with Edge AI on Apple's Core ML</title>
+   <title>Moving AI from the Cloud to the Edge with Crowd Count and Apple's Core ML</title>
    <link href="http://blog.dimroc.com/2018/08/12/counting-crowds-with-coreml/"/>
    <updated>2018-08-12T09:12:27-04:00</updated>
    <id>http://blog.dimroc.com/2018/08/12/counting-crowds-with-coreml</id>
    <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/count/CrowdCountiOS.gif&quot; alt=&quot;iOS Crowd Counting in action&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;After successfully counting crowds in python in the cloud, which you can read about
-&lt;a href=&quot;/2017/11/19/counting-crowds-and-lines/&quot;&gt;here&lt;/a&gt;, I took it upon myself to run the very same models
+&lt;p&gt;After successfully counting crowds in python, &lt;a href=&quot;/2017/11/19/counting-crowds-and-lines/&quot;&gt;which you can read about
+here&lt;/a&gt;, I took it upon myself to run the very same models
 on the iPhone with Core ML (ML: Machine Learning).
-This is currently being branded as Edge AI: neural networks run on a local device (edge) as opposed to the cloud.&lt;/p&gt;
+Core ML and MLKit open up a new domain for computing that’s being branded as Edge AI, where neural networks run on a local device (edge) as opposed to the cloud.
+The &lt;a href=&quot;https://github.com/dimroc/count/tree/master/ios&quot;&gt;source code for this experiment is available here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;In this article, we’ll go over these seven steps to cover the migration from python Keras to Core ML:&lt;/p&gt;
+&lt;p&gt;In this article, we’ll go over seven facets of migrating from Cloud AI to Edge AI:&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;Building the Crowd Classifier with Create ML&lt;/li&gt;
