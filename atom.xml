@@ -4,13 +4,165 @@
  <title>dimroc</title>
  <link href="http://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="http://blog.dimroc.com/"/>
- <updated>2018-08-10T16:05:33-04:00</updated>
+ <updated>2018-08-15T07:55:54-04:00</updated>
  <id>http://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Counting Crowds with Edge AI on Apple's Core ML</title>
+   <link href="http://blog.dimroc.com/2018/08/12/counting-crowds-with-coreml/"/>
+   <updated>2018-08-12T09:12:27-04:00</updated>
+   <id>http://blog.dimroc.com/2018/08/12/counting-crowds-with-coreml</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/count/CrowdCountiOS.gif&quot; alt=&quot;iOS Crowd Counting in action&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;After successfully counting crowds in python in the cloud, which you can read about
+&lt;a href=&quot;/2017/11/19/counting-crowds-and-lines/&quot;&gt;here&lt;/a&gt;, I took it upon myself to run the very same models
+on the iPhone with Core ML (ML: Machine Learning).
+This is currently being branded as Edge AI: neural networks run on a local device (edge) as opposed to the cloud.&lt;/p&gt;
+
+&lt;p&gt;In this article, we’ll go over these seven steps to cover the migration from python Keras to Core ML:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Building the Crowd Classifier with Create ML&lt;/li&gt;
+  &lt;li&gt;Different MLModels for different Crowd Densities: singles, tens, hundreds+&lt;/li&gt;
+  &lt;li&gt;Python coremltools to convert Keras to Core ML&lt;/li&gt;
+  &lt;li&gt;How an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/li&gt;
+  &lt;li&gt;Swift Architecture: RxSwift and MVVM&lt;/li&gt;
+  &lt;li&gt;Performance: Better than expected&lt;/li&gt;
+  &lt;li&gt;Promising Future for Edge AI&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;1-building-the-crowd-classifier-with-create-ml&quot;&gt;1. Building the Crowd Classifier with Create ML&lt;/h2&gt;
+
+&lt;p&gt;Apple’s new &lt;a href=&quot;https://developer.apple.com/documentation/createml&quot;&gt;Create ML tool&lt;/a&gt;
+allows you to build a classifier by simply dragging in a folder.
+This was used to classify images as either singles, tens, or hundreds, as a first step
+in an ML pipeline. The classification dictated which counting model to use.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/count/CrowdClassifier.png&quot; alt=&quot;Crowd Classifier&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;2-different-mlmodels-for-different-crowd-densities-singles-tens-hundreds&quot;&gt;2. Different MLModels for different crowd densities: singles, tens, hundreds+&lt;/h2&gt;
+
+&lt;p&gt;These crowd counting models (from the previous post) are heavily skewed to particular densities. For example,
+the model used to count three people, will have a hard time with one thousand people.
+They are based on the paper &lt;a href=&quot;https://arxiv.org/pdf/1702.02359.pdf&quot;&gt;Multi-Scale Convolutional Neural Networks for Crowd Counting&lt;/a&gt;.
+To mitigate this, we have three models:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;singles: Uses Apple’s built in face detection (&lt;a href=&quot;https://developer.apple.com/documentation/vision/vndetectfacerectanglesrequest&quot;&gt;VNDetectFaceRectanglesRequest&lt;/a&gt;). You can beat it by showing the back of your head!&lt;/li&gt;
+  &lt;li&gt;tens: Uses the model overtrained for the &lt;a href=&quot;http://count.dimroc.com/&quot;&gt;ShakeCam&lt;/a&gt; in the previous crowd counting post, which has between zero to eighty people. The tens category desparately needs a newly trained model.&lt;/li&gt;
+  &lt;li&gt;hundreds: Uses a model built with the &lt;a href=&quot;http://crcv.ucf.edu/data/crowd.php&quot;&gt;UCF Crowd dataset&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is the final step in a two step ML pipeline:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Crowd Classification -&amp;gt; Crowd Prediction
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;These models, however, are still in the python Keras format. Let’s convert them to Core ML.&lt;/p&gt;
+
+&lt;h2 id=&quot;3-python-coremltools-to-convert-keras-to-core-ml&quot;&gt;3. Python coremltools to convert Keras to Core ML&lt;/h2&gt;
+
+&lt;p&gt;Used python &lt;a href=&quot;https://github.com/apple/coremltools&quot;&gt;coremltools&lt;/a&gt; to convert existing crowd counting Keras model&lt;/p&gt;
+
+&lt;p&gt;Had to replace the top arbitrary sized layer with a fixed size layer to better
+with Core ML. Arbitrarily sized input is eventually coming, but support is minimal.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Create a new input layer to replace the (None,None,3) input layer&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;input_layer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InputLayer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_shape&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;675&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;900&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;input_1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Save&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;intermediary_path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;tmp/reshaped_model.h5&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;input_layer&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;intermediary_path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Convert&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;coreml_model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coremltools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;converters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Keras&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;intermediary_path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;input_names&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'input_1'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;image_input_names&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'input_1'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;output_names&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'density_map'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;coreml_model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;CrowdPredictor.mlmodel&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/dimroc/count/blob/master/ml/crowdcount/management/commands/convert_to_coreml.py&quot;&gt;Source&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;4-how-an-xcode-playground-for-core-ml-became-a-macos-app-playgrounds-are-too-brittle&quot;&gt;4. How an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/h2&gt;
+
+&lt;p&gt;As a quick way to see if any of this was possible, this started with
+an Xcode Playground. Inspired by Create ML, the Xcode playground promised to be
+a quick and easy prototype for the iOS application.&lt;/p&gt;
+
+&lt;p&gt;When it works, it’s great.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/count/CountPlayground.jpg&quot; alt=&quot;Crowd Playground&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A significant downside to playgrounds however, is its inability to be an Xcode target,
+meaning it’s unable to have preconfigured linker and build dependencies. As you use
+CocoaPods or Cartography for third party library management, this will break you, and you’ll
+end up with spurious errors like the follow:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;error: Couldn't lookup symbols:
+  type metadata for CrowdCountApiMac.FriendlyClassification
+  ...
+  __swift_FORCE_LOAD_$_swiftCoreMedia
+  __swift_FORCE_LOAD_$_swiftCoreAudio
+  CrowdCountApiMac.FriendlyPredictor.DensityMapWidth.unsafeMutableAddressor : Swift.Int
+  ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The good news is that switching over to a macOS application is relativately straighforward and will
+fix all of this, because it is a target that can link frameworks and binaries, allowing reliable compilation and linking.&lt;/p&gt;
+
+&lt;h2 id=&quot;5-swift-architecture-rxswift-and-mvvm&quot;&gt;5. Swift Architecture: RxSwift and MVVM&lt;/h2&gt;
+
+&lt;p&gt;The Swift code was written in an MVVM (Model-View-ViewModel) architecture driven by &lt;a href=&quot;https://github.com/ReactiveX/RxSwift/&quot;&gt;RxSwift&lt;/a&gt;,
+where Apple’s ViewControllers are the View.
+So really M(VC)VM. But these ViewController’s are lean, and merely have callbacks solely to drive the View or glue the VM.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/count/MVCVM.jpg&quot; alt=&quot;M(VC)VM&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There are &lt;a href=&quot;https://medium.com/@daltonclaybrook/rxswift-mvvm-a-little-at-a-time-81ac17dcf285&quot;&gt;many&lt;/a&gt;
+&lt;a href=&quot;https://medium.com/@navdeepsingh_2336/creating-an-ios-app-with-mvvm-and-rxswift-in-minutes-b8800633d2e8&quot;&gt;articles&lt;/a&gt;
+&lt;a href=&quot;https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298&quot;&gt;on this topic&lt;/a&gt;. Feel free to google for more.&lt;/p&gt;
+
+&lt;h2 id=&quot;6-performance-better-than-expected&quot;&gt;6. Performance: Better than expected&lt;/h2&gt;
+
+&lt;p&gt;While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3seconds.
+Good to see that iPhone X GPU being put to good use.&lt;/p&gt;
+
+&lt;p&gt;Word of advice: don’t do your own image and MLMultiArray manipulation.
+Use Apple’s Vision API, such as &lt;a href=&quot;https://developer.apple.com/documentation/vision/vnimagerequesthandler&quot;&gt;VNImageRequestHandler&lt;/a&gt;,
+that makes better use of hardware.&lt;/p&gt;
+
+&lt;h2 id=&quot;7-promising-future-for-edge-ai&quot;&gt;7. Promising Future for Edge AI&lt;/h2&gt;
+
+&lt;p&gt;The ability to run sophisticated neural networks, in this case
+a multi-column &lt;a href=&quot;https://adeshpande3.github.io/A-Beginner%27s-Guide-To-Understanding-Convolutional-Neural-Networks/&quot;&gt;CNN&lt;/a&gt;,
+on your iPhone rather than the cloud, and in real time, is a watershed moment.&lt;/p&gt;
+
+&lt;p&gt;Sure, this already existed in applications like Prisma and Google translate, but the ease of development
+will present many more opportunities.&lt;/p&gt;
+
+&lt;p&gt;With millions of iPhones out there, it’ll be easier than ever to crowd source data from
+your willing users to improve your model, and create a virtuous cycle that’ll improve the product:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;usage -&amp;gt; more data -&amp;gt; improved usage -&amp;gt; more data -&amp;gt; improved usage -&amp;gt; ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;While the numbers might be a little off (the tens predictor is simply not that good),
+this proof of concept shows that it’s doable, and that, in and of itself, is a milestone.&lt;/p&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Books Worth Reading 2017</title>
@@ -34,7 +186,7 @@ Prioritized in terms of preference:&lt;/p&gt;
  </entry>
  
  <entry>
-   <title>Counting Crowds and Lines</title>
+   <title>Counting Crowds and Lines with AI</title>
    <link href="http://blog.dimroc.com/2017/11/19/counting-crowds-and-lines/"/>
    <updated>2017-11-19T17:06:05-05:00</updated>
    <id>http://blog.dimroc.com/2017/11/19/counting-crowds-and-lines</id>
