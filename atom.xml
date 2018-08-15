@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="http://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="http://blog.dimroc.com/"/>
- <updated>2018-08-15T07:55:54-04:00</updated>
+ <updated>2018-08-15T08:06:01-04:00</updated>
  <id>http://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -30,7 +30,7 @@ This is currently being branded as Edge AI: neural networks run on a local devic
   &lt;li&gt;Building the Crowd Classifier with Create ML&lt;/li&gt;
   &lt;li&gt;Different MLModels for different Crowd Densities: singles, tens, hundreds+&lt;/li&gt;
   &lt;li&gt;Python coremltools to convert Keras to Core ML&lt;/li&gt;
-  &lt;li&gt;How an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/li&gt;
+  &lt;li&gt;Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/li&gt;
   &lt;li&gt;Swift Architecture: RxSwift and MVVM&lt;/li&gt;
   &lt;li&gt;Performance: Better than expected&lt;/li&gt;
   &lt;li&gt;Promising Future for Edge AI&lt;/li&gt;
@@ -69,10 +69,11 @@ To mitigate this, we have three models:&lt;/p&gt;
 
 &lt;h2 id=&quot;3-python-coremltools-to-convert-keras-to-core-ml&quot;&gt;3. Python coremltools to convert Keras to Core ML&lt;/h2&gt;
 
-&lt;p&gt;Used python &lt;a href=&quot;https://github.com/apple/coremltools&quot;&gt;coremltools&lt;/a&gt; to convert existing crowd counting Keras model&lt;/p&gt;
+&lt;p&gt;Apple’s &lt;a href=&quot;https://github.com/apple/coremltools&quot;&gt;coremltools&lt;/a&gt; python library allow one to convert existing
+Keras models to Core ML, and that’s exactly what was done for the crowd prediction model.&lt;/p&gt;
 
-&lt;p&gt;Had to replace the top arbitrary sized layer with a fixed size layer to better
-with Core ML. Arbitrarily sized input is eventually coming, but support is minimal.&lt;/p&gt;
+&lt;p&gt;I did have to replace the top variable sized layer with a fixed size layer to better work
+with Core ML. Variable sized input has come to Core ML, but support and documentation still has a way to go.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
@@ -96,9 +97,12 @@ with Core ML. Arbitrarily sized input is eventually coming, but support is minim
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/dimroc/count/blob/master/ml/crowdcount/management/commands/convert_to_coreml.py&quot;&gt;Source&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;4-how-an-xcode-playground-for-core-ml-became-a-macos-app-playgrounds-are-too-brittle&quot;&gt;4. How an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/h2&gt;
+&lt;p&gt;Now that we have our Core ML pipeline, complete with a crowd classifier deciding the crowd predictor, let’s
+see it in action.&lt;/p&gt;
 
-&lt;p&gt;As a quick way to see if any of this was possible, this started with
+&lt;h2 id=&quot;4-why-an-xcode-playground-for-core-ml-became-a-macos-app-playgrounds-are-too-brittle&quot;&gt;4. Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/h2&gt;
+
+&lt;p&gt;As a quick way to see if any of this was possible, this started as
 an Xcode Playground. Inspired by Create ML, the Xcode playground promised to be
 a quick and easy prototype for the iOS application.&lt;/p&gt;
 
