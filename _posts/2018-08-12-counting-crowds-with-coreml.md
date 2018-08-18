@@ -30,7 +30,8 @@ In this article, we'll go over seven facets of migrating from Cloud AI to Edge A
 Apple's new [Create ML tool](https://developer.apple.com/documentation/createml)
 allows you to build a classifier by simply dragging in a folder.
 This was used to classify images as either singles, tens, or hundreds, as a first step
-in an ML pipeline. The classification dictated which counting model to use.
+in an ML pipeline. This classification then dictates which counting model to use,
+described below.
 
 <img src="/public/images/count/CrowdClassifier.png" alt="Crowd Classifier" width="600px"/>
 
@@ -55,10 +56,10 @@ These models, however, are still in the python Keras format. Let's convert them 
 
 ## 3. Python coremltools to convert Keras to Core ML
 
-Apple's [coremltools](https://github.com/apple/coremltools) python library allow one to convert existing
+Apple's [coremltools](https://github.com/apple/coremltools) allow one to convert existing
 Keras models to Core ML, and that's exactly what was done for the crowd prediction model.
 
-I did have to replace the top variable sized layer with a fixed size layer to better work
+The top variable sized layer had to be replaced with a fixed size layer to better work
 with Core ML. Variable sized input has come to Core ML, but support and documentation still has a way to go.
 
 ```python
@@ -84,12 +85,12 @@ coreml_model.save("CrowdPredictor.mlmodel")
 
 [Source](https://github.com/dimroc/count/blob/master/ml/crowdcount/management/commands/convert_to_coreml.py)
 
-Now that we have our Core ML pipeline, complete with a crowd classifier deciding the crowd predictor, let's
+Now that we have our Core ML pipeline, a crowd classifier feeding into a crowd predictor, let's
 see it in action.
 
 ## 4. Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)
 
-As a quick way to see if any of this was possible, this started as
+I was under the impression that the fastest way to a functional prototype was
 an Xcode Playground. Inspired by Create ML, the Xcode playground promised to be
 a quick and easy prototype for the iOS application.
 
@@ -98,7 +99,7 @@ When it works, it's great.
 <img src="/public/images/count/CountPlayground.jpg" alt="Crowd Playground" width="600px"/>
 
 A significant downside to playgrounds however, is its inability to be an Xcode target,
-meaning it's unable to have preconfigured linker and build dependencies. As you use
+meaning it is unable to have linker and build dependencies. As you use
 CocoaPods or Cartography for third party library management, this will break you, and you'll
 end up with spurious errors like the follow:
 
@@ -112,27 +113,28 @@ error: Couldn't lookup symbols:
   ...
 ```
 
-The good news is that switching over to a macOS application is relativately straighforward and will
-fix all of this, because it is a target that can link frameworks and binaries, allowing reliable compilation and linking.
+The good news is that porting over to a macOS application is relativately straighforward, and will fix all of this.
+A macOS app is an Xcode target and can therefore link frameworks and binaries, allowing reliable
+compilation and linking.
 
 ## 5. Swift Architecture: RxSwift and MVVM
 
-The Swift code was written in an MVVM (Model-View-ViewModel) architecture driven by [RxSwift](https://github.com/ReactiveX/RxSwift/),
-where Apple's ViewControllers are the View.
-So really M(VC)VM. But these ViewController's are lean, and merely have callbacks solely to drive the View or glue the VM.
+[RxSwift](https://github.com/ReactiveX/RxSwift/) drove out an MVVM (Model-View-ViewModel) architecture,
+where Apple's ViewControllers are the View. So really M(VC)VM.
+But these ViewController's are lean, and merely drive the View or glue the VM.
 
 <img src="/public/images/count/MVCVM.jpg" alt="M(VC)VM" width="600px"/>
 
 There are [many](https://medium.com/@daltonclaybrook/rxswift-mvvm-a-little-at-a-time-81ac17dcf285)
 [articles](https://medium.com/@navdeepsingh_2336/creating-an-ios-app-with-mvvm-and-rxswift-in-minutes-b8800633d2e8)
-[on this topic](https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298). Feel free to google for more.
+[on this topic](https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298). Feel free to google for more information.
 
 ## 6. Performance: Better than expected
 
-While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3seconds.
+While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3 seconds.
 Good to see that iPhone X GPU being put to good use.
 
-Word of advice: don't do your own image and MLMultiArray manipulation.
+Word of advice: do not do your own image and MLMultiArray manipulation.
 Use Apple's Vision API, such as [VNImageRequestHandler](https://developer.apple.com/documentation/vision/vnimagerequesthandler),
 that makes better use of hardware.
 
@@ -145,12 +147,12 @@ on your iPhone rather than the cloud, and in real time, is a watershed moment.
 Sure, this already existed in applications like Prisma and Google translate, but the ease of development
 will present many more opportunities.
 
-With millions of iPhones out there, it'll be easier than ever to crowd source data from
-your willing users to improve your model, and create a virtuous cycle that'll improve the product:
+With millions of iPhones in use, it'll be easier than ever to crowd source data from
+your willing users to improve your model, and create a virtuous cycle that will improve the product:
 
 ```
 usage -> more data -> improved usage -> more data -> improved usage -> ...
 ```
 
-While the numbers might be a little off (the tens predictor is simply not that good),
-this proof of concept shows that it's doable, and that, in and of itself, is a milestone.
+This proof of concept shows that it's doable, and that, in and of itself, is a milestone.
+Add in the performance and the iPhone's ubiquity, and we have a promising future.
