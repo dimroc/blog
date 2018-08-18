@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="http://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="http://blog.dimroc.com/"/>
- <updated>2018-08-15T08:17:00-04:00</updated>
+ <updated>2018-08-18T17:54:40-04:00</updated>
  <id>http://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -44,7 +44,8 @@ The &lt;a href=&quot;https://github.com/dimroc/count/tree/master/ios&quot;&gt;so
 &lt;p&gt;Apple’s new &lt;a href=&quot;https://developer.apple.com/documentation/createml&quot;&gt;Create ML tool&lt;/a&gt;
 allows you to build a classifier by simply dragging in a folder.
 This was used to classify images as either singles, tens, or hundreds, as a first step
-in an ML pipeline. The classification dictated which counting model to use.&lt;/p&gt;
+in an ML pipeline. This classification then dictates which counting model to use,
+described below.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/public/images/count/CrowdClassifier.png&quot; alt=&quot;Crowd Classifier&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
 
@@ -70,10 +71,10 @@ To mitigate this, we have three models:&lt;/p&gt;
 
 &lt;h2 id=&quot;3-python-coremltools-to-convert-keras-to-core-ml&quot;&gt;3. Python coremltools to convert Keras to Core ML&lt;/h2&gt;
 
-&lt;p&gt;Apple’s &lt;a href=&quot;https://github.com/apple/coremltools&quot;&gt;coremltools&lt;/a&gt; python library allow one to convert existing
+&lt;p&gt;Apple’s &lt;a href=&quot;https://github.com/apple/coremltools&quot;&gt;coremltools&lt;/a&gt; allow one to convert existing
 Keras models to Core ML, and that’s exactly what was done for the crowd prediction model.&lt;/p&gt;
 
-&lt;p&gt;I did have to replace the top variable sized layer with a fixed size layer to better work
+&lt;p&gt;The top variable sized layer had to be replaced with a fixed size layer to better work
 with Core ML. Variable sized input has come to Core ML, but support and documentation still has a way to go.&lt;/p&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -98,12 +99,12 @@ with Core ML. Variable sized input has come to Core ML, but support and document
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/dimroc/count/blob/master/ml/crowdcount/management/commands/convert_to_coreml.py&quot;&gt;Source&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Now that we have our Core ML pipeline, complete with a crowd classifier deciding the crowd predictor, let’s
+&lt;p&gt;Now that we have our Core ML pipeline, a crowd classifier feeding into a crowd predictor, let’s
 see it in action.&lt;/p&gt;
 
 &lt;h2 id=&quot;4-why-an-xcode-playground-for-core-ml-became-a-macos-app-playgrounds-are-too-brittle&quot;&gt;4. Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/h2&gt;
 
-&lt;p&gt;As a quick way to see if any of this was possible, this started as
+&lt;p&gt;I was under the impression that the fastest way to a functional prototype was
 an Xcode Playground. Inspired by Create ML, the Xcode playground promised to be
 a quick and easy prototype for the iOS application.&lt;/p&gt;
 
@@ -112,7 +113,7 @@ a quick and easy prototype for the iOS application.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/public/images/count/CountPlayground.jpg&quot; alt=&quot;Crowd Playground&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;A significant downside to playgrounds however, is its inability to be an Xcode target,
-meaning it’s unable to have preconfigured linker and build dependencies. As you use
+meaning it is unable to have linker and build dependencies. As you use
 CocoaPods or Cartography for third party library management, this will break you, and you’ll
 end up with spurious errors like the follow:&lt;/p&gt;
 
@@ -125,27 +126,28 @@ end up with spurious errors like the follow:&lt;/p&gt;
   ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The good news is that switching over to a macOS application is relativately straighforward and will
-fix all of this, because it is a target that can link frameworks and binaries, allowing reliable compilation and linking.&lt;/p&gt;
+&lt;p&gt;The good news is that porting over to a macOS application is relativately straighforward, and will fix all of this.
+A macOS app is an Xcode target and can therefore link frameworks and binaries, allowing reliable
+compilation and linking.&lt;/p&gt;
 
 &lt;h2 id=&quot;5-swift-architecture-rxswift-and-mvvm&quot;&gt;5. Swift Architecture: RxSwift and MVVM&lt;/h2&gt;
 
-&lt;p&gt;The Swift code was written in an MVVM (Model-View-ViewModel) architecture driven by &lt;a href=&quot;https://github.com/ReactiveX/RxSwift/&quot;&gt;RxSwift&lt;/a&gt;,
-where Apple’s ViewControllers are the View.
-So really M(VC)VM. But these ViewController’s are lean, and merely have callbacks solely to drive the View or glue the VM.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveX/RxSwift/&quot;&gt;RxSwift&lt;/a&gt; drove out an MVVM (Model-View-ViewModel) architecture,
+where Apple’s ViewControllers are the View. So really M(VC)VM.
+But these ViewController’s are lean, and merely drive the View or glue the VM.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/public/images/count/MVCVM.jpg&quot; alt=&quot;M(VC)VM&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;There are &lt;a href=&quot;https://medium.com/@daltonclaybrook/rxswift-mvvm-a-little-at-a-time-81ac17dcf285&quot;&gt;many&lt;/a&gt;
 &lt;a href=&quot;https://medium.com/@navdeepsingh_2336/creating-an-ios-app-with-mvvm-and-rxswift-in-minutes-b8800633d2e8&quot;&gt;articles&lt;/a&gt;
-&lt;a href=&quot;https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298&quot;&gt;on this topic&lt;/a&gt;. Feel free to google for more.&lt;/p&gt;
+&lt;a href=&quot;https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298&quot;&gt;on this topic&lt;/a&gt;. Feel free to google for more information.&lt;/p&gt;
 
 &lt;h2 id=&quot;6-performance-better-than-expected&quot;&gt;6. Performance: Better than expected&lt;/h2&gt;
 
-&lt;p&gt;While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3seconds.
+&lt;p&gt;While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3 seconds.
 Good to see that iPhone X GPU being put to good use.&lt;/p&gt;
 
-&lt;p&gt;Word of advice: don’t do your own image and MLMultiArray manipulation.
+&lt;p&gt;Word of advice: do not do your own image and MLMultiArray manipulation.
 Use Apple’s Vision API, such as &lt;a href=&quot;https://developer.apple.com/documentation/vision/vnimagerequesthandler&quot;&gt;VNImageRequestHandler&lt;/a&gt;,
 that makes better use of hardware.&lt;/p&gt;
 
@@ -158,14 +160,14 @@ on your iPhone rather than the cloud, and in real time, is a watershed moment.&l
 &lt;p&gt;Sure, this already existed in applications like Prisma and Google translate, but the ease of development
 will present many more opportunities.&lt;/p&gt;
 
-&lt;p&gt;With millions of iPhones out there, it’ll be easier than ever to crowd source data from
-your willing users to improve your model, and create a virtuous cycle that’ll improve the product:&lt;/p&gt;
+&lt;p&gt;With millions of iPhones in use, it’ll be easier than ever to crowd source data from
+your willing users to improve your model, and create a virtuous cycle that will improve the product:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;usage -&amp;gt; more data -&amp;gt; improved usage -&amp;gt; more data -&amp;gt; improved usage -&amp;gt; ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;While the numbers might be a little off (the tens predictor is simply not that good),
-this proof of concept shows that it’s doable, and that, in and of itself, is a milestone.&lt;/p&gt;
+&lt;p&gt;This proof of concept shows that it’s doable, and that, in and of itself, is a milestone.
+Add in the performance and the iPhone’s ubiquity, and we have a promising future.&lt;/p&gt;
 </content>
  </entry>
  

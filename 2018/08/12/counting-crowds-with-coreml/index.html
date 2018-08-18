@@ -255,7 +255,8 @@ The <a href="https://github.com/dimroc/count/tree/master/ios">source code for th
 <p>Apple’s new <a href="https://developer.apple.com/documentation/createml">Create ML tool</a>
 allows you to build a classifier by simply dragging in a folder.
 This was used to classify images as either singles, tens, or hundreds, as a first step
-in an ML pipeline. The classification dictated which counting model to use.</p>
+in an ML pipeline. This classification then dictates which counting model to use,
+described below.</p>
 
 <p><img src="/public/images/count/CrowdClassifier.png" alt="Crowd Classifier" width="600px" /></p>
 
@@ -281,10 +282,10 @@ To mitigate this, we have three models:</p>
 
 <h2 id="3-python-coremltools-to-convert-keras-to-core-ml">3. Python coremltools to convert Keras to Core ML</h2>
 
-<p>Apple’s <a href="https://github.com/apple/coremltools">coremltools</a> python library allow one to convert existing
+<p>Apple’s <a href="https://github.com/apple/coremltools">coremltools</a> allow one to convert existing
 Keras models to Core ML, and that’s exactly what was done for the crowd prediction model.</p>
 
-<p>I did have to replace the top variable sized layer with a fixed size layer to better work
+<p>The top variable sized layer had to be replaced with a fixed size layer to better work
 with Core ML. Variable sized input has come to Core ML, but support and documentation still has a way to go.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -309,12 +310,12 @@ with Core ML. Variable sized input has come to Core ML, but support and document
 
 <p><a href="https://github.com/dimroc/count/blob/master/ml/crowdcount/management/commands/convert_to_coreml.py">Source</a></p>
 
-<p>Now that we have our Core ML pipeline, complete with a crowd classifier deciding the crowd predictor, let’s
+<p>Now that we have our Core ML pipeline, a crowd classifier feeding into a crowd predictor, let’s
 see it in action.</p>
 
 <h2 id="4-why-an-xcode-playground-for-core-ml-became-a-macos-app-playgrounds-are-too-brittle">4. Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)</h2>
 
-<p>As a quick way to see if any of this was possible, this started as
+<p>I was under the impression that the fastest way to a functional prototype was
 an Xcode Playground. Inspired by Create ML, the Xcode playground promised to be
 a quick and easy prototype for the iOS application.</p>
 
@@ -323,7 +324,7 @@ a quick and easy prototype for the iOS application.</p>
 <p><img src="/public/images/count/CountPlayground.jpg" alt="Crowd Playground" width="600px" /></p>
 
 <p>A significant downside to playgrounds however, is its inability to be an Xcode target,
-meaning it’s unable to have preconfigured linker and build dependencies. As you use
+meaning it is unable to have linker and build dependencies. As you use
 CocoaPods or Cartography for third party library management, this will break you, and you’ll
 end up with spurious errors like the follow:</p>
 
@@ -336,27 +337,28 @@ end up with spurious errors like the follow:</p>
   ...
 </code></pre></div></div>
 
-<p>The good news is that switching over to a macOS application is relativately straighforward and will
-fix all of this, because it is a target that can link frameworks and binaries, allowing reliable compilation and linking.</p>
+<p>The good news is that porting over to a macOS application is relativately straighforward, and will fix all of this.
+A macOS app is an Xcode target and can therefore link frameworks and binaries, allowing reliable
+compilation and linking.</p>
 
 <h2 id="5-swift-architecture-rxswift-and-mvvm">5. Swift Architecture: RxSwift and MVVM</h2>
 
-<p>The Swift code was written in an MVVM (Model-View-ViewModel) architecture driven by <a href="https://github.com/ReactiveX/RxSwift/">RxSwift</a>,
-where Apple’s ViewControllers are the View.
-So really M(VC)VM. But these ViewController’s are lean, and merely have callbacks solely to drive the View or glue the VM.</p>
+<p><a href="https://github.com/ReactiveX/RxSwift/">RxSwift</a> drove out an MVVM (Model-View-ViewModel) architecture,
+where Apple’s ViewControllers are the View. So really M(VC)VM.
+But these ViewController’s are lean, and merely drive the View or glue the VM.</p>
 
 <p><img src="/public/images/count/MVCVM.jpg" alt="M(VC)VM" width="600px" /></p>
 
 <p>There are <a href="https://medium.com/@daltonclaybrook/rxswift-mvvm-a-little-at-a-time-81ac17dcf285">many</a>
 <a href="https://medium.com/@navdeepsingh_2336/creating-an-ios-app-with-mvvm-and-rxswift-in-minutes-b8800633d2e8">articles</a>
-<a href="https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298">on this topic</a>. Feel free to google for more.</p>
+<a href="https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298">on this topic</a>. Feel free to google for more information.</p>
 
 <h2 id="6-performance-better-than-expected">6. Performance: Better than expected</h2>
 
-<p>While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3seconds.
+<p>While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3 seconds.
 Good to see that iPhone X GPU being put to good use.</p>
 
-<p>Word of advice: don’t do your own image and MLMultiArray manipulation.
+<p>Word of advice: do not do your own image and MLMultiArray manipulation.
 Use Apple’s Vision API, such as <a href="https://developer.apple.com/documentation/vision/vnimagerequesthandler">VNImageRequestHandler</a>,
 that makes better use of hardware.</p>
 
@@ -369,14 +371,14 @@ on your iPhone rather than the cloud, and in real time, is a watershed moment.</
 <p>Sure, this already existed in applications like Prisma and Google translate, but the ease of development
 will present many more opportunities.</p>
 
-<p>With millions of iPhones out there, it’ll be easier than ever to crowd source data from
-your willing users to improve your model, and create a virtuous cycle that’ll improve the product:</p>
+<p>With millions of iPhones in use, it’ll be easier than ever to crowd source data from
+your willing users to improve your model, and create a virtuous cycle that will improve the product:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usage -&gt; more data -&gt; improved usage -&gt; more data -&gt; improved usage -&gt; ...
 </code></pre></div></div>
 
-<p>While the numbers might be a little off (the tens predictor is simply not that good),
-this proof of concept shows that it’s doable, and that, in and of itself, is a milestone.</p>
+<p>This proof of concept shows that it’s doable, and that, in and of itself, is a milestone.
+Add in the performance and the iPhone’s ubiquity, and we have a promising future.</p>
 
 </div>
 
