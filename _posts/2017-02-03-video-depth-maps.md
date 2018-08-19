@@ -3,6 +3,7 @@ layout: post
 title: "Video Depth Maps, Zed and NVDA"
 date: "Fri Feb 03 15:55:29 -0800 2017"
 tags: finance webgl
+preview: public/images/videodepth/collection.jpg
 ---
 
 My latest experiment has been to generate video depth maps with the goal of splicing in 3D content.

@@ -3,6 +3,7 @@ layout: post
 title: "Machine Learning where your long ID comes from"
 date: "Sun Apr 09 19:30:56 -0400 2017"
 tags: aws machine-learning octave
+preview: public/images/machine-learning-ids/firstDigitThreePolicies.png
 ---
 
 _This article talks about a solution that involved sensitive information.
