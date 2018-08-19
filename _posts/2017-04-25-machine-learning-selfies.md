@@ -3,6 +3,7 @@ layout: post
 title: "Automatic Selfie Segmentation and Style Transfer"
 date: "Tue Apr 25 22:25:38 -0400 2017"
 tags: python machine-learning
+preview: public/images/machine-learning-selfie-segmentation/matte_140.jpg
 ---
 
 [_Inspired by Automatic Portrait Segmentation for Image Stylization_](http://xiaoyongshen.me/webpage_portrait/index.html)

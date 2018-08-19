@@ -4,6 +4,7 @@ title: "Counting Crowds and Lines with AI"
 date: "Sun Nov 19 17:06:05 -0500 2017"
 tags: kubernetes machine-learning python aws
 crosspost_to_medium: true
+preview: public/images/count/countLineDualShot.jpg
 ---
 
 _Updated with video footage of the [CUHK Mall Dataset](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html):_

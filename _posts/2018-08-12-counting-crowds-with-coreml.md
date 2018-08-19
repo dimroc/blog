@@ -3,6 +3,7 @@ layout: post
 title: "Moving AI from the Cloud to the Edge with Crowd Count and Apple's Core ML"
 date: "Sun Aug 12 09:12:27 -0400 2018"
 tags: machine-learning ios swift coreml python
+preview: public/images/count/CrowdCountiOS.gif
 ---
 
 ![iOS Crowd Counting in action](/public/images/count/CrowdCountiOS.gif)
