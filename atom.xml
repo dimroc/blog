@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="http://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="http://blog.dimroc.com/"/>
- <updated>2018-08-18T18:00:57-04:00</updated>
+ <updated>2018-08-19T09:13:50-04:00</updated>
  <id>http://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -25,11 +25,16 @@ on the iPhone with Core ML (ML: Machine Learning).
 Core ML and MLKit open up a new domain for computing that’s being branded as Edge AI, where neural networks run on a local device (edge) as opposed to the cloud.
 The &lt;a href=&quot;https://github.com/dimroc/count/tree/master/ios&quot;&gt;source code for this experiment is available here&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;In this article, we’ll go over seven facets of migrating from Cloud AI to Edge AI:&lt;/p&gt;
+&lt;p&gt;Transitioning from a fixed camera &lt;a href=&quot;http://count.dimroc.com&quot;&gt;(ShakeCam Madison Square Park)&lt;/a&gt;
+to a general purpose iPhone app meant handling a wider variety of input. Are we counting three
+people or three thousand people?
+In this article, we’ll go over eight facets of the port, from migrating Cloud AI to Edge AI
+to handling wildly different inputs:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Building the Crowd Classifier with Create ML&lt;/li&gt;
-  &lt;li&gt;Different MLModels for different Crowd Densities: singles, tens, hundreds+&lt;/li&gt;
+  &lt;li&gt;Using a two stage ML pipeline to handle different inputs&lt;/li&gt;
+  &lt;li&gt;First stage: Building the Crowd Classifier with Create ML&lt;/li&gt;
+  &lt;li&gt;Second stage: Different densities, different prediction models: singles, tens, hundreds+&lt;/li&gt;
   &lt;li&gt;Python coremltools to convert Keras to Core ML&lt;/li&gt;
   &lt;li&gt;Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/li&gt;
   &lt;li&gt;Swift Architecture: RxSwift and MVVM&lt;/li&gt;
@@ -39,17 +44,29 @@ The &lt;a href=&quot;https://github.com/dimroc/count/tree/master/ios&quot;&gt;so
 
 &lt;hr /&gt;
 
-&lt;h2 id=&quot;1-building-the-crowd-classifier-with-create-ml&quot;&gt;1. Building the Crowd Classifier with Create ML&lt;/h2&gt;
+&lt;h2 id=&quot;1-using-a-two-stage-ml-pipeline-to-handle-different-inputs&quot;&gt;1. Using a two stage ML pipeline to handle different inputs&lt;/h2&gt;
+
+&lt;p&gt;iPhone camera input can vary wildly. Is it a shot of only two people, or are
+we at a football stadium among thousands? Our prediction model doesn’t handle
+that type of variety well. To mitigate this, we tailor make prediction models
+to accommodate a particular density, and then use image classification to pick
+the best strategy.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Crowd Classification -&amp;gt; either singles, tens or hundreds crowd prediction -&amp;gt; count of people
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/count/CrowdCountStrategies.jpg&quot; alt=&quot;Crowd Count Strategies&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;2-building-the-crowd-classifier-with-create-ml&quot;&gt;2. Building the Crowd Classifier with Create ML&lt;/h2&gt;
 
 &lt;p&gt;Apple’s new &lt;a href=&quot;https://developer.apple.com/documentation/createml&quot;&gt;Create ML tool&lt;/a&gt;
 allows you to build a classifier by simply dragging in a folder.
 This was used to classify images as either singles, tens, or hundreds, as a first step
-in an ML pipeline. This classification then dictates which counting model to use,
-described below.&lt;/p&gt;
+in the ML pipeline.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/public/images/count/CrowdClassifier.png&quot; alt=&quot;Crowd Classifier&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;2-different-mlmodels-for-different-crowd-densities-singles-tens-hundreds&quot;&gt;2. Different MLModels for different crowd densities: singles, tens, hundreds+&lt;/h2&gt;
+&lt;h2 id=&quot;3-different-densities-different-prediction-models-singles-tens-hundreds&quot;&gt;3. Different densities, different prediction models: singles, tens, hundreds+&lt;/h2&gt;
 
 &lt;p&gt;These crowd counting models (from the previous post) are heavily skewed to particular densities. For example,
 the model used to count three people, will have a hard time with one thousand people.
@@ -62,17 +79,13 @@ To mitigate this, we have three models:&lt;/p&gt;
   &lt;li&gt;hundreds: Uses a model built with the &lt;a href=&quot;http://crcv.ucf.edu/data/crowd.php&quot;&gt;UCF Crowd dataset&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;This is the final step in a two step ML pipeline:&lt;/p&gt;
+&lt;p&gt;This would be the final step in the two step ML pipeline. These models, however,
+are still in the python Keras format. Let’s convert them to Core ML.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Crowd Classification -&amp;gt; Crowd Prediction
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;4-python-coremltools-to-convert-keras-to-core-ml&quot;&gt;4. Python coremltools to convert Keras to Core ML&lt;/h2&gt;
 
-&lt;p&gt;These models, however, are still in the python Keras format. Let’s convert them to Core ML.&lt;/p&gt;
-
-&lt;h2 id=&quot;3-python-coremltools-to-convert-keras-to-core-ml&quot;&gt;3. Python coremltools to convert Keras to Core ML&lt;/h2&gt;
-
-&lt;p&gt;Apple’s &lt;a href=&quot;https://github.com/apple/coremltools&quot;&gt;coremltools&lt;/a&gt; allow one to convert existing
-Keras models to Core ML, and that’s exactly what was done for the crowd prediction model.&lt;/p&gt;
+&lt;p&gt;Apple’s &lt;a href=&quot;https://github.com/apple/coremltools&quot;&gt;coremltools&lt;/a&gt; convert existing
+Keras models to Core ML. It worked well with one exception: arbitrarily (not fixed) sized images.&lt;/p&gt;
 
 &lt;p&gt;The top variable sized layer had to be replaced with a fixed size layer to better work
 with Core ML. Variable sized input has come to Core ML, but support and documentation still has a way to go.&lt;/p&gt;
@@ -102,7 +115,7 @@ with Core ML. Variable sized input has come to Core ML, but support and document
 &lt;p&gt;Now that we have our Core ML pipeline, a crowd classifier feeding into a crowd predictor, let’s
 see it in action.&lt;/p&gt;
 
-&lt;h2 id=&quot;4-why-an-xcode-playground-for-core-ml-became-a-macos-app-playgrounds-are-too-brittle&quot;&gt;4. Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/h2&gt;
+&lt;h2 id=&quot;5-why-an-xcode-playground-for-core-ml-became-a-macos-app-playgrounds-are-too-brittle&quot;&gt;5. Why an Xcode Playground for Core ML became a macOS App (Playgrounds are too brittle)&lt;/h2&gt;
 
 &lt;p&gt;I was under the impression that the fastest way to a functional prototype was
 an Xcode Playground. Inspired by Create ML, the Xcode playground promised to be
@@ -130,7 +143,7 @@ end up with spurious errors like the follow:&lt;/p&gt;
 A macOS app is an Xcode target and can therefore link frameworks and binaries, allowing reliable
 compilation and linking.&lt;/p&gt;
 
-&lt;h2 id=&quot;5-swift-architecture-rxswift-and-mvvm&quot;&gt;5. Swift Architecture: RxSwift and MVVM&lt;/h2&gt;
+&lt;h2 id=&quot;6-swift-architecture-rxswift-and-mvvm&quot;&gt;6. Swift Architecture: RxSwift and MVVM&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/ReactiveX/RxSwift/&quot;&gt;RxSwift&lt;/a&gt; drove out an MVVM (Model-View-ViewModel) architecture,
 where Apple’s ViewControllers are the View. So really M(VC)VM.
@@ -142,7 +155,7 @@ But these ViewController’s are lean, and merely drive the View or glue the VM.
 &lt;a href=&quot;https://medium.com/@navdeepsingh_2336/creating-an-ios-app-with-mvvm-and-rxswift-in-minutes-b8800633d2e8&quot;&gt;articles&lt;/a&gt;
 &lt;a href=&quot;https://medium.com/@dkhuong291/rxswift-with-mvvm-e4af71413298&quot;&gt;on this topic&lt;/a&gt;. Feel free to google for more information.&lt;/p&gt;
 
-&lt;h2 id=&quot;6-performance-better-than-expected&quot;&gt;6. Performance: Better than expected&lt;/h2&gt;
+&lt;h2 id=&quot;7-performance-better-than-expected&quot;&gt;7. Performance: Better than expected&lt;/h2&gt;
 
 &lt;p&gt;While extracting frames from the camera in real time, classification took ~100ms and crowd counting taking ~3 seconds.
 Good to see that iPhone X GPU being put to good use.&lt;/p&gt;
@@ -151,7 +164,7 @@ Good to see that iPhone X GPU being put to good use.&lt;/p&gt;
 Use Apple’s Vision API, such as &lt;a href=&quot;https://developer.apple.com/documentation/vision/vnimagerequesthandler&quot;&gt;VNImageRequestHandler&lt;/a&gt;,
 that makes better use of hardware.&lt;/p&gt;
 
-&lt;h2 id=&quot;7-promising-future-for-edge-ai&quot;&gt;7. Promising Future for Edge AI&lt;/h2&gt;
+&lt;h2 id=&quot;8-promising-future-for-edge-ai&quot;&gt;8. Promising Future for Edge AI&lt;/h2&gt;
 
 &lt;p&gt;The ability to run sophisticated neural networks, in this case
 a multi-column &lt;a href=&quot;https://adeshpande3.github.io/A-Beginner%27s-Guide-To-Understanding-Convolutional-Neural-Networks/&quot;&gt;CNN&lt;/a&gt;,
