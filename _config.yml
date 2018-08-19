@@ -7,7 +7,7 @@ permalink:        pretty
 title:            dimroc
 tagline:          'blog'
 description:      'The Development Blog of Dimitri Roche'
-url:              http://blog.dimroc.com
+url:              https://blog.dimroc.com
 baseurl:          /
 
 author:
