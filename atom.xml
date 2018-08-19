@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="http://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="http://blog.dimroc.com/"/>
- <updated>2018-08-19T09:13:50-04:00</updated>
+ <updated>2018-08-19T14:03:22-04:00</updated>
  <id>http://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -46,11 +46,10 @@ to handling wildly different inputs:&lt;/p&gt;
 
 &lt;h2 id=&quot;1-using-a-two-stage-ml-pipeline-to-handle-different-inputs&quot;&gt;1. Using a two stage ML pipeline to handle different inputs&lt;/h2&gt;
 
-&lt;p&gt;iPhone camera input can vary wildly. Is it a shot of only two people, or are
-we at a football stadium among thousands? Our prediction model doesn’t handle
-that type of variety well. To mitigate this, we tailor make prediction models
-to accommodate a particular density, and then use image classification to pick
-the best strategy.&lt;/p&gt;
+&lt;p&gt;iPhone camera input can vary wildly. Are we counting a selfie or a football stadium?
+Our counting model doesn’t handle that type of variety well.
+To mitigate this, we tailor make prediction models to accommodate a particular
+density, and then use image classification to pick the best strategy.&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Crowd Classification -&amp;gt; either singles, tens or hundreds crowd prediction -&amp;gt; count of people
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
