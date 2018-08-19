@@ -32,11 +32,10 @@ to handling wildly different inputs:
 
 ## 1. Using a two stage ML pipeline to handle different inputs
 
-iPhone camera input can vary wildly. Is it a shot of only two people, or are
-we at a football stadium among thousands? Our prediction model doesn't handle
-that type of variety well. To mitigate this, we tailor make prediction models
-to accommodate a particular density, and then use image classification to pick
-the best strategy.
+iPhone camera input can vary wildly. Are we counting a selfie or a football stadium?
+Our counting model doesn't handle that type of variety well.
+To mitigate this, we tailor make prediction models to accommodate a particular
+density, and then use image classification to pick the best strategy.
 
 ```
 Crowd Classification -> either singles, tens or hundreds crowd prediction -> count of people
