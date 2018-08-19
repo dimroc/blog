@@ -3,6 +3,7 @@ layout: post
 title: "Machine Learning NYC Neighborhoods"
 date: "Wed Jan 13 10:15:46 -0500 2016"
 tags: aws elixir machine-learning
+preview: public/images/FlyingToCoachellaPrediction.jpg
 ---
 
 Check out the [NYC Neighborhood Predictor](http://machinelearninghoods.dimroc.com)!

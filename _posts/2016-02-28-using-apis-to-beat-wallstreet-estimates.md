@@ -3,6 +3,7 @@ layout: post
 title: "Using Twitter API to beat the (Wall) Street"
 date: "Sun Feb 28 12:23:53 -0500 2016"
 tags: business finance
+preview: public/images/twitterbeatdastreet/FacebookCallOptionsBOOM.jpg
 ---
 
 I made a killer trade the other day. And it came from a buy signal on a side project. It showed me that Instagram was cannibalizing Twitter image traffic over time. Let me walk you through it.

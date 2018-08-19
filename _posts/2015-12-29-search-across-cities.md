@@ -3,6 +3,7 @@ layout: post
 title: "Urban Events: Compare NYC media against LA and other cities"
 date: "Tue Dec 29 18:52:35 -0500 2015"
 tags: go react elasticsearch docker
+preview: public/images/UrbanEvents.jpg
 ---
 
 Just released [Urban Events](http://urbanevents.dimroc.com/?q=tattoos)!
