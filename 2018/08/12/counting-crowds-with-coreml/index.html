@@ -287,6 +287,8 @@ the model used to count three people, will have a hard time with one thousand pe
 They are based on the paper <a href="https://arxiv.org/pdf/1702.02359.pdf">Multi-Scale Convolutional Neural Networks for Crowd Counting</a>.
 To mitigate this, we have three models:</p>
 
+<p><img src="/public/images/count/CrowdCountStrategies.jpg" alt="Crowd Count Strategies" width="600px" /></p>
+
 <ul>
   <li>singles: Uses Apple’s built in face detection (<a href="https://developer.apple.com/documentation/vision/vndetectfacerectanglesrequest">VNDetectFaceRectanglesRequest</a>). You can beat it by showing the back of your head!</li>
   <li>tens: Uses the model overtrained for the <a href="http://count.dimroc.com/">ShakeCam</a> in the previous crowd counting post, which has between zero to eighty people. The tens category desparately needs a newly trained model.</li>

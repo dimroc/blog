@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="https://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="https://blog.dimroc.com/"/>
- <updated>2018-08-19T15:02:32-04:00</updated>
+ <updated>2018-08-20T08:08:33-04:00</updated>
  <id>https://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -71,6 +71,8 @@ in the ML pipeline.&lt;/p&gt;
 the model used to count three people, will have a hard time with one thousand people.
 They are based on the paper &lt;a href=&quot;https://arxiv.org/pdf/1702.02359.pdf&quot;&gt;Multi-Scale Convolutional Neural Networks for Crowd Counting&lt;/a&gt;.
 To mitigate this, we have three models:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/count/CrowdCountStrategies.jpg&quot; alt=&quot;Crowd Count Strategies&quot; width=&quot;600px&quot; /&gt;&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;singles: Uses Apple’s built in face detection (&lt;a href=&quot;https://developer.apple.com/documentation/vision/vndetectfacerectanglesrequest&quot;&gt;VNDetectFaceRectanglesRequest&lt;/a&gt;). You can beat it by showing the back of your head!&lt;/li&gt;
