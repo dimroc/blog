@@ -7,7 +7,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
   <!--iPhone preview -->
-  <meta property="og:title" content="A better error handling future for iOS with Swift" />
+  <meta property="og:title" content="Books Worth Reading 2018" />
   <meta property="og:image" content="/" />
 
   <!-- Enable responsiveness on mobile devices-->
@@ -15,7 +15,7 @@
 
   <title>
     
-      A better error handling future for iOS with Swift &middot; dimroc
+      Books Worth Reading 2018 &middot; dimroc
     
   </title>
 
@@ -229,69 +229,27 @@
 
       <div class="container content">
         <div class="post">
-  <h1 class="post-title">A better error handling future for iOS with Swift</h1>
-  <span class="post-date">30 Sep 2014</span>
+  <h1 class="post-title">Books Worth Reading 2018</h1>
+  <span class="post-date">31 Dec 2018</span>
   <span class="post-comments"><a href="#disqus_thread"></a></span>
-  <p><em>Update: I now handle errors from callbacks with the <a href="http://www.dimroc.com/2014/12/17/bolt-framework-promisekit-or-reactive-cocoa-for-async/">Bolts Framework</a>. Consider this article deprecated.</em></p>
+  <p>A slow reading year 😞.
+Continued to read up on soft skills, but see that slowing down next year. Garbage books don’t make the list.
+Prioritized in terms of preference:</p>
 
-<hr />
-
-<p>Pattern matching is a fantastic mechanism found in functional programming languages, and <a href="https://developer.apple.com/swift/">Swift</a> has it! Below, we’ll find out how to use it to encapsulate errors in asynchronous code.</p>
-
-<!--more-->
-
-<h3 id="swift-enumerations">Swift Enumerations</h3>
-
-<p>Define different cases, resulting in new classes scoped to the enum.</p>
-
-<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">enum</span> <span class="kt">GoogleGeocoderResponse</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="kt">Response</span><span class="p">(</span><span class="kt">MFLocation</span><span class="p">)</span>
-    <span class="k">case</span> <span class="kt">Error</span><span class="p">(</span><span class="kt">NSError</span><span class="p">)</span>
-<span class="p">}</span></code></pre></figure>
-
-<p>Instantiate one of the enumbs depending on the scenario:</p>
-
-<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="n">manager</span><span class="o">.</span><span class="kt">GET</span><span class="p">(</span><span class="nf">baseUrl</span><span class="p">(),</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">parameters</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nv">operation</span><span class="p">:</span> <span class="kt">AFHTTPRequestOperation</span><span class="o">!</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="k">in</span>
-            <span class="k">let</span> <span class="nv">location</span> <span class="o">=</span> <span class="kt">GoogleGeocoder</span><span class="o">.</span><span class="nf">fromResponse</span><span class="p">(</span><span class="n">response</span><span class="o">!</span><span class="p">)</span>
-            <span class="nf">callback</span><span class="p">(</span><span class="kt">GoogleGeocoderResponse</span><span class="o">.</span><span class="kt">Response</span><span class="p">(</span><span class="n">location</span><span class="p">))</span>
-        <span class="p">})</span> <span class="p">{</span> <span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
-            <span class="nf">callback</span><span class="p">(</span><span class="kt">GoogleGeocoderResponse</span><span class="o">.</span><span class="kt">Error</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
-        <span class="p">}</span></code></pre></figure>
-
-<p>Use the <code class="highlighter-rouge">switch</code> syntax to perform pattern matching against these enum classes:</p>
-
-<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kt">GoogleGeocoder</span><span class="o">.</span><span class="nf">reverse</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">coordinate</span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nv">response</span><span class="p">:</span> <span class="kt">GoogleGeocoderResponse</span><span class="p">)</span> <span class="k">in</span>
-            <span class="k">switch</span> <span class="n">response</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="o">.</span><span class="kt">Error</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
-                <span class="kt">NSLog</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-            <span class="k">case</span> <span class="o">.</span><span class="kt">Response</span><span class="p">(</span><span class="k">let</span> <span class="nv">location</span><span class="p">):</span>
-                <span class="kt">NSLog</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
-            <span class="p">}</span>
-
-            <span class="k">self</span><span class="o">.</span><span class="nf">callback</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="p">})</span></code></pre></figure>
-
-<p>One of the benefits to pattern matching is speed. Although one might infer run-time type checking in the <code class="highlighter-rouge">switch</code>, it is all mostly done at compile time via polymorphism or some other mechanism.</p>
-
-<p>This does not eliminate the need for <code class="highlighter-rouge">NSError</code>. That approach is still recommended when interacting with UIKit, etc.</p>
-
-<p>Check out <a href="http://swiftlytyping.tumblr.com/post/88210131086/error-handling?utm_campaign=iOS_Dev_Weekly_Issue_150&amp;utm_medium=email&amp;utm_source=iOS%2BDev%2BWeekly">Swiftlytyping’s post on Swift error handling</a>
-for a more thorough example with generics.</p>
+<ol>
+  <li><a href="https://smile.amazon.com/dp/B00ICN066A/ref=dp-kindle-redirect?_encoding=UTF8&amp;btkr=1">Sapiens</a></li>
+  <li><a href="https://smile.amazon.com/Extreme-Ownership-U-S-Navy-SEALs-ebook/dp/B0739PYQSS/ref=sr_1_4?s=digital-text&amp;ie=UTF8&amp;qid=1546700069&amp;sr=1-4&amp;keywords=extreme+ownership">Extreme Ownership</a></li>
+  <li><a href="https://smile.amazon.com/Emotional-Intelligence-Matter-More-Than-ebook/dp/B000JMKVCG/ref=sr_1_5?s=digital-text&amp;ie=UTF8&amp;qid=1546700114&amp;sr=1-5&amp;keywords=emotional+intelligence">Emotional Intelligence</a></li>
+  <li><a href="https://smile.amazon.com/Concurrency-Go-Tools-Techniques-Developers-ebook/dp/B0742NH2SG/ref=sr_1_1?s=digital-text&amp;ie=UTF8&amp;qid=1546700139&amp;sr=1-1&amp;keywords=concurrency+in+go">Concurrency In Go, especially chapter 4</a></li>
+  <li><a href="https://smile.amazon.com/EQ-Applied-Real-World-Emotional-Intelligence-ebook/dp/B07D7K938G/ref=sr_1_1?s=digital-text&amp;ie=UTF8&amp;qid=1546700152&amp;sr=1-1&amp;keywords=eq+applied">EQ Applied</a></li>
+  <li><a href="https://smile.amazon.com/Homage-Catalonia-George-Orwell-ebook/dp/B003K16PFU/ref=sr_1_1?s=digital-text&amp;ie=UTF8&amp;qid=1546700172&amp;sr=1-1&amp;keywords=homage+to+catalonia">Homage to Catalonia</a></li>
+</ol>
 
 </div>
 
 <div class="related">
   <h2>Related Posts</h2>
   <ul class="related-posts">
-    
-      <li>
-        <h3>
-          <a href="/2018/12/31/books-worth-reading-2018/">
-            Books Worth Reading 2018
-            <small>31 Dec 2018</small>
-          </a>
-        </h3>
-      </li>
     
       <li>
         <h3>
@@ -307,6 +265,15 @@ for a more thorough example with generics.</p>
           <a href="/2017/12/30/books-worth-reading-2017/">
             Books Worth Reading 2017
             <small>30 Dec 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2017/11/19/counting-crowds-and-lines/">
+            Counting Crowds and Lines with AI
+            <small>19 Nov 2017</small>
           </a>
         </h3>
       </li>

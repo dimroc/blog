@@ -4,13 +4,33 @@
  <title>dimroc</title>
  <link href="https://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="https://blog.dimroc.com/"/>
- <updated>2018-08-20T08:08:33-04:00</updated>
+ <updated>2019-01-05T10:02:43-05:00</updated>
  <id>https://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
    <email></email>
  </author>
 
+ 
+ <entry>
+   <title>Books Worth Reading 2018</title>
+   <link href="https://blog.dimroc.com/2018/12/31/books-worth-reading-2018/"/>
+   <updated>2018-12-31T09:43:25-05:00</updated>
+   <id>https://blog.dimroc.com/2018/12/31/books-worth-reading-2018</id>
+   <content type="html">&lt;p&gt;A slow reading year 😞.
+Continued to read up on soft skills, but see that slowing down next year. Garbage books don’t make the list.
+Prioritized in terms of preference:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/dp/B00ICN066A/ref=dp-kindle-redirect?_encoding=UTF8&amp;amp;btkr=1&quot;&gt;Sapiens&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Extreme-Ownership-U-S-Navy-SEALs-ebook/dp/B0739PYQSS/ref=sr_1_4?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700069&amp;amp;sr=1-4&amp;amp;keywords=extreme+ownership&quot;&gt;Extreme Ownership&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Emotional-Intelligence-Matter-More-Than-ebook/dp/B000JMKVCG/ref=sr_1_5?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700114&amp;amp;sr=1-5&amp;amp;keywords=emotional+intelligence&quot;&gt;Emotional Intelligence&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Concurrency-Go-Tools-Techniques-Developers-ebook/dp/B0742NH2SG/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700139&amp;amp;sr=1-1&amp;amp;keywords=concurrency+in+go&quot;&gt;Concurrency In Go, especially chapter 4&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/EQ-Applied-Real-World-Emotional-Intelligence-ebook/dp/B07D7K938G/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700152&amp;amp;sr=1-1&amp;amp;keywords=eq+applied&quot;&gt;EQ Applied&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Homage-Catalonia-George-Orwell-ebook/dp/B003K16PFU/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700172&amp;amp;sr=1-1&amp;amp;keywords=homage+to+catalonia&quot;&gt;Homage to Catalonia&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+ </entry>
  
  <entry>
    <title>Moving AI from the Cloud to the Edge with Crowd Count and Apple's Core ML</title>
