@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="https://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="https://blog.dimroc.com/"/>
- <updated>2019-01-05T10:02:43-05:00</updated>
+ <updated>2019-01-05T19:18:57-05:00</updated>
  <id>https://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -22,12 +22,77 @@ Continued to read up on soft skills, but see that slowing down next year. Garbag
 Prioritized in terms of preference:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/dp/B00ICN066A/ref=dp-kindle-redirect?_encoding=UTF8&amp;amp;btkr=1&quot;&gt;Sapiens&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Extreme-Ownership-U-S-Navy-SEALs-ebook/dp/B0739PYQSS/ref=sr_1_4?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700069&amp;amp;sr=1-4&amp;amp;keywords=extreme+ownership&quot;&gt;Extreme Ownership&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Emotional-Intelligence-Matter-More-Than-ebook/dp/B000JMKVCG/ref=sr_1_5?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700114&amp;amp;sr=1-5&amp;amp;keywords=emotional+intelligence&quot;&gt;Emotional Intelligence&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Concurrency-Go-Tools-Techniques-Developers-ebook/dp/B0742NH2SG/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700139&amp;amp;sr=1-1&amp;amp;keywords=concurrency+in+go&quot;&gt;Concurrency In Go, especially chapter 4&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/EQ-Applied-Real-World-Emotional-Intelligence-ebook/dp/B07D7K938G/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700152&amp;amp;sr=1-1&amp;amp;keywords=eq+applied&quot;&gt;EQ Applied&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Homage-Catalonia-George-Orwell-ebook/dp/B003K16PFU/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700172&amp;amp;sr=1-1&amp;amp;keywords=homage+to+catalonia&quot;&gt;Homage to Catalonia&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/dp/B07HRLQSLG?ref_=k4w_ss_dp_lp&quot;&gt;The Curse of Bigness: Antitrust in the New Gilded Age&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;It became apparent, in retrospect, just how much innovation the Bell system monopoly had been holding back. For out of the carcass of AT&amp;amp; T emerged entirely new types of industries unimagined or unimaginable during the reign of AT&amp;amp; T. For example, the liberty to sell things to consumers that plugged into a (new) phone jack not only yielded the answering machine, but the home modulator/ demodulator, or modem, allowing a home computer to speak with a network. That, in turn, made feasible an industry of “online service providers” like AOL or Compuserve, which themselves spawned internet service providers that were accessible from home, producing the Internet revolution.&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;Fantastic read on the origins and evolution of Antitrust. Starting from Teddy Roosevelt ‘trustbusting’ in the Second Industrial Revoluion
+ to its transformation by the Chicago School to emphasize on consumer prices, resulting in its lack of enforcement in the current Tech trust era.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/dp/B00ICN066A/ref=dp-kindle-redirect?_encoding=UTF8&amp;amp;btkr=1&quot;&gt;Sapiens&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;The Scientific Revolution has not been a revolution of knowledge. It has been above all a revolution of ignorance. The great discovery that launched the Scientific Revolution was the discovery that humans do not know the answers to their most important questions.
+ Premodern traditions of knowledge such as Islam, Christianity, Buddhism and Confucianism asserted that everything that is important to know about the world was already known. The great gods, or the one almighty God, or the wise people of the past possessed all-encompassing wisdom, which they revealed to us in scriptures and oral traditions.&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;An amazing walk through mankind’s history, showing how different organizational structures helped humans
+ grow from tribes to the coordination of billions spanning the globe. These devices spanned mercantilism, religion, and
+ ideology, and show the adverse effects it’s had on the world.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Emotional-Intelligence-Matter-More-Than-ebook/dp/B000JMKVCG/ref=sr_1_5?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700114&amp;amp;sr=1-5&amp;amp;keywords=emotional+intelligence&quot;&gt;Emotional Intelligence&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Anyone can become angry—that is easy. But to be angry with the right person, to the right degree, at the right time, for the right purpose, and in the right way—that is not easy. - ARISTOTLE, The Nichomachean Ethics&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;The book that trailblazed the term EI (or rather EQ) walks through in academic detail the different facets of the space that separates itself from IQ, and how to use
+ it in every day life.&lt;/li&gt;
+      &lt;li&gt;Wish I understood this as a teenager.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Extreme-Ownership-U-S-Navy-SEALs-ebook/dp/B0739PYQSS/ref=sr_1_4?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700069&amp;amp;sr=1-4&amp;amp;keywords=extreme+ownership&quot;&gt;Extreme Ownership&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Leaders must own everything in their world. There is no one else to blame [but themself]…
+Whether in SEAL training, in combat on distant battlefields, in business, or in life: there are no bad teams, only bad leaders.&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;An ideology taken from the special forces and brought to business, documented with conviction
+ over a series of case studies alternating from operations in the Iraqi War to scenarios in Corporate America.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Homage-Catalonia-George-Orwell-ebook/dp/B003K16PFU/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700172&amp;amp;sr=1-1&amp;amp;keywords=homage+to+catalonia&quot;&gt;Homage to Catalonia&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;Beware of my partisanship, my mistakes of fact, and the distortion inevitably caused by my having seen only one corner of events.&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;An autobiographical account of George Owell’s time fighting in the Spanish Civil War. Written with a candor that is lost in much of today’s journalism.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/EQ-Applied-Real-World-Emotional-Intelligence-ebook/dp/B07D7K938G/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700152&amp;amp;sr=1-1&amp;amp;keywords=eq+applied&quot;&gt;EQ Applied&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;The concept of the growth mindset has gained popularity in recent years, partially due to the work of Stanford psychology professor Carol Dweck. In her book Mindset, Dweck advocates that individuals who believe their talents can be developed through hard work, good strategies, and input from others (growth mindset) tend to achieve more than those who believe their talents are innate gifts with finite development potential (fixed mindset).&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;A less pedantic more palatable introduction to emotional intelligence, broken down into four abilities: self-awareness, self-management, social awareness, relationship management.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://smile.amazon.com/Concurrency-Go-Tools-Techniques-Developers-ebook/dp/B0742NH2SG/ref=sr_1_1?s=digital-text&amp;amp;ie=UTF8&amp;amp;qid=1546700139&amp;amp;sr=1-1&amp;amp;keywords=concurrency+in+go&quot;&gt;Concurrency In Go, especially chapter 4&lt;/a&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;The first is that we do not write parallel code, only concurrent code that we hope will be run in parallel. Once again, parallelism is a property of the runtime of our program, not the code.&lt;/p&gt;
+    &lt;/blockquote&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;A fantastic read on responsible, error handling concurrent code in the soon to be dominant systems programming language.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 </content>
  </entry>
