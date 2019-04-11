@@ -14,7 +14,7 @@ on the iPhone with Core ML (ML: Machine Learning).
 Core ML and MLKit open up a new domain for computing that's being branded as Edge AI, where neural networks run on a local device (edge) as opposed to the cloud.
 The [source code for this experiment is available here](https://github.com/dimroc/count/tree/master/ios).
 
-Transitioning from a fixed camera [(ShakeCam Madison Square Park)](http://count.dimroc.com)
+Transitioning from a fixed camera [(ShakeCam Madison Square Park)](https://count.dimroc.com)
 to a general purpose iPhone app meant handling a wider variety of input. Are we counting three
 people or three thousand people?
 In this article, we'll go over eight facets of the port, from migrating Cloud AI to Edge AI
@@ -63,7 +63,7 @@ To mitigate this, we have three models:
 <img src="/public/images/count/CrowdCountStrategies.jpg" alt="Crowd Count Strategies" width="600px"/>
 
 - singles: Uses Apple's built in face detection ([VNDetectFaceRectanglesRequest](https://developer.apple.com/documentation/vision/vndetectfacerectanglesrequest)). You can beat it by showing the back of your head!
-- tens: Uses the model overtrained for the [ShakeCam](http://count.dimroc.com/) in the previous crowd counting post, which has between zero to eighty people. The tens category desparately needs a newly trained model.
+- tens: Uses the model overtrained for the [ShakeCam](https://count.dimroc.com/) in the previous crowd counting post, which has between zero to eighty people. The tens category desparately needs a newly trained model.
 - hundreds: Uses a model built with the [UCF Crowd dataset](http://crcv.ucf.edu/data/crowd.php).
 
 This would be the final step in the two step ML pipeline. These models, however,
