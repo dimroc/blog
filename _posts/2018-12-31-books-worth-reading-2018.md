@@ -20,13 +20,12 @@ Prioritized in terms of preference:
     Premodern traditions of knowledge such as Islam, Christianity, Buddhism and Confucianism asserted that everything that is important to know about the world was already known. The great gods, or the one almighty God, or the wise people of the past possessed all-encompassing wisdom, which they revealed to us in scriptures and oral traditions.
 
     * An amazing walk through mankind's history, showing how different organizational structures helped humans
-    grow from tribes to the coordination of billions spanning the globe. These devices spanned mercantilism, religion, and
-    ideology, and show the adverse effects it's had on the world.
+    coordinate local tribes to a globe of billions. These devices include mercantilism, religion, and ideology, and show the adverse effect it's had on the world.
 
 3. [Emotional Intelligence](https://smile.amazon.com/Emotional-Intelligence-Matter-More-Than-ebook/dp/B000JMKVCG/ref=sr_1_5?s=digital-text&ie=UTF8&qid=1546700114&sr=1-5&keywords=emotional+intelligence)
     > Anyone can become angry—that is easy. But to be angry with the right person, to the right degree, at the right time, for the right purpose, and in the right way—that is not easy. - ARISTOTLE, The Nichomachean Ethics
 
-    * The book that trailblazed the term EI (or rather EQ) walks through in academic detail the different facets of the space that separates itself from IQ, and how to use
+    * The book that trailblazed the term EI (or EQ) walks through in academic detail the different facets of the space that separates itself from IQ, and how to use
     it in every day life.
     * Wish I understood this as a teenager.
 
