@@ -2,6 +2,7 @@
 layout: post
 title: "Books Worth Reading 2018"
 date: "Sat Dec 31 09:43:25 -0500 2018"
+tags: books
 ---
 
 A slow reading year 😞.
