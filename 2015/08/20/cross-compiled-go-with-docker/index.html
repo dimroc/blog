@@ -232,7 +232,11 @@
   <h1 class="post-title">Cross Compiled Go with Alpine Linux make a tiny Docker image</h1>
   <span class="post-date">20 Aug 2015</span>
   <span class="post-comments"><a href="#disqus_thread"></a></span>
-  <p>Golang’s ability to create a self-contained executable makes deployment a breeze.
+  <p><em>Update: Docker has since released <a href="https://docs.docker.com/develop/develop-images/multistage-build/">Multi-stage builds</a>
+to address the problem described below. It’s a far better solution, and you can consider the below article deprecated.
+Check it out!</em></p>
+
+<p>Golang’s ability to create a self-contained executable makes deployment a breeze.
 You just copy the single file. No need to worry about versioned dependencies and your dependencies’ dependencies.</p>
 
 <p>Golang’s compiler goes ever further by supporting <a href="http://stackoverflow.com/questions/12168873/cross-compile-go-on-osx">cross compilation</a>.

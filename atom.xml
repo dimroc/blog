@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="https://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="https://blog.dimroc.com/"/>
- <updated>2020-01-02T18:38:47-05:00</updated>
+ <updated>2020-03-24T20:33:53-04:00</updated>
  <id>https://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -2117,7 +2117,11 @@ be great to track peak memory usage for the runs, so that we can now plot memory
    <link href="https://blog.dimroc.com/2015/08/20/cross-compiled-go-with-docker/"/>
    <updated>2015-08-20T10:46:35-04:00</updated>
    <id>https://blog.dimroc.com/2015/08/20/cross-compiled-go-with-docker</id>
-   <content type="html">&lt;p&gt;Golang’s ability to create a self-contained executable makes deployment a breeze.
+   <content type="html">&lt;p&gt;&lt;em&gt;Update: Docker has since released &lt;a href=&quot;https://docs.docker.com/develop/develop-images/multistage-build/&quot;&gt;Multi-stage builds&lt;/a&gt;
+to address the problem described below. It’s a far better solution, and you can consider the below article deprecated.
+Check it out!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Golang’s ability to create a self-contained executable makes deployment a breeze.
 You just copy the single file. No need to worry about versioned dependencies and your dependencies’ dependencies.&lt;/p&gt;
 
 &lt;p&gt;Golang’s compiler goes ever further by supporting &lt;a href=&quot;http://stackoverflow.com/questions/12168873/cross-compile-go-on-osx&quot;&gt;cross compilation&lt;/a&gt;.
