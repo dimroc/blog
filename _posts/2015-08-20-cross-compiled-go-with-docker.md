@@ -5,6 +5,10 @@ date: "Sat Aug 20 10:46:35 -0400 2015"
 tags: go docker
 ---
 
+_Update: Docker has since released [Multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/)
+to address the problem described below. It's a far better solution, and you can consider the below article deprecated.
+Check it out!_
+
 Golang's ability to create a self-contained executable makes deployment a breeze.
 You just copy the single file. No need to worry about versioned dependencies and your dependencies' dependencies.
 
