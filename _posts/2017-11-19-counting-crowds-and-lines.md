@@ -6,15 +6,18 @@ tags: kubernetes machine-learning python aws
 preview: public/images/count/countLineDualShot.jpg
 ---
 
-_Updated with video footage of the [CUHK Mall Dataset](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html):_
 <video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" width="600px"></video>
-_Feel free to check out the [site](https://count.dimroc.com) or the [source code](https://github.com/dimroc/counting_company)._
+_* Data courtesy of the [CUHK Mall Dataset](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html)_<br/>
+_* <a href="/public/images/count/countLandingPage.jpg" target="_blank">Screenshot of decommissioned website Count: Quantified imagery SaaS</a>_
+<br/>
+_* Feel free to check out the [source code](https://github.com/dimroc/counting_company)._<br/>
+_* Check out [part 2: counting people on your iPhone with CoreML](/2018/08/12/counting-crowds-with-coreml/)._<br/>
 
 <hr/>
 
-In Union Square, NYC, there's the untoppable burger joint named Shake Shack that's
-always crowded. A group of us would obsessively check the [Shake Cam](https://www.shakeshack.com/location/madison-square-park/)
-around lunch to figure out if that trip was worth it.
+In Union Square, NYC, there's the always crowded burger spot Shake Shack.
+A group of us would obsessively check the [Shake Cam](https://www.shakeshack.com/location/madison-square-park/)
+around lunch to figure out if a bite was worth the wait.
 
 <a href="https://www.shakeshack.com/location/madison-square-park" target="_blank">
 <img src="/public/images/count/shakecam.jpg" alt="Shake Cam" width="200px"/>
