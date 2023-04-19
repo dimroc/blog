@@ -1,0 +1,54 @@
+.custom.summary {
+}
+
+.custom.summary a.more {
+  display: block;
+  text-align: right;
+}
+
+.masthead .masthead-title .masthead-links {
+  float: none;
+}
+
+@media (min-width: 30em) {
+  .custom.post-title {
+    display: inline-block;
+    width: 60%;
+  }
+
+  .index .post .post-date {
+    width: 15%;
+    text-align: right;
+    display: inline-block;
+  }
+
+  .index .post .post-comments {
+    width: 15%;
+    text-align: right;
+    display: inline-block;
+  }
+
+  .index .post .post-title {
+    margin-bottom: 0;
+  }
+}
+
+#spinningCube {
+  display: block;
+  margin: auto;
+}
+
+img {
+  margin: auto;
+}
+
+iframe {
+  margin: auto;
+  display: block;
+}
+
+video {
+  max-width: 100%;
+  margin: auto;
+  display: block;
+}

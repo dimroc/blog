@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!--iPhone preview -->
+  <meta property="og:title" content="Comparing Golang, Scala, Elixir and Ruby for ETL" />
+  <meta property="og:image" content="/" />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Comparing Golang, Scala, Elixir and Ruby for ETL &middot; dimroc
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/tagging.css">
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/custom.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+
+  <!-- Javascript -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script src="/public/javascript/detectmobilebrowser.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+  <meta name="google-site-verification" content="KFJOcbe4F4sAQcx11yd_6hmxu0DVdy6ZgI7y6TFK8VU" />
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-43559997-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+
+  <body class="sidebar-overlay">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="https://github.com/dimroc">GitHub</a>
+    <a class="sidebar-nav-item" href="https://experiments.dimroc.com">Experiments</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/dimroc">@dimroc</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>Tags</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+    
+      <a class="sidebar-nav-item" href=/tag/webgl/>webgl</a>
+    
+      <a class="sidebar-nav-item" href=/tag/javascript/>javascript</a>
+    
+      <a class="sidebar-nav-item" href=/tag/twitter/>twitter</a>
+    
+      <a class="sidebar-nav-item" href=/tag/nyc/>nyc</a>
+    
+      <a class="sidebar-nav-item" href=/tag/elasticsearch/>elasticsearch</a>
+    
+      <a class="sidebar-nav-item" href=/tag/ios/>ios</a>
+    
+      <a class="sidebar-nav-item" href=/tag/ruby/>ruby</a>
+    
+      <a class="sidebar-nav-item" href=/tag/elixir/>elixir</a>
+    
+      <a class="sidebar-nav-item" href=/tag/golang/>golang</a>
+    
+      <a class="sidebar-nav-item" href=/tag/scala/>scala</a>
+    
+      <a class="sidebar-nav-item" href=/tag/etl/>etl</a>
+    
+      <a class="sidebar-nav-item" href=/tag/swift/>swift</a>
+    
+      <a class="sidebar-nav-item" href=/tag/testing/>testing</a>
+    
+      <a class="sidebar-nav-item" href=/tag/rails/>rails</a>
+    
+      <a class="sidebar-nav-item" href=/tag/python/>python</a>
+    
+      <a class="sidebar-nav-item" href=/tag/business/>business</a>
+    
+      <a class="sidebar-nav-item" href=/tag/go/>go</a>
+    
+      <a class="sidebar-nav-item" href=/tag/docker/>docker</a>
+    
+      <a class="sidebar-nav-item" href=/tag/react/>react</a>
+    
+      <a class="sidebar-nav-item" href=/tag/tutum/>tutum</a>
+    
+      <a class="sidebar-nav-item" href=/tag/aws/>aws</a>
+    
+      <a class="sidebar-nav-item" href=/tag/machine-learning/>machine-learning</a>
+    
+      <a class="sidebar-nav-item" href=/tag/angular/>angular</a>
+    
+      <a class="sidebar-nav-item" href=/tag/finance/>finance</a>
+    
+      <a class="sidebar-nav-item" href=/tag/books/>books</a>
+    
+      <a class="sidebar-nav-item" href=/tag/octave/>octave</a>
+    
+      <a class="sidebar-nav-item" href=/tag/kubernetes/>kubernetes</a>
+    
+      <a class="sidebar-nav-item" href=/tag/coreml/>coreml</a>
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2023. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h2 class="masthead-title">
+            <a href="/" title="Home">dimroc</a>
+            <small>blog</small>
+            <span class="masthead-links">
+              <a href="https://experiments.dimroc.com" title="Experiments">See Experiments</a>
+            </span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Comparing Golang, Scala, Elixir and Ruby for ETL</h1>
+  <span class="post-date">29 Sep 2014</span>
+  <span class="post-comments"><a href="#disqus_thread"></a></span>
+  <p><em>Update 05/11/2015: After reading this, check out <a href="/2015/05/07/etl-language-showdown-pt2/">part 2</a> to
+see how updates to the younger languages (Elixir, Golang) and changes to the algorithm (no intermediary reduction file) affected results.</em></p>
+
+<h2 id="update-there-is-now-a-part-3"><em>Update: There is now a <a href="/2015/11/14/etl-language-showdown-pt3/">part 3</a></em></h2>
+
+<p>How do the following languages stack up when running an <a href="https://en.wikipedia.org/wiki/Extract,_transform,_load">extract, transform, and load (ETL)</a> against ~40M tweets? Read on to find out more.</p>
+
+<ul>
+  <li><a href="https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/">Ruby, JRuby, and Parallel</a></li>
+  <li><a href="http://golang.org/">Golang 1.2</a> - Imperative</li>
+  <li><a href="http://scala-lang.org/">Scala 2.10.4</a> - Both Imperative and Functional</li>
+  <li><a href="http://elixir-lang.org/">Elixir 0.13.0</a> - Functional</li>
+</ul>
+
+<!--more-->
+
+<h2 id="goal">Goal</h2>
+
+<p>Compare each language’s productivity, terseness and readability. The performance comparisons should not be taken too seriously. If anything,
+it is a bigger indication of my skillset and my ability to ramp up in that language rather than their performance capabilities. Nonetheless, they are here to reflect what I would realistically face.</p>
+
+<h2 id="the-task">The Task</h2>
+
+<p>Count the number of tweets that mention <em>knicks</em> in their message and aggregate them based on the neighborhood of origin.
+The ~1GB dataset for this task, sampled below, contains a tweet’s message and its NYC neighborhood. <a href="https://dimroc-public.s3.amazonaws.com/etl-language-comparison/tweets20140416.tar.gz">It can be downloaded here</a>.
+Too small to warrant Hadoop, but large enough to run in parallel. The algorithm maps each entry to a file, and reduces all files in memory for a final output.</p>
+
+<p>Example Input (spans multiple files):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>91	west-brighton	Brooklyn	Uhhh
+121	turtle-bay-east-midtown	Manhattan	Say anything
+175	morningside-heights	Manhattan	It feels half-cheating half-fulfilling to cite myself.
+</code></pre></div></div>
+
+<p>Example Output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>midtown-midtown-south	4845
+hudson-yards-chelsea-flatiron-union-square	746
+battery-park-city-lower-manhattan	625
+</code></pre></div></div>
+
+<h3 id="initial-assumption">Initial Assumption</h3>
+
+<ul>
+  <li>These tasks are not run on Hadoop but do run concurrently. Performance numbers are expected to be moot since the CPU mostly sits idle waiting on Disk IO.</li>
+  <li>**UPDATE: Boy was the IO bound assumption wrong.</li>
+</ul>
+
+<h2 id="the-hardware">The Hardware</h2>
+
+<p>MacBook Pro 2.3GHz i7 (quad core) with 8GB RAM and 5200 RPM HDD</p>
+
+<h2 id="the-languages">The Languages</h2>
+
+<ol>
+  <li><a href="https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/">Ruby 2.1.0</a> with <a href="http://celluloid.io/">Celluloid</a>  - Exposes the GIL limitation in pure ruby and shows the multicore advantage of JRuby.</li>
+  <li><a href="https://www.ruby-lang.org/en/news/2013/12/25/ruby-2-1-0-is-released/">Ruby 2.1.0</a> and <a href="http://www.gnu.org/software/parallel/">GNU Parallel</a>  - Uses GNU parallel to run ruby processes on multiple cores.</li>
+  <li><a href="http://golang.org/">Golang 1.2</a> - Imperative</li>
+  <li><a href="http://scala-lang.org/">Scala 2.10.4</a> - Both Imperative and Functional</li>
+  <li><a href="http://elixir-lang.org/">Elixir 0.13.0</a> - Functional</li>
+</ol>
+
+<h2 id="ruby">Ruby</h2>
+
+<h4 id="features-used">Features used</h4>
+
+<ul>
+  <li>Celluloid Actor Pool</li>
+</ul>
+
+<h4 id="observations">Observations</h4>
+
+<ul>
+  <li>Performance is very respectable when considering the GIL lock: <code class="language-plaintext highlighter-rouge">1m15.243s</code></li>
+  <li>Performance is great when run on <strong>JRuby</strong>, which uses all available cores: <code class="language-plaintext highlighter-rouge">0m41.268s</code></li>
+</ul>
+
+<h3 id="ruby-with-gnu-parallel">Ruby with GNU Parallel</h3>
+
+<p>This is effectively:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ parallel -j 100% -a commands.txt &amp;&amp; ruby reducer.rb
+</code></pre></div></div>
+
+<h4 id="features-used-1">Features used</h4>
+
+<ul>
+  <li>GNU Parallel to get around the GIL and more accurately mirror a real world scenario: Many single core workers running one ruby process (eg: Heroku dynos)</li>
+</ul>
+
+<h4 id="observations-1">Observations</h4>
+
+<ul>
+  <li>Performance is excellent, with all cores on full blast: <code class="language-plaintext highlighter-rouge">40s</code>.</li>
+  <li>This implementation is cheating in some areas but serves as a good baseline for other comparisons.</li>
+  <li>Separate processes can be a maintenance nightmare. It leads to memory bloat, is difficult to coordinate failed processes, and can be difficult to deploy and scale. There is simplicity in being able to deploy one process that is capable of using all cores.</li>
+  <li>From experience, Ruby’s real weakness is its poor performance handling long-running jobs. Memory leaks run rampant. <a href="http://blog.redfin.com/devblog/2010/05/how_and_why_twitter_uses_scala.html#.U10CzWRdXLh">Twitter shared this opinion</a>.</li>
+</ul>
+
+<h2 id="golang">Golang</h2>
+
+<h4 id="features-used-2">Features used</h4>
+
+<ul>
+  <li>goroutines</li>
+  <li>channels</li>
+  <li>selects</li>
+</ul>
+
+<h4 id="observations-2">Observations</h4>
+
+<ul>
+  <li>Performance after first write with no optimizations: <code class="language-plaintext highlighter-rouge">3m23.165s</code>. <strong>Was only using one core!</strong></li>
+  <li>Performance average after using all cores by manually setting GOMAXPROCS: <code class="language-plaintext highlighter-rouge">1m03.593s</code></li>
+  <li><a href="http://stackoverflow.com/questions/17868419/how-can-my-go-program-keep-all-the-cpu-cores-busy">Had to research why all cores weren’t used here</a>.</li>
+  <li>Ultimately, <a href="http://golang.org/pkg/runtime/#GOMAXPROCS">GOMAXPROCS will be removed</a> and scheduling will automatically make use of all cores.</li>
+  <li>Golang’s libraries are fantastic but don’t have the mature optimizations of other languages (yet).</li>
+  <li>Ended up being the fewest lines of code across all languages, by a lot.</li>
+  <li>Golang is not functional, so don’t force functional programming concepts, like map and reduce. For loops for days…</li>
+</ul>
+
+<h4 id="moments-of-joy">Moments of Joy</h4>
+<ul>
+  <li>
+    <p>Handling goroutines with <code class="language-plaintext highlighter-rouge">channel</code>s and <code class="language-plaintext highlighter-rouge">select</code>.</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">for</span> <span class="n">_</span> <span class="o">=</span> <span class="k">range</span> <span class="n">inputFiles</span> <span class="p">{</span>
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="n">channel</span><span class="o">:</span>
+      <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Finished mapping."</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Iterating over a <code class="language-plaintext highlighter-rouge">map</code> with <code class="language-plaintext highlighter-rouge">range</code>.</li>
+  <li>Using <code class="language-plaintext highlighter-rouge">defer</code> for cleanup of file resources.</li>
+  <li>Command-line debugger (but I didn’t need it).</li>
+</ul>
+
+<h4 id="moments-of-disappointment">Moments of Disappointment</h4>
+<ul>
+  <li>
+    <p>Verbose error handling. There are design patterns to better manage errors, but were skipped for this demo.</p>
+
+    <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">files</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">ReadDir</span><span class="p">(</span><span class="n">inputDir</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+  <span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Having to explicitly set the number of cores to use via <code class="language-plaintext highlighter-rouge">GOMAXPROCS</code> because of immature scheduling.</li>
+  <li>Lack of collection helpers like <code class="language-plaintext highlighter-rouge">map</code> and <code class="language-plaintext highlighter-rouge">reduce</code>.</li>
+</ul>
+
+<h2 id="scala">Scala</h2>
+
+<h4 id="features-used-3">Features used</h4>
+
+<ul>
+  <li>Akka (Supervisors and Actors)</li>
+</ul>
+
+<h4 id="observations-3">Observations</h4>
+
+<ul>
+  <li>Performance after first write on first run: <code class="language-plaintext highlighter-rouge">50s</code></li>
+  <li>Performance on subsequent runs: <code class="language-plaintext highlighter-rouge">27s</code>. The JVM is probably doing something fancy.</li>
+  <li>All cores used.</li>
+  <li>Not as IO bound as originally thought. Attributed to the optimizations in the BufferedSource/BufferedWriter classes.</li>
+</ul>
+
+<h4 id="moments-of-joy-1">Moments of Joy</h4>
+<ul>
+  <li>Witnessing the speed after the first write.</li>
+  <li>Seeing BDD style testing as default for ScalaTest.</li>
+  <li>
+    <p>Using <code class="language-plaintext highlighter-rouge">!</code>, <code class="language-plaintext highlighter-rouge">?</code>, and <code class="language-plaintext highlighter-rouge">receive</code> to handle messages in the Actor system.</p>
+
+    <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">def</span> <span class="nf">map</span><span class="o">(</span><span class="n">inputDir</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">outputDir</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"MapSystem"</span><span class="o">)</span>
+    <span class="k">val</span> <span class="nv">mapSupervisor</span> <span class="k">=</span> <span class="nv">system</span><span class="o">.</span><span class="py">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MapSupervisor</span><span class="o">],</span> <span class="s">"mapsupervisor"</span><span class="o">)</span>
+    <span class="k">val</span> <span class="nv">future</span> <span class="k">=</span> <span class="n">mapSupervisor</span> <span class="o">?</span> <span class="nc">ProcessDirectoryMessage</span><span class="o">(</span><span class="n">inputDir</span><span class="o">,</span> <span class="n">outputDir</span><span class="o">)</span>
+
+    <span class="nv">Await</span><span class="o">.</span><span class="py">result</span><span class="o">(</span><span class="n">future</span><span class="o">,</span> <span class="nv">Duration</span><span class="o">.</span><span class="py">Inf</span><span class="o">)</span>
+    <span class="nv">system</span><span class="o">.</span><span class="py">shutdown</span>
+  <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">sbt run</code> and <code class="language-plaintext highlighter-rouge">sbt test</code> work well, especially for fetching dependencies.</li>
+  <li>Realizing the power of Akka and Akka Cluster.</li>
+</ul>
+
+<h4 id="moments-of-disappointment-1">Moments of Disappointment</h4>
+<ul>
+  <li>Inability to debug via the command line.</li>
+  <li>Having to set implicit variables: <code class="language-plaintext highlighter-rouge">implicit val timeout = Timeout(5 minutes)</code>.</li>
+  <li>Having to use Java libraries for File IO.</li>
+</ul>
+
+<h2 id="elixir">Elixir</h2>
+
+<h4 id="features-used-4">Features used</h4>
+
+<ul>
+  <li>Streams</li>
+  <li>pipeline operators</li>
+  <li>PIDs</li>
+  <li>All the Erlang and Elixir goodness</li>
+</ul>
+
+<h4 id="observations-4">Observations</h4>
+<ul>
+  <li>Performance average after first write with <code class="language-plaintext highlighter-rouge">:delayed_write</code>: <code class="language-plaintext highlighter-rouge">2m30.508s</code>.</li>
+  <li>This number says less about Elixir’s performance and more about how much I suck at writing Elixir code. Ease of writing performant code though is a valid factor.</li>
+  <li>Extremely productive language once one knows the module functions, but difficult to discover.</li>
+  <li>Clearly designed for use with a text editor and the command-line (It’s great).</li>
+  <li>The Elixir docs are usually the sole source of information, thankfully they are pretty good.</li>
+</ul>
+
+<h4 id="moments-of-joy-2">Moments of Joy</h4>
+<ul>
+  <li><a href="https://github.com/elixir-lang/vim-elixir">MacVim Vundle!</a></li>
+  <li>Using Interactive Elixir, <code class="language-plaintext highlighter-rouge">iex</code> and Mix is fantastic. Preferable to <code class="language-plaintext highlighter-rouge">sbt console</code>.</li>
+  <li>Matching on assignment: <code class="language-plaintext highlighter-rouge">{:ok, result} = {:ok, 5}</code>.</li>
+  <li>Functional style coupled with pipeline operators and anonymous methods makes for some beautifully code.</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Stream.into</code> allows manipulation of infinite collections in a terse manner</p>
+
+    <div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">output</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">stream!</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="p">[</span><span class="ss">:delayed_write</span><span class="p">])</span>
+  <span class="n">stream</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">stream!</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+            <span class="o">|&gt;</span> <span class="no">Stream</span><span class="o">.</span><span class="n">into</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="k">fn</span> <span class="n">line</span> <span class="o">-&gt;</span> <span class="n">map_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">end</span><span class="p">)</span>
+  <span class="no">Stream</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="moments-of-disappointment-2">Moments of Disappointment</h4>
+<ul>
+  <li>The lack of objects is initially infuriating. Hard to encapsulate logic, and structs don’t seem like a substitute. It effectively means that most if not all built-in methods only return primitive types as opposed to objects.</li>
+  <li>Lack of online resources because of small community. Few Stack Overflow posts, etc.</li>
+  <li>Discoverability is tricky since methods are all module functions on primitive types, therefore you can’t look up the primitive type, but must know the relevant module.</li>
+  <li>Inability to fold/reduce from a stream in a straighforward manner. Had to hold contents in memory.</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<ul>
+  <li>Only after returning to a functional language like Elixir do I realize the convenience of <strong>Object Oriented meets Functional</strong>. Big ups to Scala.</li>
+  <li>The ability to return an object with relevant methods while still being immutable adds the power of discoverability, a huge advantage over the manipulation of maps and other primitives with module functions.</li>
+  <li>The big surprise was JRuby’s performance and the impact of being able to use all cores. Running Puma on JRuby is very compelling when using a system with multiple cores.</li>
+  <li>Golang’s simplicity is very refreshing and their built-in profiling contributes to a philosophy of hand-tuning code for the best performance.</li>
+  <li>Scala, on the other hand, has the user well removed from the low level, but the JVM handles a lot of optimizations for the programmer, and it shows. If only I didn’t need an IDE…</li>
+</ul>
+
+<p>For ETL operations, it would be remiss to ignore the Hadoop and Java ecosystem. Scala provides an incredible toolset for all ETL operations, but I can’t help but want to code in Golang.</p>
+
+<p>As always, feel free to check out the <a href="https://github.com/dimroc/etl-language-comparison/tree/v1">source code</a>.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2019/12/31/books-worth-reading-2019/">
+            Books Worth Reading 2019
+            <small>31 Dec 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2018/12/31/books-worth-reading-2018/">
+            Books Worth Reading 2018
+            <small>31 Dec 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2018/08/12/counting-crowds-with-coreml/">
+            Moving AI from the Cloud to the Edge with Crowd Count and Apple's Core ML
+            <small>12 Aug 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'dimroc'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'dimroc'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+  var s = document.createElement('script'); s.async = true;
+  s.type = 'text/javascript';
+  s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+
+
+  </body>
+</html>

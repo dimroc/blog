@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!--iPhone preview -->
+  <meta property="og:title" content="Counting Crowds and Lines with AI" />
+  <meta property="og:image" content="/public/images/count/countLineDualShot.jpg" />
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Counting Crowds and Lines with AI &middot; dimroc
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/tagging.css">
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="/public/css/custom.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+
+  <!-- Javascript -->
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script src="/public/javascript/detectmobilebrowser.js"></script>
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+  <meta name="google-site-verification" content="KFJOcbe4F4sAQcx11yd_6hmxu0DVdy6ZgI7y6TFK8VU" />
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-43559997-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+
+  <body class="sidebar-overlay">
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Blog</a>
+    <a class="sidebar-nav-item" href="https://github.com/dimroc">GitHub</a>
+    <a class="sidebar-nav-item" href="https://experiments.dimroc.com">Experiments</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+
+    <a class="sidebar-nav-item" href="https://twitter.com/dimroc">@dimroc</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>Tags</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    
+    
+      <a class="sidebar-nav-item" href=/tag/webgl/>webgl</a>
+    
+      <a class="sidebar-nav-item" href=/tag/javascript/>javascript</a>
+    
+      <a class="sidebar-nav-item" href=/tag/twitter/>twitter</a>
+    
+      <a class="sidebar-nav-item" href=/tag/nyc/>nyc</a>
+    
+      <a class="sidebar-nav-item" href=/tag/elasticsearch/>elasticsearch</a>
+    
+      <a class="sidebar-nav-item" href=/tag/ios/>ios</a>
+    
+      <a class="sidebar-nav-item" href=/tag/ruby/>ruby</a>
+    
+      <a class="sidebar-nav-item" href=/tag/elixir/>elixir</a>
+    
+      <a class="sidebar-nav-item" href=/tag/golang/>golang</a>
+    
+      <a class="sidebar-nav-item" href=/tag/scala/>scala</a>
+    
+      <a class="sidebar-nav-item" href=/tag/etl/>etl</a>
+    
+      <a class="sidebar-nav-item" href=/tag/swift/>swift</a>
+    
+      <a class="sidebar-nav-item" href=/tag/testing/>testing</a>
+    
+      <a class="sidebar-nav-item" href=/tag/rails/>rails</a>
+    
+      <a class="sidebar-nav-item" href=/tag/python/>python</a>
+    
+      <a class="sidebar-nav-item" href=/tag/business/>business</a>
+    
+      <a class="sidebar-nav-item" href=/tag/go/>go</a>
+    
+      <a class="sidebar-nav-item" href=/tag/docker/>docker</a>
+    
+      <a class="sidebar-nav-item" href=/tag/react/>react</a>
+    
+      <a class="sidebar-nav-item" href=/tag/tutum/>tutum</a>
+    
+      <a class="sidebar-nav-item" href=/tag/aws/>aws</a>
+    
+      <a class="sidebar-nav-item" href=/tag/machine-learning/>machine-learning</a>
+    
+      <a class="sidebar-nav-item" href=/tag/angular/>angular</a>
+    
+      <a class="sidebar-nav-item" href=/tag/finance/>finance</a>
+    
+      <a class="sidebar-nav-item" href=/tag/books/>books</a>
+    
+      <a class="sidebar-nav-item" href=/tag/octave/>octave</a>
+    
+      <a class="sidebar-nav-item" href=/tag/kubernetes/>kubernetes</a>
+    
+      <a class="sidebar-nav-item" href=/tag/coreml/>coreml</a>
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2023. All rights reserved.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h2 class="masthead-title">
+            <a href="/" title="Home">dimroc</a>
+            <small>blog</small>
+            <span class="masthead-links">
+              <a href="https://experiments.dimroc.com" title="Experiments">See Experiments</a>
+            </span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Counting Crowds and Lines with AI</h1>
+  <span class="post-date">19 Nov 2017</span>
+  <span class="post-comments"><a href="#disqus_thread"></a></span>
+  <video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" width="600px"></video>
+<p><em>* Data courtesy of the <a href="http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html">CUHK Mall Dataset</a></em><br />
+<em>* <a href="/public/images/count/countLandingPage.jpg" target="_blank">Screenshot of decommissioned website Count: Quantified imagery SaaS</a></em>
+<br />
+<em>* Feel free to check out the <a href="https://github.com/dimroc/counting_company">source code</a>.</em><br />
+<em>* Check out <a href="/2018/08/12/counting-crowds-with-coreml/">part 2: counting people on your iPhone with CoreML</a>.</em><br /></p>
+
+<hr />
+
+<p>In Union Square, NYC, there’s the always crowded burger spot Shake Shack.
+A group of us would obsessively check the <a href="https://www.shakeshack.com/location/madison-square-park/">Shake Cam</a>
+around lunch to figure out if a bite was worth the wait.</p>
+
+<p><a href="https://www.shakeshack.com/location/madison-square-park" target="_blank">
+<img src="/public/images/count/shakecam.jpg" alt="Shake Cam" width="200px" />
+</a></p>
+<center><small>14 person line, not bad</small></center>
+
+<p>Rather than do this manually (come on, it’s nearly 2018), it would be great if this could be done
+for us. Then, to take that idea further, imagine being able to measure foot traffic on a month to month basis
+or to measure the impact of a new promotional campaign.</p>
+
+<p><a href="https://count.dimroc.com" target="_blank">
+<img src="/public/images/count/countLineDualShot.jpg" alt="Count Alpha" width="600px" />
+</a></p>
+
+<p>Object detection has received a lot of attention in the deep learning space, but it’s
+ill-suited for highly congested scenes like crowds. In this post, I’ll talk about
+how I implemented <a href="https://arxiv.org/pdf/1702.02359.pdf">multi-scale convolutional neural network (CNN)</a>
+for crowd and line counting.</p>
+
+<h2 id="why-not-object-detection">Why not object detection</h2>
+
+<p>Regional-CNN’s (R-CNN) use a sliding window to find an object. High density crowds are ill-suited for
+sliding windows due to high occlusion:</p>
+
+<p><img src="/public/images/count/rcnnfail.jpg" alt="R-CNN" width="300px" /></p>
+<center><small>Failed attempt with off the shelf (no retraining) TensorFlow R-CNN</small></center>
+
+<p>Further exploration in this approach led me to <a href="https://github.com/Russell91/TensorBox">TensorBox</a>,
+but it too had issues with high congestion and large crowd counts.</p>
+
+<h2 id="density-maps-to-the-rescue">Density Maps to the rescue</h2>
+
+<p>Rather than a sliding window, density maps (aka heat maps) estimate the likelihood of a head
+being at a location:
+<img src="/public/images/count/ucfOriginal.jpg" alt="UCF Original" width="400px" />
+<img src="/public/images/count/ucfcrowd.jpg" alt="Dense Crowd Ground Truth" width="500px" /></p>
+<center><a href="http://crcv.ucf.edu/data/crowd.php" target="_blank"><small>
+Crowd photo from the UCF Dataset
+</small></a></center>
+
+<p>3406 vs 3408? Pretty close!</p>
+
+<h3 id="whats-happening-here">What’s happening here?</h3>
+
+<p><img src="/public/images/count/multiscale-cnn.jpg" alt="Multi-scale CNN" /></p>
+
+<p>Based on <a href="https://arxiv.org/pdf/1702.02359.pdf">multi-scale convolutional neural network (CNN) for crowd counting</a>,
+the ground truth is generated by taking the head annotations and setting that pixel value to one, and
+then gaussian blurring the image. The model is then trained to output these blurred images, or density maps.
+The sum of all the image pixels then results in the crowd count prediction. Read the <a href="https://arxiv.org/pdf/1702.02359.pdf">paper</a> for more insight.</p>
+
+<p>Let’s look at density maps applied to the shake cam. Don’t worry about the color switch from blue to white for the density maps.
+<img src="/public/images/count/predictionBreakdown.jpg" alt="Dense Crowd Ground Truth" width="500px" /></p>
+<center><small>The sum of the pixel values is the size of the crowd</small></center>
+
+<p>As you can see above, we have:</p>
+
+<ol>
+  <li>The annotated image courtesy of AWS Mechanical Turk.</li>
+  <li>The calculated ground truth by setting head locations to one and then gaussian blurring.</li>
+  <li>The model’s prediction after being trained with ground truths.</li>
+</ol>
+
+<h2 id="how-to-get-the-images">How to get the images?</h2>
+
+<p>From your neighborhood <a href="https://www.shakeshack.com/location/madison-square-park">Shake Shack Cam</a> of course.</p>
+
+<h2 id="how-to-annotate-the-data">How to annotate the data?</h2>
+
+<p>The tried and true AWS Mechanical Turk, with a twist: a mouse click annotates a head as shown below:
+<img src="/public/images/count/headAnnotator.jpg" alt="Head Annotator" width="400px" /></p>
+
+<p>I went ahead and modified the <a href="https://github.com/kyamagu/bbox-annotator">bbox-annotator</a>
+to be a single click <a href="https://github.com/dimroc/head-annotator">head annotator</a>.</p>
+
+<h2 id="how-to-count-the-line">How to count the line?</h2>
+
+<p>Lines aren’t merely people in a certain space, they are people standing next to each other
+to form a contiguous collection of people. As of now, I simply feed the density map into a
+three layer fully connected (FC) network to output a single number, the line count.</p>
+
+<p>Gathering data for that also ended up being a task in AWS Mechanical Turk.</p>
+
+<p>Here are some examples of where lines aren’t immediately obvious:</p>
+
+<p><img src="/public/images/count/lineNotHot.jpg" alt="Line Not Hot" width="400px" />
+<img src="/public/images/count/lineNotHot2.jpg" alt="Line Not Hot" width="400px" /></p>
+
+<h2 id="making-a-product-out-of-data-science">Making a product out of data science</h2>
+
+<p>This is all good fun working on your development box, but how do you host it? This
+will be a topic for another blog post, but the short story is:</p>
+
+<ol>
+  <li>Make sure it doesn’t look bad! Thanks to the design work done by Steve @ <a href="http://thoughtmerchants.com/">thoughtmerchants.com</a></li>
+  <li>Use Vue JS and d3 to visualize the line count.</li>
+  <li>Create a docker image with your static assets and Conda dependencies.</li>
+  <li>Deploy to GCP with kubernetes on Google Container Engine.</li>
+  <li>Periodically run a background job to scrape the shake cam image and run a prediction.</li>
+</ol>
+
+<p><img src="/public/images/count/countalpha.jpg" alt="Count Alpha" width="400px" /></p>
+
+<p>I did the extra credit step of having a Rails application interact with the ML service
+via <a href="https://grpc.io/">gRPC</a>, while integration testing with <a href="https://github.com/mrkn/pycall.rb">PyCall</a>.
+Not necessary, but I’m very happy with the setup.</p>
+
+<h2 id="unexpected-challenges">Unexpected Challenges</h2>
+
+<p>These following challenges have contributed to erroneous line predictions:</p>
+
+<ol>
+  <li>Umbrellas. Not a head but still a person.</li>
+  <li>Shadows. Around noon there can be some strong shadows resembling people.</li>
+  <li>Winter Darkness. It gets much darker much sooner in November and December. Yet the model was trained predominantly with images of people in daylight.</li>
+  <li>Winter Snow. Training data never had snow, and now we have mistakes like this:</li>
+</ol>
+
+<p><img src="/public/images/count/snownotpeople.jpg" alt="Count Mistaking Snow" width="500px" /></p>
+
+<p>As I discover more of these scenarios, I’ll know what data to gather for a model retraining.</p>
+
+<h2 id="check-out-the-site-and-the-source">Check out <a href="https://count.dimroc.com">the site</a> and the <a href="https://github.com/dimroc/counting_company">source</a>.</h2>
+
+<p><em>Feel free to drop a line below if you have any questions.</em></p>
+
+<h3 id="references">References</h3>
+
+<ul>
+  <li>Multi-scale Convolutional Neural Networks for Crowd Counting
+Lingke Zeng, Xiangmin Xu, Bolun Cai, Suo Qiu, Tong Zhang
+<a href="https://arxiv.org/abs/1702.02359">Page</a> <a href="https://arxiv.org/pdf/1702.02359.pdf">PDF</a></li>
+  <li>Fully Convolutional Crowd Counting On Highly Congested Scenes
+Mark Marsden, Kevin McGuinness, Suzanne Little and Noel E. O’Connor
+<a href="https://arxiv.org/pdf/1612.00220.pdf">PDF</a></li>
+  <li>Multi-Source Multi-Scale Counting in Extremely Dense Crowd Images
+Haroon Idrees, Imran Saleemi, Cody Seibert, Mubarak Shah
+IEEE International Conference on Computer Vision and Pattern Recognition (CVPR), 2013
+<a href="http://crcv.ucf.edu/papers/cvpr2013/Counting_V3o.pdf">PDF</a></li>
+  <li>From Semi-Supervised to Transfer Counting of Crowds
+C. C. Loy, S. Gong, and T. Xiang
+in Proceedings of IEEE International Conference on Computer Vision, pp. 2256-2263, 2013 (ICCV)
+<a href="http://personal.ie.cuhk.edu.hk/~ccloy/files/iccv_2013_crowd.pdf">PDF</a> <a href="http://personal.ie.cuhk.edu.hk/~ccloy/project_semi_counting/index.html">Project Page</a></li>
+</ul>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2019/12/31/books-worth-reading-2019/">
+            Books Worth Reading 2019
+            <small>31 Dec 2019</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2018/12/31/books-worth-reading-2018/">
+            Books Worth Reading 2018
+            <small>31 Dec 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2018/08/12/counting-crowds-with-coreml/">
+            Moving AI from the Cloud to the Edge with Crowd Count and Apple's Core ML
+            <small>12 Aug 2018</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'dimroc'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script type="text/javascript">
+/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+var disqus_shortname = 'dimroc'; // required: replace example with your forum shortname
+
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function () {
+  var s = document.createElement('script'); s.async = true;
+  s.type = 'text/javascript';
+  s.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+
+
+  </body>
+</html>
