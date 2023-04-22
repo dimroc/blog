@@ -6,6 +6,7 @@ tags: kubernetes machine-learning python aws
 preview: public/images/count/countLineDualShot.jpg
 ---
 
+<img src="/public/images/count/countTop.jpg" alt="Count: Quantified Imagery"/>
 <video src="/public/videos/mallcount.mp4" controls="true" type="video/mp4" width="600px"></video>
 _* Data courtesy of the [CUHK Mall Dataset](http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html)_<br/>
 _* <a href="/public/images/count/countLandingPage.jpg" target="_blank">Screenshot of decommissioned website Count: Quantified imagery SaaS</a>_
