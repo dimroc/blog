@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2023-04-19T12:48:42-07:00</updated>
+ <updated>2023-04-22T08:15:08-07:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>Dimitri Roche</name>
@@ -518,7 +518,8 @@ Prioritized in terms of preference:&lt;/p&gt;
    <link href="http://localhost:4000/2017/11/19/counting-crowds-and-lines/"/>
    <updated>2017-11-19T14:06:05-08:00</updated>
    <id>http://localhost:4000/2017/11/19/counting-crowds-and-lines</id>
-   <content type="html">&lt;video src=&quot;/public/videos/mallcount.mp4&quot; controls=&quot;true&quot; type=&quot;video/mp4&quot; width=&quot;600px&quot;&gt;&lt;/video&gt;
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/count/countTop.jpg&quot; alt=&quot;Count: Quantified Imagery&quot; /&gt;&lt;/p&gt;
+&lt;video src=&quot;/public/videos/mallcount.mp4&quot; controls=&quot;true&quot; type=&quot;video/mp4&quot; width=&quot;600px&quot;&gt;&lt;/video&gt;
 &lt;p&gt;&lt;em&gt;* Data courtesy of the &lt;a href=&quot;http://personal.ie.cuhk.edu.hk/~ccloy/downloads_mall_dataset.html&quot;&gt;CUHK Mall Dataset&lt;/a&gt;&lt;/em&gt;&lt;br /&gt;
 &lt;em&gt;* &lt;a href=&quot;/public/images/count/countLandingPage.jpg&quot; target=&quot;_blank&quot;&gt;Screenshot of decommissioned website Count: Quantified imagery SaaS&lt;/a&gt;&lt;/em&gt;
 &lt;br /&gt;
