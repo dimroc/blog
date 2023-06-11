@@ -31,7 +31,8 @@ Below, you'll see simple first person images of a game with untextured models, r
 depth maps and segmentation maps. Scroll to the bottom for higher resolution videos.
 
 <div style="display: flex; flex-wrap: wrap;">
-  <img src="/public/game2video/fps_screenshot_regular.jpg" />
+  <img src="/public/game2video/godot_in_action.jpg" width="50%" style="margin:0" />
+  <img src="/public/game2video/fps_screenshot_regular.jpg"  width="50%" style="margin:0" />
   <img src="/public/game2video/fps_screenshot_depth.jpg" width="50%" style="margin:0" />
   <img src="/public/game2video/fps_screenshot_seg.jpg"   width="50%" style="margin:0" />
 </div>
