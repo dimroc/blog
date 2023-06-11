@@ -4,7 +4,7 @@
  <title>dimroc</title>
  <link href="https://blog.dimroc.com/atom.xml" rel="self"/>
  <link href="https://blog.dimroc.com/"/>
- <updated>2023-06-11T12:26:21-07:00</updated>
+ <updated>2023-06-11T14:32:07-07:00</updated>
  <id>https://blog.dimroc.com</id>
  <author>
    <name>Dimitri Roche</name>
@@ -42,7 +42,8 @@ a mini game in &lt;a href=&quot;&quot;&gt;Godot&lt;/a&gt;, render some frames an
 depth maps and segmentation maps. Scroll to the bottom for higher resolution videos.&lt;/p&gt;
 
 &lt;div style=&quot;display: flex; flex-wrap: wrap;&quot;&gt;
-  &lt;img src=&quot;/public/game2video/fps_screenshot_regular.jpg&quot; /&gt;
+  &lt;img src=&quot;/public/game2video/godot_in_action.jpg&quot; width=&quot;50%&quot; style=&quot;margin:0&quot; /&gt;
+  &lt;img src=&quot;/public/game2video/fps_screenshot_regular.jpg&quot; width=&quot;50%&quot; style=&quot;margin:0&quot; /&gt;
   &lt;img src=&quot;/public/game2video/fps_screenshot_depth.jpg&quot; width=&quot;50%&quot; style=&quot;margin:0&quot; /&gt;
   &lt;img src=&quot;/public/game2video/fps_screenshot_seg.jpg&quot; width=&quot;50%&quot; style=&quot;margin:0&quot; /&gt;
 &lt;/div&gt;
