@@ -1,0 +1,2 @@
+public/videos/**/* filter=lfs diff=lfs merge=lfs -text
+public/game2video/**/* filter=lfs diff=lfs merge=lfs -text
