@@ -80,9 +80,9 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 32rem;
   }
 }
-@media (min-width: 62em) {
+@media (min-width: 64em) {
   .container {
-    max-width: 48rem;
+    max-width: 62rem;
   }
 }
 
